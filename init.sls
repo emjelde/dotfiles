@@ -1,0 +1,17 @@
+include:
+  - .awesome
+  - .bash
+  - .deluge
+  - .firefox
+  - .git
+  - .gpg
+  - .htop
+  - .java
+  - .pass
+  - .smartcard
+  - .ssh
+  - .thunderbird
+  - .tmux
+  - .urxvt
+  - .vim
+  - .x11

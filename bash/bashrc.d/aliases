@@ -1,0 +1,5 @@
+alias code="cmatrix -a -b -u 3 -C blue"
+alias mv="mv -i"
+alias rm="rm -I"
+alias screenoff="sleep .1 && xset dpms force off"
+alias ♥="echo '<3 you too!'"

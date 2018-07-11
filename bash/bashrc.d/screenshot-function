@@ -1,0 +1,8 @@
+function screenshot {
+	if [ -z "$1" ] ; then
+		OUT_FILE="screenshot_$(date -Ins).png"
+	else
+		OUT_FILE=$1
+	fi
+	xwd -root | xwdtopnm 2> /dev/null | pnmtopng > $OUT_FILE
+}

@@ -1,0 +1,104 @@
+# /etc/skel/.bashrc
+#
+# This file is sourced by all *interactive* bash shells on startup,
+# including some apparently interactive shells such as scp and rcp
+# that can't tolerate any output.  So make sure this doesn't display
+# anything or bad things will happen !
+
+
+# Test for an interactive shell.  There is no need to set anything
+# past this point for scp and rcp, and it's important to refrain from
+# outputting anything in those cases.
+if [[ $- != *i* ]] ; then
+  # Shell is non-interactive.  Be done now!
+  return
+fi
+
+if [[ $TERM = "linux" ]]; then
+  unicode_start
+fi
+
+# Put your fun stuff here.
+
+PATH="${PATH}:${HOME}/.bin"
+
+## General options
+
+# Trim long paths in the prompt
+PROMPT_DIRTRIM=3
+
+## Smarter tab-completion
+
+# Perform file completion in a case insensitive fashion
+bind "set completion-ignore-case on"
+
+# Treat hyphens and underscores as equivalent
+bind "set completion-map-case on"
+
+# Display matches for ambiguous patterns at first tab press
+bind "set show-all-if-ambiguous on"
+
+## Sane history defaults
+
+# Append to the history file, don't overwrite it
+shopt -s histappend
+
+# Save multi-line commands as one command
+shopt -s cmdhist
+
+# No history limit
+export HISTSIZE=-1
+
+# Inhibit history truncation
+export HISTFILESIZE=-1
+
+# Avoid duplicate entries
+export HISTCONTROL="erasedups:ignoreboth"
+
+# Don't record some commands
+export HISTIGNORE="&:[ ]*:exit:ls:bg:fg:history:clear"
+
+# Use standard ISO 8601 timestamp
+# %F equivalent to %Y-%m-%d
+# %T equivalent to %H:%M:%S (24-hours format)
+export HISTTIMEFORMAT='%F %T '
+
+## Better directory navigation
+
+# Prepend cd to directory names automatically
+#shopt -s autocd 2> /dev/null
+
+# Correct spelling errors during tab-completion
+shopt -s dirspell 2> /dev/null
+
+# Correct spelling errors in arguments supplied to cd
+shopt -s cdspell 2> /dev/null
+
+## XDG Base Directory
+
+# Where user-specific configurations should be written
+# (analogous to /etc)
+XDG_CONFIG_HOME=$HOME/.config
+
+# Where user-specific non-essential (cached) data should be
+# written (analogous to /var/cache)
+XDG_CACHE_HOME=$HOME/.cache
+
+# Where user-specific data files should be written
+# (analogous to /usr/share)
+XDG_DATA_HOME=$HOME/.local/share
+
+# Used for non-essential, user-specific data files such as
+# sockets,named pipes, etc.
+# Usually set by pam_systemd (not used), initialize it here for now
+if [ -z "$XDG_RUNTIME_DIR" ]; then
+  export XDG_RUNTIME_DIR=/run/user/$(id -u)
+fi
+
+{{ accumulator['.bashrc']|join('\n') }}
+
+## Source .bashrc.d
+
+for sh in .bashrc.d/* ; do
+  [[ -r ${sh} ]] && source "${sh}"
+done

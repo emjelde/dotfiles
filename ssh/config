@@ -1,0 +1,4 @@
+CheckHostIP no
+IdentitiesOnly yes
+
+{{ accumulator['.ssh/config']|join('\n') }}

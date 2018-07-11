@@ -1,0 +1,49 @@
+--- a/theme.lua
++++ b/theme.lua
+@@ -8,31 +8,31 @@
+ 
+ -- {{{ Main
+ theme = {}
+-theme.wallpaper = "/usr/share/awesome/themes/zenburn/zenburn-background.png"
++theme.wallpaper = "~/.config/awesome/wallpapers/mybike.png"
+ -- }}}
+ 
+ -- {{{ Styles
+-theme.font      = "sans 8"
++theme.font      = "sans 8" --terminus 8
+ 
+ -- {{{ Colors
+ theme.fg_normal  = "#DCDCCC"
+ theme.fg_focus   = "#F0DFAF"
+ theme.fg_urgent  = "#CC9393"
+ theme.bg_normal  = "#3F3F3F"
+-theme.bg_focus   = "#1E2320"
++theme.bg_focus   = "#3465A4" --#1E2320
+ theme.bg_urgent  = "#3F3F3F"
+ theme.bg_systray = theme.bg_normal
+ -- }}}
+ 
+ -- {{{ Borders
+ theme.border_width  = 2
+-theme.border_normal = "#3F3F3F"
+-theme.border_focus  = "#6F6F6F"
+-theme.border_marked = "#CC9393"
++theme.border_normal = "#3F3F3F" --#000055
++theme.border_focus  = "#3465A4" --#6F6F6F
++theme.border_marked = "#91231C" --#CC9393
+ -- }}}
+ 
+ -- {{{ Titlebars
+-theme.titlebar_bg_focus  = "#3F3F3F"
++theme.titlebar_bg_focus  = "#3465A4" --#3F3F3F
+ theme.titlebar_bg_normal = "#3F3F3F"
+ -- }}}
+ 
+@@ -80,6 +80,7 @@
+ -- {{{ Misc
+ theme.awesome_icon           = "/usr/share/awesome/themes/zenburn/awesome-icon.png"
+ theme.menu_submenu_icon      = "/usr/share/awesome/themes/default/submenu.png"
++--theme.tasklist_floating_icon = "/usr/share/awesome/themes/default/tasklist/floatingw.png"
+ -- }}}
+ 
+ -- {{{ Layout

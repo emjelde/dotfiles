@@ -1,0 +1,16 @@
+autocmd FileType gitcommit set textwidth=72
+filetype plugin on
+filetype indent on
+set expandtab
+set ignorecase
+set incsearch
+set mouse=a
+set nowrap
+set number
+set ruler
+set shiftwidth=3
+set smartcase
+set tabstop=3
+set wildmenu
+set wildmode=list:longest,full
+syntax enable
