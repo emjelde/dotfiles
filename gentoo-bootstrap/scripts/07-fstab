@@ -1,0 +1,14 @@
+#!/bin/bash -uex
+
+BOOT_UUID="$(blkid -s UUID -o value ${BOOT_DEVICE})"
+SWAP_UUID="$(blkid -s UUID -o value ${SWAP_DEVICE})"
+ROOT_UUID="$(blkid -s UUID -o value ${ROOT_DEVICE})"
+
+chroot /mnt/gentoo /bin/bash -uex <<EOF
+cat > /etc/fstab <<'DATA'
+# <fs>              <mount>   <type>   <opts>             <dump/pass>
+UUID=${BOOT_UUID}   /boot     vfat     noauto,noatime     0 0
+UUID=${ROOT_UUID}   /         ext4     defaults,noatime   0 0
+UUID=${SWAP_UUID}   none      swap     sw                 0 0
+DATA
+EOF

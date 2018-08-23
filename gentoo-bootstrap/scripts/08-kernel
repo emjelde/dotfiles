@@ -1,0 +1,42 @@
+#!/bin/bash -uex
+
+cp "${SOURCE}/kernel/gentoo-sources" /mnt/gentoo/tmp/
+cp --recursive "${SOURCE}/kernel/initramfs" /mnt/gentoo/tmp/initramfs
+
+cp "${SOURCE}/kernel/kernel.config" /mnt/gentoo/tmp/
+if [ "$ARCH" == "x86" ]; then
+  # Does anything else need to change?
+  sed --in-place 's/CONFIG_64BIT=y/CONFIG_64BIT=n/' /mnt/gentoo/tmp/kernel.config
+fi
+
+trap "cd /mnt/gentoo/tmp && rm --recursive gentoo-sources initramfs kernel.config" EXIT
+
+OLD_ARCH=${ARCH}
+
+case "$ARCH" in
+  x86|x86_64|amd64)
+    ARCH=x86
+  ;;
+esac
+
+export ROOT_UUID="$(blkid -s UUID -o value ${ROOT_DEVICE})"
+
+chroot /mnt/gentoo /bin/bash -uex <<'EOF'
+mkdir /usr/src/initramfs
+cp /tmp/initramfs/initramfs.list /usr/src/initramfs/
+envsubst '$ROOT_UUID' < /tmp/initramfs/init > /usr/src/initramfs/init
+envsubst '$ROOT_UUID' < /tmp/initramfs/fstab > /usr/src/initramfs/fstab
+mkdir --parents /etc/portage/package.accept_keywords/sys-kernel
+cp /tmp/gentoo-sources /etc/portage/package.accept_keywords/sys-kernel/
+emerge --verbose --quiet sys-kernel/gentoo-sources
+cd /usr/src/linux
+cp /tmp/kernel.config .config
+make --quiet listnewconfig
+make --quiet olddefconfig
+make --quiet --jobs $CPUS
+make --quiet modules_install
+mkdir --parents /boot/efi/boot
+cp arch/${ARCH}/boot/bzImage /boot/efi/boot/bootx64.efi
+EOF
+
+ARCH=${OLD_ARCH}

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -uex
+
+CPUS=$(nproc --all)
+MEMORY=8192
+
+cat << EOF > vm-variables.json
+{
+  "cpus": "${CPUS}",
+  "memory": "${MEMORY}"
+}
+EOF

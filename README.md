@@ -48,4 +48,6 @@ This project was inspired by:
 
 [salt-states](https://github.com/shadowfax-chc/salt-states)
 
+[gentoo-packer](https://github.com/d11wtq/gentoo-packer)
+
 Many thanks to all the contributors of these projects.

@@ -1,0 +1,15 @@
+#!/bin/bash -uex
+
+sgdisk \
+  --new 1:0:+128M --typecode 1:EF00 --change-name 1:"linux-boot" \
+  --new 2:0:+1G   --typecode 2:8200 --change-name 2:"swap"       \
+  --new 3:0:0     --typecode 3:8300 --change-name 3:"linux-root" \
+  --print /dev/sda
+
+sync
+
+mkfs.vfat "${BOOT_DEVICE}"
+mkfs.ext4 "${ROOT_DEVICE}"
+
+mkswap "${SWAP_DEVICE}"
+swapon "${SWAP_DEVICE}"

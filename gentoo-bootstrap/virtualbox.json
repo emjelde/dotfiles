@@ -1,0 +1,69 @@
+{
+  "description": "Stage 3 Gentoo Installation (VirtualBox)",
+  "variables": {
+    "headless": "true",
+    "ssh_username": "root",
+    "ssh_password": "secret"
+  },
+  "builders": [{
+    "type": "virtualbox-iso",
+    "boot_command": [
+      "gentoo-nofb<enter>",
+      "<wait10>",
+      "<enter>",
+      "<wait10>",
+      "passwd {{user `ssh_username`}}<enter>",
+      "{{user `ssh_password`}}<enter>",
+      "{{user `ssh_password`}}<enter>",
+      "sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config<enter>",
+      "sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config<enter>",
+      "/etc/init.d/sshd start<enter>"
+    ],
+    "boot_wait": "5s",
+    "guest_os_type": "Gentoo_64",
+    "guest_additions_mode": "disable",
+    "headless": "{{user `headless`}}",
+    "iso_url": "{{user `iso_url`}}",
+    "iso_checksum": "{{user `iso_checksum`}}",
+    "iso_checksum_type": "sha512",
+    "ssh_username": "{{user `ssh_username`}}",
+    "ssh_password": "{{user `ssh_password`}}",
+    "shutdown_command": "shutdown -h now",
+    "vm_name": "Gentoo",
+    "vboxmanage": [
+      [ "modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}" ],
+      [ "modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}" ]
+    ]
+  }],
+  "provisioners": [{
+    "type": "file",
+    "source": "kernel",
+    "destination": "/tmp"
+  },{
+    "type": "shell",
+    "environment_vars": [
+      "ARCH={{user `arch`}}",
+      "BOOT_DEVICE=/dev/sda1",
+      "CPUS={{user `cpus`}}",
+      "MAKEOPTS=-j{{user `cpus`}}",
+      "MIRROR={{user `mirror`}}",
+      "ROOT_DEVICE=/dev/sda3",
+      "RSYNC_MIRROR={{user `rsync_mirror`}}",
+      "SOURCE=/tmp",
+      "STAGE3={{user `stage3`}}",
+      "SWAP_DEVICE=/dev/sda2"
+   ],
+    "scripts": [
+      "scripts/01-partition",
+      "scripts/02-stage3",
+      "scripts/03-mounts",
+      "scripts/04-resolvconf",
+      "scripts/05-portage",
+      "scripts/06-timezone",
+      "scripts/07-fstab",
+      "scripts/08-kernel",
+      "scripts/09-network",
+      "scripts/10-system"
+    ]
+  }]
+}

@@ -1,0 +1,5 @@
+/gentoo-bootstrap/autobuild-variables.json
+/gentoo-bootstrap/autobuilds/
+/gentoo-bootstrap/output-virtualbox-iso/
+/gentoo-bootstrap/packer_cache/
+/gentoo-bootstrap/vm-variables.json

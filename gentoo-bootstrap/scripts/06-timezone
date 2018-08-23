@@ -1,0 +1,5 @@
+#!/bin/bash -uex
+
+chroot /mnt/gentoo /bin/bash -uex <<EOF
+ln --symbolic --no-dereference --force /usr/share/zoneinfo/UTC /etc/localtime
+EOF
