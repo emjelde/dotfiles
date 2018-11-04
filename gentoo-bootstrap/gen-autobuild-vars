@@ -5,32 +5,35 @@ set -uex
 ARCH=${ARCH:-amd64}
 MIRROR=${MIRROR:-http://distfiles.gentoo.org}
 RSYNC_MIRROR=${RSYNC_MIRROR:-rsync://rsync11.us.gentoo.org/gentoo-portage}
-SIGNING_KEY=0x13EBBDBEDE7A12775DFDB1BABB572E0E2D182910
+
+WEEKLY_RELEASE_SIGNING_KEY=0x13EBBDBEDE7A12775DFDB1BABB572E0E2D182910
+EBUILD_REPOSITORY_SIGNING_KEY=0xDCD05B71EAB94199527F44ACDB6B8C1F96D8BF6D
 
 DIST="${MIRROR}/releases/${ARCH}/autobuilds"
 ISO_PATH=$(wget -q -O- "${DIST}/latest-install-${ARCH}-minimal.txt" | tail -n 1 | cut -f 1 -d ' ')
 ISO="$(basename "$ISO_PATH")"
 AUTOBUILD="$(dirname "$ISO_PATH")"
 AUTOBUILD_DIR="autobuilds/${AUTOBUILD}"
+AUTOBUILD_KEYRING="autobuilds/keyring"
 
-mkdir -p "$AUTOBUILD_DIR"
-cd "$AUTOBUILD_DIR"
-wget --continue "${DIST}/${ISO_PATH}" "${DIST}/${ISO_PATH}.CONTENTS" "${DIST}/${ISO_PATH}.DIGESTS.asc"
+mkdir --parents "$AUTOBUILD_DIR" "$AUTOBUILD_KEYRING"
+wget --continue \
+     --directory-prefix "${AUTOBUILD_DIR}" \
+     "${DIST}/${ISO_PATH}" "${DIST}/${ISO_PATH}.CONTENTS" "${DIST}/${ISO_PATH}.DIGESTS.asc"
 
-GNUPG_TEMP_HOME="$(mktemp -d)"
-trap "rm -r \"$GNUPG_TEMP_HOME\"" EXIT
 gpg --quiet \
-    --homedir "$GNUPG_TEMP_HOME" \
+    --homedir "$AUTOBUILD_KEYRING" \
     --no-default-keyring \
     --keyring trustedkeys.gpg \
-    --keyserver ha.pool.sks-keyservers.net \
-    --recv-keys ${SIGNING_KEY}
-gpgv --homedir "$GNUPG_TEMP_HOME" "${ISO}.DIGESTS.asc"
+    --keyserver hkps.pool.sks-keyservers.net \
+    --recv-keys ${WEEKLY_RELEASE_SIGNING_KEY} ${EBUILD_REPOSITORY_SIGNING_KEY}
+gpgv --homedir "$AUTOBUILD_KEYRING" "${AUTOBUILD_DIR}/${ISO}.DIGESTS.asc"
 
+cd $AUTOBUILD_DIR
 ISO_CHECKSUM="$(awk '/# SHA512 HASH/{getline; print}' ${ISO}.DIGESTS.asc)"
-echo "$ISO_CHECKSUM" | shasum --algorithm 512 --check --status -
-ISO_CHECKSUM=$(echo "$ISO_CHECKSUM" | head -n 1 | cut -f 1 -d ' ')
+echo "$ISO_CHECKSUM" | sha512sum --check --status -
 cd -
+ISO_CHECKSUM=$(echo "$ISO_CHECKSUM" | head -n 1 | cut -f 1 -d ' ')
 cat << EOF > autobuild-variables.json
 {
   "arch": "${ARCH}",

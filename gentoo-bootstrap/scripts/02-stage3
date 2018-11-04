@@ -10,15 +10,10 @@ cd "$tarball_temp"
 wget --quiet "$stage3_url" "${stage3_url}.DIGESTS.asc"
 trap "rm -r \"$tarball_temp\"" EXIT
 
-gpg --quiet \
-    --no-default-keyring \
-    --keyring trustedkeys.gpg \
-    --keyserver hkps.pool.sks-keyservers.net \
-    --recv-keys 0x13EBBDBEDE7A12775DFDB1BABB572E0E2D182910
-gpgv --quiet "${tarball}.DIGESTS.asc"
+gpgv --quiet --homedir "${AUTOBUILD_KEYRING}" "${tarball}.DIGESTS.asc"
 awk '/# SHA512 HASH/{getline; print}' "${tarball}.DIGESTS.asc" \
    | grep "${tarball}$" \
-   | shasum --algorithm 512 --check --status -
+   | sha512sum --check --status -
 
 mkdir --parents /mnt/gentoo
 mount --read-write ${ROOT_DEVICE} /mnt/gentoo
