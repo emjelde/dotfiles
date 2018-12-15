@@ -1,0 +1,31 @@
+#!/bin/bash
+
+set -u
+
+SALT_DIR=salt/salt
+read -r -d '' DOTFILES_INCLUDE <<'EOF'
+import yaml
+
+include = yaml.load(open('../init.sls'))['include']
+
+for line in include:
+   print(line[1:])
+EOF
+
+# set after read as it appears to return a
+# non-zero return code when reaching EOF
+set -e
+
+rm -rf "$SALT_DIR"
+mkdir --parents "${SALT_DIR}/dotfiles"
+
+echo "dotfiles"
+for SLS in $(python -c "$DOTFILES_INCLUDE")
+do
+   echo "  ${SLS}"
+   cp --recursive "../${SLS}" "${SALT_DIR}/dotfiles/"
+done
+cp ../init.sls "${SALT_DIR}/dotfiles/"
+
+echo "gentoo"
+cp --recursive ../gentoo "${SALT_DIR}/gentoo"

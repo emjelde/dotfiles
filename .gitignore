@@ -1,5 +1,9 @@
 /gentoo-bootstrap/autobuild-variables.json
 /gentoo-bootstrap/autobuilds/
 /gentoo-bootstrap/output-virtualbox-iso/
+/gentoo-bootstrap/output-virtualbox-ovf/
 /gentoo-bootstrap/packer_cache/
+/gentoo-bootstrap/salt/pillar.asc
+/gentoo-bootstrap/salt/pillar/
+/gentoo-bootstrap/salt/salt
 /gentoo-bootstrap/vm-variables.json

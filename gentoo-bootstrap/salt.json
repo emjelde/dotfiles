@@ -1,0 +1,59 @@
+{
+  "description": "Salt Provisioning Gentoo (VirtualBox)",
+  "variables": {
+    "headless": "true",
+    "minion_id": "roflpc",
+    "ssh_username": "root",
+    "ssh_password": "secret"
+  },
+  "builders": [{
+    "type": "virtualbox-ovf",
+    "boot_wait": "10s",
+    "guest_additions_mode": "disable",
+    "headless": "{{user `headless`}}",
+    "source_path": "output-virtualbox-iso/Gentoo.ovf",
+    "ssh_password": "{{user `ssh_password`}}",
+    "ssh_username": "{{user `ssh_username`}}",
+    "shutdown_command": "shutdown -h now",
+    "vm_name": "Gentoo",
+    "vboxmanage": [
+      [ "modifyvm", "{{.Name}}", "--cpus", "12" ],
+      [ "modifyvm", "{{.Name}}", "--firmware", "efi" ],
+      [ "modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}" ],
+      [ "modifyvm", "{{.Name}}", "--vram", "{{user `vram`}}" ]
+    ]
+  }],
+  "provisioners": [{
+    "type": "file",
+    "source": "salt/grains",
+    "destination": "/tmp/grains"
+  },{
+    "type": "file",
+    "source": "salt/minion",
+    "destination": "/tmp/minion"
+  },{
+    "type": "file",
+    "source": "salt/top.sls",
+    "destination": "/tmp/top.sls"
+  },{
+    "type": "file",
+    "source": "salt/pillar",
+    "destination": "/tmp/pillar"
+  },{
+    "type": "file",
+    "source": "salt/pillar.asc",
+    "destination": "/tmp/pillar.asc"
+  },{
+    "type": "file",
+    "source": "salt/salt",
+    "destination": "/tmp/salt"
+  },{
+    "type": "shell",
+    "environment_vars": [
+      "MINION_ID={{user `minion_id`}}"
+    ],
+    "scripts": [
+      "salt/install"
+    ]
+  }]
+}

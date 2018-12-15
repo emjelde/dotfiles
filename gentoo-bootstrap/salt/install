@@ -1,0 +1,35 @@
+#!/bin/bash -uex
+
+eselect profile set default/linux/amd64/17.0/desktop
+
+# Use sys-fs/udev instead of sys-fs/eudev to resolve conflict
+# TODO: Find out if the binhost is causing this issue?
+emerge --verbose --quiet sys-fs/udev
+
+mkdir --parents /etc/portage/package.accept_keywords/app-admin
+echo '<app-admin/salt-2018.3.0' >> /etc/portage/package.accept_keywords/app-admin/salt
+
+mkdir --parents /etc/portage/package.accept_keywords/dev-python
+echo '=dev-python/pycryptodome-3.6.6' >> /etc/portage/package.accept_keywords/dev-python/pycryptodome
+
+#sed --in-place 's/--getbinpkgonly/--getbinpkg/' /etc/portage/make.conf
+emerge --verbose --quiet app-admin/salt
+rc-update add salt-minion
+
+UID_GID=1337
+groupadd -g $UID_GID evan
+useradd -m -u $UID_GID -g $UID_GID -G audio,users,video,wheel -s /bin/bash evan
+echo evan:secret | chpasswd
+
+cp /tmp/grains /etc/salt/grains
+cp /tmp/minion /etc/salt/minion
+echo $MINION_ID > /etc/salt/minion_id
+mkdir --parents /etc/salt/gpgkeys
+gpg --homedir /etc/salt/gpgkeys --import /tmp/pillar.asc
+
+mkdir --parents /srv/salt /srv/pillar
+cp -r /tmp/pillar/* /srv/pillar
+cp -r /tmp/salt/* /tmp/top.sls /srv/salt
+
+rc-service salt-minion start
+salt-call state.highstate --log-level info

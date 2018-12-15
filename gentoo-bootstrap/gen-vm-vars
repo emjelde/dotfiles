@@ -3,11 +3,13 @@
 set -uex
 
 CPUS=$(nproc --all)
-MEMORY=8192
+MEMORY=20480
+VIDEO_MEMORY=128
 
 cat << EOF > vm-variables.json
 {
   "cpus": "${CPUS}",
-  "memory": "${MEMORY}"
+  "memory": "${MEMORY}",
+  "vram": "${VIDEO_MEMORY}"
 }
 EOF

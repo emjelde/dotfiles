@@ -1,0 +1,12 @@
+include:
+  - .fonts
+  - .gentools
+  - .kernel
+  - .locale
+  - .makeconf
+  - .reposconf
+  - .salt
+  - .system
+  - .time
+  - .useflags
+  - .virtualbox
