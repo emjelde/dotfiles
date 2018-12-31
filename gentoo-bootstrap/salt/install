@@ -2,17 +2,12 @@
 
 eselect profile set default/linux/amd64/17.0/desktop
 
-# Use sys-fs/udev instead of sys-fs/eudev to resolve conflict
-# TODO: Find out if the binhost is causing this issue?
-emerge --verbose --quiet sys-fs/udev
-
 mkdir --parents /etc/portage/package.accept_keywords/app-admin
 echo '<app-admin/salt-2018.3.0' >> /etc/portage/package.accept_keywords/app-admin/salt
 
 mkdir --parents /etc/portage/package.accept_keywords/dev-python
 echo '=dev-python/pycryptodome-3.6.6' >> /etc/portage/package.accept_keywords/dev-python/pycryptodome
 
-#sed --in-place 's/--getbinpkgonly/--getbinpkg/' /etc/portage/make.conf
 emerge --verbose --quiet app-admin/salt
 rc-update add salt-minion
 

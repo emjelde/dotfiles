@@ -22,13 +22,8 @@ chroot /mnt/gentoo /bin/bash -uex <<EOF
 mkdir --parents /etc/portage/repos.conf
 cp /usr/share/portage/config/repos.conf /etc/portage/repos.conf/gentoo.conf
 sed --in-place 's~rsync://rsync.gentoo.org/gentoo-portage~${RSYNC_MIRROR}~' /etc/portage/repos.conf/gentoo.conf
-echo "MAKEOPTS=\"${MAKEOPTS}\"" >> /etc/portage/make.conf
-EOF
 
-chroot /mnt/gentoo /bin/bash -uex <<'EOF'
-echo 'EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --buildpkg --getbinpkg"' >> /etc/portage/make.conf
-# TODO replace with more permanent host or a self hosted solution (nfs?)
-echo 'PORTAGE_BINHOST="http://10.0.2.2:8000/packages"' >> /etc/portage/make.conf
+echo "MAKEOPTS=\"${MAKEOPTS}\"" >> /etc/portage/make.conf
 
 emerge --sync --quiet
 

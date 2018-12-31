@@ -10,10 +10,6 @@ distdir:
   makeconf.present:
     - value: /usr/portage/distfiles
 
-emerge_default_opts:
-  makeconf.present:
-    - value: ${EMERGE_DEFAULT_OPTS} --buildpkg --getbinpkg
-
 grub_platforms:
   makeconf.present:
     - value: efi-64
