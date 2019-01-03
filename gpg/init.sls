@@ -5,6 +5,13 @@ gpg:
   pkg.installed:
     - name: app-crypt/gnupg
 
+gpg-homedir:
+  file.directory:
+    - name: {{ grains.homedir }}/.gnupg
+    - user: {{ grains.user }}
+    - group: {{ grains.user }}
+    - mode: 700
+
 gpg-variables:
   eselect.set:
     - name: pinentry
@@ -31,7 +38,8 @@ gpg.conf:
     - source: salt://dotfiles/gpg/gpg.conf
     - user: {{ grains.user }}
     - group: {{ grains.user }}
-    - makedirs: true
+    - require:
+      - file: gpg-homedir
 
 gpg-agent.conf:
   file.managed:
@@ -39,7 +47,8 @@ gpg-agent.conf:
     - source: salt://dotfiles/gpg/gpg-agent.conf
     - user: {{ grains.user }}
     - group: {{ grains.user }}
-    - makedirs: true
+    - require:
+      - file: gpg-homedir
 
 sshcontrol:
   file.managed:
@@ -47,4 +56,5 @@ sshcontrol:
     - source: salt://dotfiles/gpg/sshcontrol
     - user: {{ grains.user }}
     - group: {{ grains.user }}
-    - makedirs: true
+    - require:
+      - file: gpg-homedir

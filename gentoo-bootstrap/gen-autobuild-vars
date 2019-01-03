@@ -16,11 +16,14 @@ AUTOBUILD="$(dirname "$ISO_PATH")"
 AUTOBUILD_DIR="autobuilds/${AUTOBUILD}"
 AUTOBUILD_KEYRING="autobuilds/keyring"
 
-mkdir --parents "$AUTOBUILD_DIR" "$AUTOBUILD_KEYRING"
+mkdir --parents "$AUTOBUILD_DIR"
 wget --continue \
      --directory-prefix "${AUTOBUILD_DIR}" \
      "${DIST}/${ISO_PATH}" "${DIST}/${ISO_PATH}.CONTENTS" "${DIST}/${ISO_PATH}.DIGESTS.asc"
 
+OLD_UMASK=$(umask)
+umask 077
+mkdir --parents "$AUTOBUILD_KEYRING"
 gpg --quiet \
     --homedir "$AUTOBUILD_KEYRING" \
     --no-default-keyring \
@@ -28,6 +31,7 @@ gpg --quiet \
     --keyserver hkps.pool.sks-keyservers.net \
     --recv-keys ${WEEKLY_RELEASE_SIGNING_KEY} ${EBUILD_REPOSITORY_SIGNING_KEY}
 gpgv --homedir "$AUTOBUILD_KEYRING" "${AUTOBUILD_DIR}/${ISO}.DIGESTS.asc"
+umask "${OLD_UMASK}"
 
 cd $AUTOBUILD_DIR
 ISO_CHECKSUM="$(awk '/# SHA512 HASH/{getline; print}' ${ISO}.DIGESTS.asc)"

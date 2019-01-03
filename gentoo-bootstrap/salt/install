@@ -19,8 +19,12 @@ echo evan:secret | chpasswd
 cp /tmp/grains /etc/salt/grains
 cp /tmp/minion /etc/salt/minion
 echo $MINION_ID > /etc/salt/minion_id
+
+OLD_UMASK=$(umask)
+umask 077
 mkdir --parents /etc/salt/gpgkeys
 gpg --homedir /etc/salt/gpgkeys --import /tmp/pillar.asc
+umask "${OLD_UMASK}"
 
 mkdir --parents /srv/salt /srv/pillar
 cp -r /tmp/pillar/* /srv/pillar
