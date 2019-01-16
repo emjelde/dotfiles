@@ -1,14 +1,8 @@
 #!/bin/bash -uex
 
 cp "${SOURCE}/kernel/gentoo-sources" /mnt/gentoo/tmp/
-cp --recursive "${SOURCE}/kernel/initramfs" /mnt/gentoo/tmp/initramfs
-
 cp "${SOURCE}/kernel/kernel.config" /mnt/gentoo/tmp/
-if [ "$ARCH" == "x86" ]; then
-  # Does anything else need to change?
-  sed --in-place 's/CONFIG_64BIT=y/CONFIG_64BIT=n/' /mnt/gentoo/tmp/kernel.config
-fi
-
+cp --recursive "${SOURCE}/kernel/initramfs" /mnt/gentoo/tmp/initramfs
 trap "cd /mnt/gentoo/tmp && rm --recursive gentoo-sources initramfs kernel.config" EXIT
 
 OLD_ARCH=${ARCH}

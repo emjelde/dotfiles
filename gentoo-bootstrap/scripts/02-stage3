@@ -1,8 +1,6 @@
 #!/bin/bash -uex
 
 tarball="stage3-amd64-${STAGE3}.tar.xz"
-[ $ARCH == "x86" ] && tarball="stage3-i686-${STAGE3}.tar.xz" || true
-
 stage3_url="${MIRROR}/releases/${ARCH}/autobuilds/${STAGE3}/${tarball}"
 
 tarball_temp="$(mktemp -d)"
