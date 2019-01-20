@@ -1,0 +1,7 @@
+#!/bin/bash -uex
+
+rm -rf /srv/salt
+mkdir /srv/salt
+cp -r /tmp/salt/* /tmp/top.sls /srv/salt
+
+salt-call state.highstate --log-level info

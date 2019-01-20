@@ -2,6 +2,7 @@
 /gentoo-bootstrap/autobuilds/
 /gentoo-bootstrap/output-virtualbox-iso/
 /gentoo-bootstrap/output-virtualbox-ovf/
+/gentoo-bootstrap/output-virtualbox-ovf.last/
 /gentoo-bootstrap/packer_cache/
 /gentoo-bootstrap/salt/pillar.asc
 /gentoo-bootstrap/salt/pillar/

@@ -1,0 +1,39 @@
+{
+  "description": "Salt Resume",
+  "variables": {
+    "headless": "true",
+    "ssh_username": "root",
+    "ssh_password": "secret"
+  },
+  "builders": [{
+    "type": "virtualbox-ovf",
+    "boot_wait": "10s",
+    "guest_additions_mode": "disable",
+    "headless": "{{user `headless`}}",
+    "source_path": "output-virtualbox-ovf.last/Gentoo.ovf",
+    "ssh_password": "{{user `ssh_password`}}",
+    "ssh_username": "{{user `ssh_username`}}",
+    "shutdown_command": "shutdown -h now",
+    "vm_name": "Gentoo",
+    "vboxmanage": [
+      [ "modifyvm", "{{.Name}}", "--cpus", "12" ],
+      [ "modifyvm", "{{.Name}}", "--firmware", "efi" ],
+      [ "modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}" ],
+      [ "modifyvm", "{{.Name}}", "--vram", "{{user `vram`}}" ]
+    ]
+  }],
+  "provisioners": [{
+    "type": "file",
+    "source": "salt/salt",
+    "destination": "/tmp/salt"
+  },{
+    "type": "file",
+    "source": "salt/top.sls",
+    "destination": "/tmp/top.sls"
+  },{
+    "type": "shell",
+    "scripts": [
+      "salt/resume"
+    ]
+  }]
+}
