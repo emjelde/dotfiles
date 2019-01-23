@@ -1,3 +1,7 @@
+# When Packer is invoked it sometimes calls out to checkpoint.hashicorp.com to
+# look for new versions of Packer. Disable this for security and privacy
+# reasons.
+export CHECKPOINT_DISABLE=1
 
 .PHONY: build
 build: virtualbox-salt
