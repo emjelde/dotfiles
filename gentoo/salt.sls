@@ -2,7 +2,7 @@ salt:
   pkg.installed:
     - name: app-admin/salt
   portage_config.flags:
-    - name: '<app-admin/salt-2018.3.0'
+    - name: <app-admin/salt-2018.3.0
     - accept_keywords:
       - ~ARCH
     - require_in:
@@ -12,9 +12,9 @@ salt-flags:
   portage_config.flags:
     - name: app-admin/salt
     - use:
-      - 'gnupg'
-      - 'portage'
-      - 'vim-syntax'
+      - gnupg
+      - portage
+      - vim-syntax
     - require_in:
       - pkg: salt
 

@@ -4,7 +4,7 @@ deluge:
   portage_config.flags:
     - name: net-p2p/deluge
     - use:
-      - 'qtk'
+      - qtk
     - require_in:
       - pkg: deluge
 
@@ -12,6 +12,6 @@ libtorrent-rasterbar-flags:
   portage_config.flags:
     - name: net-libs/libtorrent-rasterbar
     - use:
-      - 'python'
+      - python
     - require_in:
       - pkg: deluge

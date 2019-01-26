@@ -4,7 +4,7 @@ git:
   portage_config.flags:
     - name: dev-vcs/git
     - use:
-      - 'doc'
+      - doc
     - require_in:
       - pkg: git
 

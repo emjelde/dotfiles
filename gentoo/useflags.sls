@@ -2,20 +2,20 @@ asciidoc-flags:
   portage_config.flags:
     - name: asciidoc
     - use:
-      - 'python_single_target_python2_7'
+      - python_single_target_python2_7
 
 boost-flags:
   portage_config.flags:
     - name: dev-libs/boost
     - use:
-      - 'icu'
-      - 'python'
+      - icu
+      - python
 
 gd-flags:
   portage_config.flags:
     - name: media-libs/gd
     - use:
-      - 'fontconfig'
+      - fontconfig
 
 # ncurses and gpm depend on each other and portage doesn't know how to handle
 # this yet :(
@@ -26,28 +26,28 @@ ncurses-flags:
   portage_config.flags:
     - name: sys-libs/ncurses
     - use:
-      - '-gpm'
+      - -gpm
 
 pinentry-flags:
   portage_config.flags:
     - name: app-crypt/pinentry
     - use:
-      - 'gnome-keyring'
+      - gnome-keyring
 
 python-flags:
   portage_config.flags:
     - name: dev-lang/python
     - use:
-      - 'sqlite'
+      - sqlite
 
 sudo-flags:
   portage_config.flags:
     - name: app-admin/sudo
     - use:
-      - '-sendmail'
+      - -sendmail
 
 util-linux-flags:
   portage_config.flags:
     - name: sys-apps/util-linux
     - use:
-      - 'tty-helpers'
+      - tty-helpers

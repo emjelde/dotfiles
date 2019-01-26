@@ -7,13 +7,13 @@ urxvt:
   portage_config.flags:
     - name: x11-terms/rxvt-unicode
     - use:
-      - '256-color'
-      - 'fading-colors'
-      - 'font-styles'
-      - 'iso14755'
-      - 'pixbuf'
-      - 'unicode3'
-      - 'xft'
+      - 256-color
+      - fading-colors
+      - font-styles
+      - iso14755
+      - pixbuf
+      - unicode3
+      - xft
     - require_in:
       - pkg: urxvt
   file.accumulated:
