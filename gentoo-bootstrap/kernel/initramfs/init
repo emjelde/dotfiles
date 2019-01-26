@@ -3,12 +3,8 @@
 init_arg="/sbin/init"
 shell_checkpoint=0
 
-root_key_file="/etc/key"
-
 root_device=""
 root_device_uuid="$ROOT_UUID"
-root_enc_mapping="enc-root"
-root_volume_group="roflpc"
 
 die() {
    local message="${1}"
@@ -25,6 +21,7 @@ do_setup() {
    mount -t proc none /proc
    mount -t sysfs none /sys
    mount -t devtmpfs none /dev
+   mount -t tmpfs tmpfs /run
 
    parse_cmdl_args
 
@@ -53,43 +50,6 @@ parse_cmdl_args() {
    done
 }
 
-open_crypt() {
-   local device="${1}"
-   local mapping="${2}"
-
-   [ ! cryptsetup isLuks "${device}" 2>/dev/null ] &&
-      die "Error: ${device} is not an encrypted device."
-
-   [ ! -f "${root_key_file}" ] && die "Error: Key file missing."
-
-   cryptsetup --allow-discards -d "${root_key_file}" open "${device}" "${mapping}"
-
-   [ "$?" -ne 0 ] && die "Error: Failed to decrypt ${device}."
-}
-
-close_crypt() {
-   cryptsetup luksClose "${root_enc_mapping}"
-   [ "$?" -ne 0 ] && die "Error: Failed to close encrypted device ${root_enc_mapping}."
-}
-
-do_decrypt() {
-   echo "Decrypting Root"
-   open_crypt "${root_device}" "${root_enc_mapping}"
-}
-
-start_lvm() {
-   lvm vgchange -ay "${root_volume_group}"
-   [ "$?" -ne 0 ] && die "Error: Failed to start LVM."
-
-   lvm vgscan --mknodes
-   [ "$?" -ne 0 ] && die "Error: Failed to make LVM nodes."
-}
-
-stop_lvm() {
-   lvm vgchange -an "${root_volume_group}"
-   [ "$?" -ne 0 ] && die "Error: Failed to stop LVM."
-}
-
 do_mount_root() {
    if [ -z "${root_device}" ]
    then
@@ -104,24 +64,15 @@ do_mount_root() {
 
    [ -z "${root_device}" ] && die "Error: Root missing."
 
-   #do_decrypt
-   #start_lvm
-
    mount /new-root
 
    if [ "$?" -ne 0 ]
    then
-      #stop_lvm
-      #close_crypt
       die "Error: Mount root failed."
    fi
 }
 
 do_switch() {
-   echo "Access Granted"
-   umount /proc
-   umount /sys
-   umount /dev
    exec switch_root /new-root "${init_arg}"
 }
 

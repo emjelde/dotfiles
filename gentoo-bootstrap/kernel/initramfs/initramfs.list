@@ -2,10 +2,30 @@
 # Initramfs file list
 #
 # Describes files to be included into the initramfs.
-# this file list is processed by a utility that comes with the Linux kernel.
 #
-# usr/gen_init_cpio
+# This file list is processed by the Linux kernel utility
+# /usr/src/linux/usr/gen_init_cpio
 #
+# # a comment
+# file <name> <location> <mode> <uid> <gid> [<hard links>]
+# dir <name> <mode> <uid> <gid>
+# nod <name> <mode> <uid> <gid> <dev_type> <maj> <min>
+# slink <name> <target> <mode> <uid> <gid>
+# pipe <name> <mode> <uid> <gid>
+# sock <name> <mode> <uid> <gid>
+#
+# <name>       name of the file/dir/nod/etc in the archive
+# <location>   location of the file in the current filesystem
+#              expands shell variables quoted with ${}
+# <target>     link target
+# <mode>       mode/permissions of the file
+# <uid>        user id (0=root)
+# <gid>        group id (0=root)
+# <dev_type>   device type (b=block, c=character)
+# <maj>        major number of nod
+# <min>        minor number of nod
+# <hard links> space separated list of other links to file
+
 
 dir /bin 0755 0 0
 file /bin/bash /bin/bash 0755 0 0
@@ -26,47 +46,20 @@ nod /dev/zero 0600 0 0 c 1 5
 
 dir /etc 0755 0 0
 file /etc/fstab /usr/src/initramfs/fstab 0644 0 0
-#file /etc/key /usr/src/initramfs/key 0600 0 0
 
 file init /usr/src/initramfs/init 0755 0 0
 
 dir /lib64 0755 0 0
-slink /lib64/ld-linux-x86-64.so.2 ld-2.27.so 0777 0 0
-file /lib64/ld-2.27.so /lib64/ld-2.27.so 0755 0 0
-slink /lib64/libattr.so.1 libattr.so.1.1.0 0777 0 0
-file /lib64/libattr.so.1.1.0 /lib64/libattr.so.1.1.0 0755 0 0
-slink /lib64/libblkid.so.1 libblkid.so.1.1.0 0777 0 0
-file /lib64/libblkid.so.1.1.0 /lib64/libblkid.so.1.1.0 0755 0 0
-slink /lib64/libc.so.6 libc-2.27.so 0777 0 0
-file /lib64/libc-2.27.so /lib64/libc-2.27.so 0755 0 0
-#slink /lib64/libcap.so.2 libcap.so.2.25 0777 0 0
-#file /lib64/libcap.so.2.25 /lib64/libcap.so.2.25 0755 0 0
-#file /lib64/libdevmapper-event.so.1.02 /lib64/libdevmapper-event.so.1.02 0755 0 0
-#file /lib64/libdevmapper.so.1.02 /lib64/libdevmapper.so.1.02 0755 0 0
-slink /lib64/libdl.so.2 libdl-2.27.so 0777 0 0
-file /lib64/libdl-2.27.so /lib64/libdl-2.27.so 0755 0 0
-#slink /lib64/liblzo2.so.2 liblzo2.so.2.0.0 0777 0 0
-#file /lib64/liblzo2.so.2.0.0 /lib64/liblzo2.so.2.0.0 0755 0 0
-slink /lib64/libm.so.6 libm-2.27.so 0777 0 0
-file /lib64/libm-2.27.so /lib64/libm-2.27.so 0755 0 0
-slink /lib64/libncurses.so.6 libncurses.so.6.1 0777 0 0
-file /lib64/libncurses.so.6.1 /lib64/libncurses.so.6.1 0755 0 0
-slink /lib64/libmount.so.1 libmount.so.1.1.0 0777 0 0
-file /lib64/libmount.so.1.1.0 /lib64/libmount.so.1.1.0 0755 0 0
-slink /lib64/libpthread.so.0 libpthread-2.27.so 0777 0 0
-file /lib64/libpthread-2.27.so /lib64/libpthread-2.27.so 0755 0 0
-slink /lib64/libreadline.so.7 libreadline.so.7 0777 0 0
+file /lib64/ld-linux-x86-64.so.2 /lib64/ld-linux-x86-64.so.2 0755 0 0
+file /lib64/libblkid.so.1 /lib64/libblkid.so.1 0755 0 0
+file /lib64/libc.so.6 /lib64/libc.so.6 0755 0 0
+file /lib64/libdl.so.2 /lib64/libdl.so.2 0755 0 0
+file /lib64/libmount.so.1 /lib64/libmount.so.1 0755 0 0
+file /lib64/libncurses.so.6 /lib64/libncurses.so.6 0755 0 0
+file /lib64/libpthread.so.0 /lib64/libpthread.so.0 0755 0 0
 file /lib64/libreadline.so.7 /lib64/libreadline.so.7 0755 0 0
-slink /lib64/libresolv.so.2 libresolv-2.27.so 0777 0 0
-file /lib64/libresolv-2.27.so /lib64/libresolv-2.27.so 0755 0 0
-slink /lib64/librt.so.1 librt-2.27.so 0777 0 0
-file /lib64/librt-2.27.so /lib64/librt-2.27.so 0755 0 0
-#slink /lib64/libudev.so.1 libudev.so.1.6.11 0777 0 0
-#file /lib64/libudev.so.1.6.11 /lib64/libudev.so.1.6.11 0755 0 0
-slink /lib64/libuuid.so.1 libuuid.so.1.3.0 0777 0 0
-file /lib64/libuuid.so.1.3.0 /lib64/libuuid.so.1.3.0 0755 0 0
-slink /lib64/libz.so.1 libz.so.1.2.11 0777 0 0
-file /lib64/libz.so.1.2.11 /lib64/libz.so.1.2.11 0755 0 0
+file /lib64/librt.so.1 /lib64/librt.so.1 0755 0 0
+file /lib64/libuuid.so.1 /lib64/libuuid.so.1 0755 0 0
 
 dir /mnt 0755 0 0
 
@@ -74,24 +67,10 @@ dir /new-root 0755 0 0
 
 dir /proc 0755 0 0
 
+dir /run 0755 0 0
+
 dir /sbin 0755 0 0
 file /sbin/blkid /sbin/blkid 0755 0 0
-#file /sbin/btrfs /sbin/btrfs 0755 0 0
-#file /sbin/cryptsetup /sbin/cryptsetup 0755 0 0
-#file /sbin/lvm /sbin/lvm 0755 0 0
 file /sbin/switch_root /sbin/switch_root 0755 0 0
 
 dir /sys 0755 0 0
-
-dir /usr 0755 0 0
-dir /usr/lib64 0755 0 0
-#slink /usr/lib64/libcryptsetup.so.4 libcryptsetup.so.4.7.0 0777 0 0
-#file /usr/lib64/libcryptsetup.so.4.7.0 /usr/lib64/libcryptsetup.so.4.7.0 0755 0 0
-slink /usr/lib64/libgcrypt.so.20 libgcrypt.so.20.2.3 0777 0 0
-file /usr/lib64/libgcrypt.so.20.2.3 /usr/lib64/libgcrypt.so.20.2.3 0755 0 0
-slink /usr/lib64/libgpg-error.so.0 libgpg-error.so.0.24.0 0777 0 0
-file /usr/lib64/libgpg-error.so.0.24.0 /usr/lib64/libgpg-error.so.0.24.0 0755 0 0
-slink /usr/lib64/libpopt.so.0 libpopt.so.0.0.0 0777 0 0
-file /usr/lib64/libpopt.so.0.0.0 /usr/lib64/libpopt.so.0.0.0 0755 0 0
-#slink /usr/lib64/libzstd.so.0 libzstd.so.1.3.2 0777 0 0
-#file /usr/lib64/libzstd.so.1.3.2 /usr/lib64/libzstd.so.1.3.2 0755 0 0
