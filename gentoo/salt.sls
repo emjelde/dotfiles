@@ -18,14 +18,6 @@ salt-flags:
     - require_in:
       - pkg: salt
 
-pycryptodome-keywords:
-  portage_config.flags:
-    - name: =dev-python/pycryptodome-3.4.7
-    - accept_keywords:
-      - ~ARCH
-    - require_in:
-      - pkg: salt
-
 python-gnupg-keywords:
   portage_config.flags:
     - name: =dev-python/python-gnupg-0.4.3

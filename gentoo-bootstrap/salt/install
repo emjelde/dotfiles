@@ -5,9 +5,6 @@ eselect profile set default/linux/amd64/17.0/desktop
 mkdir --parents /etc/portage/package.accept_keywords/app-admin
 echo '<app-admin/salt-2018.3.0' >> /etc/portage/package.accept_keywords/app-admin/salt
 
-mkdir --parents /etc/portage/package.accept_keywords/dev-python
-echo '=dev-python/pycryptodome-3.6.6' >> /etc/portage/package.accept_keywords/dev-python/pycryptodome
-
 emerge --verbose --quiet app-admin/salt
 rc-update add salt-minion
 
