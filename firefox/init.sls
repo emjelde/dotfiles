@@ -17,7 +17,7 @@ firefox:
   ('virtual',    'cargo',    '=', '1.32.0'),
   ('virtual',    'rust',     '=', '1.32.0')
 %}
-{{ package }}-flags:
+{{ category }}-{{ package }}-flags:
   portage_config.flags:
     - name: {{ operator }}{{ category }}/{{ package }}-{{ version }}
     - accept_keywords:
