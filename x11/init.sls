@@ -38,7 +38,7 @@ x-dm:
 # https://superuser.com/questions/243914/xresources-or-xdefaults
 x-defaults:
   file.managed:
-    - name: {{ grains.homedir }}/.Xdefaults
+    - name: {{ grains.user_home }}/.Xdefaults
     - source: salt://dotfiles/x11/Xdefaults
     - user: {{ grains.user }}
     - group: {{ grains.user }}
@@ -51,7 +51,7 @@ x-lock:
     - name: x11-misc/xlockmore
   file.accumulated:
     - name: .Xdefaults
-    - filename: {{ grains.homedir }}/.Xdefaults
+    - filename: {{ grains.user_home }}/.Xdefaults
     - text: |
         XLock.dpmsoff: 600
         XLock.font: -*-helvetica-medium-r-*-*-20-*-*-*-*-*-*
@@ -65,7 +65,7 @@ x-lock:
 x-defaults-colors:
   file.accumulated:
     - name: .Xdefaults
-    - filename: {{ grains.homedir }}/.Xdefaults
+    - filename: {{ grains.user_home }}/.Xdefaults
     - text: |
         *color4:  #3465A4
         *color12: #6495ed
@@ -74,7 +74,7 @@ x-defaults-colors:
 
 x-modmap:
   file.managed:
-    - name: {{ grains.homedir }}/.Xmodmap
+    - name: {{ grains.user_home }}/.Xmodmap
     - source: salt://dotfiles/x11/Xmodmap
     - user: {{ grains.user }}
     - group: {{ grains.user }}

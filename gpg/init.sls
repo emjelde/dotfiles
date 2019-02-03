@@ -7,7 +7,7 @@ gpg:
 
 gpg-homedir:
   file.directory:
-    - name: {{ grains.homedir }}/.gnupg
+    - name: {{ grains.user_home }}/.gnupg
     - user: {{ grains.user }}
     - group: {{ grains.user }}
     - mode: 700
@@ -18,7 +18,7 @@ gpg-variables:
     - target: pinentry-curses
   file.accumulated:
     - name: .bashrc
-    - filename: {{ grains.homedir }}/.bashrc
+    - filename: {{ grains.user_home }}/.bashrc
     - text: |
         ## GPG
 
@@ -34,7 +34,7 @@ gpg-variables:
 
 gpg.conf:
   file.managed:
-    - name: {{ grains.homedir }}/.gnupg/gpg.conf
+    - name: {{ grains.user_home }}/.gnupg/gpg.conf
     - source: salt://dotfiles/gpg/gpg.conf
     - user: {{ grains.user }}
     - group: {{ grains.user }}
@@ -43,7 +43,7 @@ gpg.conf:
 
 gpg-agent.conf:
   file.managed:
-    - name: {{ grains.homedir }}/.gnupg/gpg-agent.conf
+    - name: {{ grains.user_home }}/.gnupg/gpg-agent.conf
     - source: salt://dotfiles/gpg/gpg-agent.conf
     - user: {{ grains.user }}
     - group: {{ grains.user }}
@@ -52,7 +52,7 @@ gpg-agent.conf:
 
 sshcontrol:
   file.managed:
-    - name: {{ grains.homedir }}/.gnupg/sshcontrol
+    - name: {{ grains.user_home }}/.gnupg/sshcontrol
     - source: salt://dotfiles/gpg/sshcontrol
     - user: {{ grains.user }}
     - group: {{ grains.user }}

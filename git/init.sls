@@ -10,7 +10,7 @@ git:
 
 git-attributes:
   file.managed:
-    - name: {{ grains.homedir }}/.config/git/attributes
+    - name: {{ grains.xdg_config_home }}/git/attributes
     - source: salt://dotfiles/git/attributes
     - user: {{ grains.user }}
     - group: {{ grains.user }}
@@ -20,7 +20,7 @@ git-attributes:
 
 git-config:
   file.managed:
-    - name: {{ grains.homedir }}/.config/git/config
+    - name: {{ grains.xdg_config_home }}/git/config
     - source: salt://dotfiles/git/config
     - user: {{ grains.user }}
     - group: {{ grains.user }}

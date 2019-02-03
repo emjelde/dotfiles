@@ -25,10 +25,6 @@
   }],
   "provisioners": [{
     "type": "file",
-    "source": "salt/grains",
-    "destination": "/tmp/grains"
-  },{
-    "type": "file",
     "source": "salt/minion",
     "destination": "/tmp/minion"
   },{

@@ -13,13 +13,15 @@ configuration of tools for my personal desktop/workstation.
 The salt state system uses the sls files as a representation of the state in
 which the system should be in.
 
-These states make use of two custom grains
+These states make use of custom grains
 
 **/etc/salt/grains:**
 
 ```
 user: evan
-homedir: /home/evan
+user_home: /home/evan
+xdg_config_home: /home/evan/.config
+xdg_data_home: /home/evan/.local/share
 ```
 
 a pillar for the ssh identity files in ssh/init.sls

@@ -13,7 +13,6 @@ groupadd -g $UID_GID evan
 useradd -m -u $UID_GID -g $UID_GID -G audio,users,video,wheel -s /bin/bash evan
 echo evan:secret | chpasswd
 
-cp /tmp/grains /etc/salt/grains
 cp /tmp/minion /etc/salt/minion
 echo $MINION_ID > /etc/salt/minion_id
 

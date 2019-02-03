@@ -3,7 +3,7 @@ include:
 
 ssh:
   file.managed:
-    - name: {{ grains.homedir }}/.ssh/config
+    - name: {{ grains.user_home }}/.ssh/config
     - source: salt://dotfiles/ssh/config
     - user: {{ grains.user }}
     - group: {{ grains.user }}
@@ -13,7 +13,7 @@ ssh:
 ssh-variables:
   file.accumulated:
     - name: .bashrc
-    - filename: {{ grains.homedir }}/.bashrc
+    - filename: {{ grains.user_home }}/.bashrc
     - text: |
         ## SSH
 
@@ -50,7 +50,7 @@ ssh-{{ host }}:
 ssh-{{ host }}-config:
   file.accumulated:
     - name: .ssh/config
-    - filename: {{ grains.homedir }}/.ssh/config
+    - filename: {{ grains.user_home }}/.ssh/config
     - text: |
         Host {{ host }}
         HostName {{ host }}
@@ -63,7 +63,7 @@ ssh-{{ host }}-config:
 
 ssh-{{ host }}-identity:
   file.managed:
-    - name: {{ grains.homedir }}/.ssh/{{ identityfile }}
+    - name: {{ grains.user_home }}/.ssh/{{ identityfile }}
     - contents_pillar: .ssh/{{ identityfile }}
     - user: {{ grains.user }}
     - group: {{ grains.user }}

@@ -18,7 +18,7 @@ urxvt:
       - pkg: urxvt
   file.accumulated:
     - name: .Xdefaults
-    - filename: {{ grains.homedir }}/.Xdefaults
+    - filename: {{ grains.user_home }}/.Xdefaults
     - text: |
         URxvt*background: #000000
         URxvt*font: xft:Deja Vu Sans Mono:pixelsize=12

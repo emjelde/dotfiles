@@ -4,7 +4,7 @@ vim:
 
 vimrc:
   file.managed:
-    - name: {{ grains.homedir }}/.vimrc
+    - name: {{ grains.user_home }}/.vimrc
     - source: salt://dotfiles/vim/vimrc
     - user: {{ grains.user }}
     - group: {{ grains.user }}

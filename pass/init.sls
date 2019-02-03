@@ -16,7 +16,7 @@ pass:
       - pkg: pass
   file.accumulated:
     - name: .bashrc
-    - filename: {{ grains.homedir }}/.bashrc
+    - filename: {{ grains.user_home }}/.bashrc
     - text: |
         ## Pass
 
@@ -44,8 +44,7 @@ passff-host:
     - source: salt://dotfiles/pass/passff-host-env.patch
     - template: jinja
     - defaults:
-        # TODO resolve ${XDG_DATA_HOME}/pass instead
-        PASSWORD_STORE_DIR: {{ grains.homedir }}/.local/share/pass
+        PASSWORD_STORE_DIR: {{ grains.xdg_data_home }}/pass
         PASSWORD_STORE_SIGNING_KEY: {{ signing_key }}
         version: {{ passff_host_version }}
     - makedirs: true

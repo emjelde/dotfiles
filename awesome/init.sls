@@ -20,7 +20,7 @@ awesome:
 # TODO clean up rc.lua
 awesome-config:
   file.managed:
-    - name: {{ grains.homedir }}/.config/awesome/rc.lua
+    - name: {{ grains.xdg_config_home }}/awesome/rc.lua
     - source: salt://dotfiles/awesome/rc.lua
     - user: {{ grains.user }}
     - group: {{ grains.user }}
@@ -30,7 +30,7 @@ awesome-config:
 
 awesome-startup:
   file.managed:
-    - name: {{ grains.homedir }}/.config/awesome/startup
+    - name: {{ grains.xdg_config_home }}/awesome/startup
     - source: salt://dotfiles/awesome/startup
     - user: {{ grains.user }}
     - group: {{ grains.user }}
@@ -42,12 +42,12 @@ awesome-startup:
 awesome-themes-zenburn:
   cmd.run:
     - name: >
-        mkdir --parents {{ grains.homedir }}/.config/awesome/themes &&
-        cp --recursive /usr/share/awesome/themes/zenburn {{ grains.homedir }}/.config/awesome/themes/
+        mkdir --parents {{ grains.xdg_config_home }}/awesome/themes &&
+        cp --recursive /usr/share/awesome/themes/zenburn {{ grains.xdg_config_home }}/awesome/themes/
     - onchanges:
       - pkg: awesome
   file.directory:
-    - name: {{ grains.homedir }}/.config/awesome/themes/zenburn
+    - name: {{ grains.xdg_config_home }}/awesome/themes/zenburn
     - user: {{ grains.user }}
     - group: {{ grains.user }}
     - recurse:
@@ -59,7 +59,7 @@ awesome-themes-zenburn:
 
 awesome-themes-custom:
   file.patch:
-    - name: {{ grains.homedir }}/.config/awesome/themes/zenburn/theme.lua
+    - name: {{ grains.xdg_config_home }}/awesome/themes/zenburn/theme.lua
     - source: salt://dotfiles/awesome/theme.patch
     - hash: 25da5f8d57c7fe54d7269d75e67c1d22d0c08e75
     - onchanges:
@@ -67,7 +67,7 @@ awesome-themes-custom:
 
 awesome-wallpapers:
   file.recurse:
-    - name: {{ grains.homedir }}/.config/awesome/wallpapers
+    - name: {{ grains.xdg_config_home }}/awesome/wallpapers
     - source: salt://dotfiles/awesome/wallpapers
     - user: {{ grains.user }}
     - group: {{ grains.user }}
@@ -77,7 +77,7 @@ awesome-wallpapers:
 awesome-alttab:
   git.detached:
     - name: https://github.com/jorenheit/awesome_alttab
-    - target: {{ grains.homedir }}/.config/awesome/alttab
+    - target: {{ grains.xdg_config_home }}/awesome/alttab
     - user: {{ grains.user }}
     - rev: 40d70b7537e86697ec4918b8a3f84ecdc63feede
     - require_in:
@@ -88,7 +88,7 @@ awesome-alttab:
 awesome-lain:
   git.detached:
     - name: https://github.com/copycat-killer/lain.git
-    - target: {{ grains.homedir }}/.config/awesome/lain
+    - target: {{ grains.xdg_config_home }}/awesome/lain
     - user: {{ grains.user }}
     - rev: 301faf5370d045e94c9c344acb0fdac84a2f25a6
     - require_in:
@@ -101,7 +101,7 @@ awesome-lain:
 awesome-scratch:
   git.detached:
     - name: https://github.com/proteansec/awesome-scratch.git
-    - target: {{ grains.homedir }}/.config/awesome/scratch
+    - target: {{ grains.xdg_config_home }}/awesome/scratch
     - user: {{ grains.user }}
     - rev: b386269d61cb8acb3d26fe37aed37eaae645a04f
     - require_in:
@@ -112,7 +112,7 @@ awesome-scratch:
 awesome-vicious:
   git.detached:
     - name: https://github.com/Mic92/vicious.git
-    - target: {{ grains.homedir }}/.config/awesome/vicious
+    - target: {{ grains.xdg_config_home }}/awesome/vicious
     - user: {{ grains.user }}
     - rev: a13ddc08921e3da1f8691be9139abeccfa3f0bff
     - require_in:
