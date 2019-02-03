@@ -1,0 +1,11 @@
+--- a/passff-host-{{ version }}.py
++++ b/passff-host-{{ version }}.py
+@@ -16,6 +16,8 @@
+ COMMAND_ARGS = []
+ COMMAND_ENV  = {
+     "TREE_CHARSET": "ISO-8859-1",
++    "PASSWORD_STORE_DIR": "{{ PASSWORD_STORE_DIR }}",
++    "PASSWORD_STORE_SIGNING_KEY": "{{ PASSWORD_STORE_SIGNING_KEY }}",
+     "PATH": "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+ }
+ CHARSET      = "UTF-8"
