@@ -11,8 +11,13 @@ cd ${tarball_temp} && awk '/# SHA512 HASH/{getline; print}' "${tarball}.DIGESTS.
    | grep "${tarball}$" \
    | sha512sum --check --status - && cd -
 
+mkdir --parents /mnt/btrfs
+mount --read-write --options defaults,noatime "$ROOT_DEVICE" /mnt/btrfs
+btrfs subvolume create /mnt/btrfs/root
+
 mkdir --parents /mnt/gentoo
-mount --read-write ${ROOT_DEVICE} /mnt/gentoo
+mount --read-write --options defaults,noatime,subvol=root "$ROOT_DEVICE" /mnt/gentoo
+
 tar --extract \
     --xz \
     --preserve-permissions \

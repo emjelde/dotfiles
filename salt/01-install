@@ -8,11 +8,6 @@ echo '<app-admin/salt-2018.3.0' >> /etc/portage/package.accept_keywords/app-admi
 emerge --verbose --quiet app-admin/salt
 rc-update add salt-minion
 
-UID_GID=1337
-groupadd -g $UID_GID evan
-useradd -m -u $UID_GID -g $UID_GID -G audio,users,video,wheel -s /bin/bash evan
-echo evan:secret | chpasswd
-
 cp /tmp/minion /etc/salt/minion
 echo $MINION_ID > /etc/salt/minion_id
 

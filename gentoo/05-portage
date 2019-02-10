@@ -8,15 +8,22 @@ wget --directory-prefix="$tarball_temp" --quiet "$snapshots_url"{,.gpgsig}
 
 gpgv --quiet --homedir "${AUTOBUILD_KEYRING}" "${tarball_temp}/${tarball}"{.gpgsig,}
 
-export PORTDIR=/usr/portage
-export DISTDIR=/usr/portage/distfiles
-mkdir --parents /mnt/gentoo$PORTDIR
+REPOSDIR=/var/gentoo/repos
+export PORTDIR=${REPOSDIR}/gentoo
+export DISTDIR=/var/gentoo/distfiles
+mkdir --parents /mnt/gentoo{$REPOSDIR,$DISTDIR}
+btrfs subvolume create /mnt/btrfs/repos
+btrfs subvolume create /mnt/btrfs/distfiles
+mount --read-write --options defaults,noatime,subvol=repos "$ROOT_DEVICE" /mnt/gentoo${REPOSDIR}
+mount --read-write --options defaults,noatime,subvol=distfiles "$ROOT_DEVICE" /mnt/gentoo${DISTDIR}
+
+mkdir /mnt/gentoo${PORTDIR}
 tar --extract \
     --xz \
-    --warning=no-timestamp \
     --numeric-owner \
     --file "${tarball_temp}/${tarball}" \
-    --directory /mnt/gentoo/usr
+    --strip-components=1 \
+    --directory /mnt/gentoo${PORTDIR}
 
 cp --recursive "${SOURCE}/portage" /mnt/gentoo/tmp/
 chroot /mnt/gentoo /bin/bash -uex <<'EOF'
@@ -26,7 +33,12 @@ envsubst '$PORTDIR $RSYNC_MIRROR' < /tmp/portage/gentoo.conf > /etc/portage/repo
 rm --recursive /tmp/portage
 EOF
 
+chown root:portage /mnt/gentoo${PORTDIR}
+chown root:portage /mnt/gentoo${DISTDIR}
+
 chroot /mnt/gentoo /bin/bash -uex <<EOF
+ln --symbolic $PORTDIR /usr/portage
+
 emerge --sync --quiet
 
 # suppress notification about news items

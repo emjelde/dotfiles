@@ -4,7 +4,7 @@
 # Describes files to be included into the initramfs.
 #
 # This file list is processed by the Linux kernel utility
-# /usr/src/linux/usr/gen_init_cpio
+# /usr/src/linux/usr/gen_init_cpio.
 #
 # # a comment
 # file <name> <location> <mode> <uid> <gid> [<hard links>]
@@ -25,7 +25,11 @@
 # <maj>        major number of nod
 # <min>        minor number of nod
 # <hard links> space separated list of other links to file
+#
 
+#
+# Basic commands needed for init
+#
 
 dir /bin 0755 0 0
 file /bin/bash /bin/bash 0755 0 0
@@ -74,3 +78,13 @@ file /sbin/blkid /sbin/blkid 0755 0 0
 file /sbin/switch_root /sbin/switch_root 0755 0 0
 
 dir /sys 0755 0 0
+
+#
+# Btrfs filesystem support
+#
+
+file /sbin/btrfs /sbin/btrfs 0755 0 0
+
+file /lib64/liblzo2.so.2 /lib64/liblzo2.so.2 0755 0 0
+file /lib64/libz.so.1 /lib64/libz.so.1 0755 0 0
+file /usr/lib64/libzstd.so.1 /usr/lib64/libzstd.so.1 0755 0 0

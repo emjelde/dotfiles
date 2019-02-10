@@ -9,7 +9,7 @@ sgdisk \
 sync
 
 mkfs.vfat "${BOOT_DEVICE}"
-mkfs.ext4 "${ROOT_DEVICE}"
+mkfs.btrfs "${ROOT_DEVICE}"
 
 mkswap "${SWAP_DEVICE}"
 swapon "${SWAP_DEVICE}"
