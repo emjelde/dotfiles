@@ -2,12 +2,14 @@
 
 set -uex
 
+CPU_FLAGS=$(command -v cpuid2cpuflags >/dev/null 2>&1 && cpuid2cpuflags || true)
 CPUS=$(nproc --all)
 MEMORY=20480
 VIDEO_MEMORY=128
 
 cat << EOF > vm-variables.json
 {
+  "cpuflags": "${CPU_FLAGS##*CPU_FLAGS_X86: }",
   "cpus": "${CPUS}",
   "memory": "${MEMORY}",
   "vram": "${VIDEO_MEMORY}"

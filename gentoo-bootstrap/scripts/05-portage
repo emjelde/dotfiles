@@ -8,7 +8,9 @@ wget --directory-prefix="$tarball_temp" --quiet "$snapshots_url"{,.gpgsig}
 
 gpgv --quiet --homedir "${AUTOBUILD_KEYRING}" "${tarball_temp}/${tarball}"{.gpgsig,}
 
-mkdir --parents /mnt/gentoo/usr/portage
+export PORTDIR=/usr/portage
+export DISTDIR=/usr/portage/distfiles
+mkdir --parents /mnt/gentoo$PORTDIR
 tar --extract \
     --xz \
     --warning=no-timestamp \
@@ -16,13 +18,15 @@ tar --extract \
     --file "${tarball_temp}/${tarball}" \
     --directory /mnt/gentoo/usr
 
-chroot /mnt/gentoo /bin/bash -uex <<EOF
+cp --recursive "${SOURCE}/portage" /mnt/gentoo/tmp/
+chroot /mnt/gentoo /bin/bash -uex <<'EOF'
 mkdir --parents /etc/portage/repos.conf
-cp /usr/share/portage/config/repos.conf /etc/portage/repos.conf/gentoo.conf
-sed --in-place 's~rsync://rsync.gentoo.org/gentoo-portage~${RSYNC_MIRROR}~' /etc/portage/repos.conf/gentoo.conf
+envsubst '$CPUS $PORTDIR $DISTDIR $CPU_FLAGS_X86' < /tmp/portage/make.conf > /etc/portage/make.conf
+envsubst '$PORTDIR $RSYNC_MIRROR' < /tmp/portage/repos.conf/gentoo.conf > /etc/portage/repos.conf/gentoo.conf
+rm --recursive /tmp/portage
+EOF
 
-echo "MAKEOPTS=\"${MAKEOPTS}\"" >> /etc/portage/make.conf
-
+chroot /mnt/gentoo /bin/bash -uex <<EOF
 emerge --sync --quiet
 
 # suppress notification about news items

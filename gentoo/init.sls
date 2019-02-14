@@ -3,8 +3,6 @@ include:
   - .gentools
   - .kernel
   - .locale
-  - .makeconf
-  - .reposconf
   - .salt
   - .system
   - .time

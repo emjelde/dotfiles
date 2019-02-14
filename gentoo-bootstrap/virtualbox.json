@@ -44,13 +44,17 @@
     "source": "autobuilds/keyring",
     "destination": "/tmp"
   },{
+    "type": "file",
+    "source": "portage",
+    "destination": "/tmp"
+  },{
     "type": "shell",
     "environment_vars": [
       "ARCH={{user `arch`}}",
       "AUTOBUILD_KEYRING=/tmp/keyring",
       "BOOT_DEVICE=/dev/sda1",
+      "CPU_FLAGS_X86={{user `cpuflags`}}",
       "CPUS={{user `cpus`}}",
-      "MAKEOPTS=-j{{user `cpus`}}",
       "MIRROR={{user `mirror`}}",
       "ROOT_DEVICE=/dev/sda3",
       "RSYNC_MIRROR={{user `rsync_mirror`}}",

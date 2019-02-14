@@ -1,6 +1,7 @@
 gentools:
   pkg.installed:
     - names:
+      - app-portage/cpuid2cpuflags
       - app-portage/genlop
       - app-portage/gentoolkit
 
