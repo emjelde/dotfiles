@@ -3,7 +3,7 @@
   "variables": {
     "headless": "true",
     "ssh_username": "root",
-    "ssh_password": "secret"
+    "ssh_password": "correcthorsebatterystaple"
   },
   "builders": [{
     "type": "virtualbox-ovf",

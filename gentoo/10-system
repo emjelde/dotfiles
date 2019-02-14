@@ -7,8 +7,8 @@ useradd --no-create-home --uid $UID_GID --gid $UID_GID --groups wheel --shell /b
 chmod 750 /home/evan /snapshots/.evan
 chown evan: /home/evan /snapshots/.evan
 
-echo evan:secret | chpasswd
-echo root:secret | chpasswd
+echo evan:correcthorsebatterystaple | chpasswd
+echo root:correcthorsebatterystaple | chpasswd
 
 eselect profile set default/linux/amd64/17.0/desktop
 
