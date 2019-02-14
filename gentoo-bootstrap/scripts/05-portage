@@ -3,19 +3,17 @@
 tarball='portage-latest.tar.xz'
 snapshots_url="${MIRROR}/snapshots/${tarball}"
 
-tarball_temp="$(mktemp -d)"
-cd "$tarball_temp"
-wget --quiet "$snapshots_url" "${snapshots_url}.gpgsig"
-trap "rm -r \"$tarball_temp\"" EXIT
+tarball_temp="$(mktemp -d)" && trap "rm -r \"$tarball_temp\"" EXIT
+wget --directory-prefix="$tarball_temp" --quiet "$snapshots_url"{,.gpgsig}
 
-gpgv --quiet --homedir "${AUTOBUILD_KEYRING}" "${tarball}.gpgsig" "$tarball"
+gpgv --quiet --homedir "${AUTOBUILD_KEYRING}" "${tarball_temp}/${tarball}"{.gpgsig,}
 
 mkdir --parents /mnt/gentoo/usr/portage
 tar --extract \
     --xz \
     --warning=no-timestamp \
     --numeric-owner \
-    --file "$tarball" \
+    --file "${tarball_temp}/${tarball}" \
     --directory /mnt/gentoo/usr
 
 chroot /mnt/gentoo /bin/bash -uex <<EOF

@@ -3,15 +3,13 @@
 tarball="stage3-amd64-${STAGE3}.tar.xz"
 stage3_url="${MIRROR}/releases/${ARCH}/autobuilds/${STAGE3}/${tarball}"
 
-tarball_temp="$(mktemp -d)"
-cd "$tarball_temp"
-wget --quiet "$stage3_url" "${stage3_url}.DIGESTS.asc"
-trap "rm -r \"$tarball_temp\"" EXIT
+tarball_temp="$(mktemp -d)" && trap "rm -r \"$tarball_temp\"" EXIT
+wget --directory-prefix="$tarball_temp" --quiet "$stage3_url"{,.DIGESTS.asc}
 
-gpgv --quiet --homedir "${AUTOBUILD_KEYRING}" "${tarball}.DIGESTS.asc"
-awk '/# SHA512 HASH/{getline; print}' "${tarball}.DIGESTS.asc" \
+gpgv --quiet --homedir "${AUTOBUILD_KEYRING}" "${tarball_temp}/${tarball}.DIGESTS.asc"
+cd ${tarball_temp} && awk '/# SHA512 HASH/{getline; print}' "${tarball}.DIGESTS.asc" \
    | grep "${tarball}$" \
-   | sha512sum --check --status -
+   | sha512sum --check --status - && cd -
 
 mkdir --parents /mnt/gentoo
 mount --read-write ${ROOT_DEVICE} /mnt/gentoo
@@ -20,5 +18,5 @@ tar --extract \
     --preserve-permissions \
     --xattrs-include='*.*' \
     --numeric-owner \
-    --file "$tarball" \
+    --file "${tarball_temp}/${tarball}" \
     --directory /mnt/gentoo
