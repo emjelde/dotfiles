@@ -3,43 +3,43 @@
 # reasons.
 export CHECKPOINT_DISABLE=1
 
+# Location of the packer cache
+export PACKER_CACHE_DIR=build/packer_cache
+
+# Location of the packer log
+export PACKER_LOG=1
+export PACKER_LOG_PATH=build/build.log
+
 .PHONY: build
-build: virtualbox-salt
+build: gentoo-salt
 
 .PHONY: clean
 clean:
-	rm -f autobuild-variables.json
-	rm -f vm-variables.json
-	rm -rf autobuilds
-	rm -rf output-virtualbox-iso
-	rm -rf output-virtualbox-ovf
-	rm -rf output-virtualbox-ovf.last
-	rm -rf packer_cache
-	rm -rf salt/salt
+	rm -rf build
 
 .PHONY: install-amd64-minimal-latest.iso
 install-amd64-minimal-latest.iso:
-	bash gen-autobuild-vars
+	bash gentoo/gentoo-autobuild-vars
 
-.PHONY: virtualbox
-virtualbox: install-amd64-minimal-latest.iso
-	bash gen-vm-vars
-	packer build -var-file=autobuild-variables.json -var-file=vm-variables.json virtualbox.json
+.PHONY: gentoo
+gentoo: install-amd64-minimal-latest.iso
+	bash gentoo/gentoo-vm-vars
+	packer build -var-file=build/autobuild-variables.json -var-file=build/vm-variables.json gentoo/gentoo.json
 
-.PHONY: virtualbox-salt
-virtualbox-salt: virtualbox
-	bash copy-state
-	packer build -var-file=vm-variables.json salt.json
+.PHONY: gentoo-salt
+gentoo-salt: gentoo
+	bash salt/salt-state-copy
+	packer build -var-file=build/vm-variables.json salt/salt.json
 
 .PHONY: resume
 resume:
-	rm -rf output-virtualbox-ovf.last
-	mv output-virtualbox-ovf output-virtualbox-ovf.last
-	bash copy-state
-	packer build -var-file=vm-variables.json resume.json
+	rm -rf build/gentoo-salt.last
+	mv build/gentoo-salt build/gentoo-salt.last
+	bash salt/salt-state-copy
+	packer build -var-file=build/vm-variables.json salt/resume.json
 
 .PHONY: abort-resume
 abort-resume:
-	test -d output-virtualbox-ovf.last && \
-	rm -rf output-virtualbox-ovf && \
-	mv output-virtualbox-ovf.last output-virtualbox-ovf
+	test -d build/gentoo-salt.last && \
+	rm -rf build/gentoo-salt && \
+	mv build/gentoo-salt.last build/gentoo-salt

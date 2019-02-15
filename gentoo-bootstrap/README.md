@@ -18,8 +18,8 @@ The default `make` command will perform a two stage build:
 
 If for some reason some state fails to apply you can resume salt after making
 changes using `make resume` which renames the last packer output as
-**output-virtualbox-ovf.last** and starts the next run.
+**gentoo-salt.last** and starts the next run.
 
 To resume from the previous run use `make abort-resume` to remove the current
-packer run moving **output-virtualbox-ovf.last** back to
-**output-virtualbox-ovf**.
+packer run moving **gentoo-salt.last** back to
+**gentoo-salt**.

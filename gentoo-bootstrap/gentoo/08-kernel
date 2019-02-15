@@ -2,8 +2,8 @@
 
 cp "${SOURCE}/kernel/gentoo-sources" /mnt/gentoo/tmp/
 cp "${SOURCE}/kernel/kernel.config" /mnt/gentoo/tmp/
-cp --recursive "${SOURCE}/kernel/initramfs" /mnt/gentoo/tmp/initramfs
-trap "cd /mnt/gentoo/tmp && rm --recursive gentoo-sources initramfs kernel.config" EXIT
+cp "${SOURCE}/kernel/initramfs."{fstab,init,list} /mnt/gentoo/tmp/
+trap "cd /mnt/gentoo/tmp && rm gentoo-sources initramfs.{fstab,init,list} kernel.config" EXIT
 
 OLD_ARCH=${ARCH}
 
@@ -17,9 +17,9 @@ export ROOT_UUID="$(blkid -s UUID -o value ${ROOT_DEVICE})"
 
 chroot /mnt/gentoo /bin/bash -uex <<'EOF'
 mkdir /usr/src/initramfs
-cp /tmp/initramfs/initramfs.list /usr/src/initramfs/
-envsubst '$ROOT_UUID' < /tmp/initramfs/init > /usr/src/initramfs/init
-envsubst '$ROOT_UUID' < /tmp/initramfs/fstab > /usr/src/initramfs/fstab
+cp /tmp/initramfs.list /usr/src/initramfs/
+envsubst '$ROOT_UUID' < /tmp/initramfs.init > /usr/src/initramfs/init
+envsubst '$ROOT_UUID' < /tmp/initramfs.fstab > /usr/src/initramfs/fstab
 mkdir --parents /etc/portage/package.accept_keywords/sys-kernel
 cp /tmp/gentoo-sources /etc/portage/package.accept_keywords/sys-kernel/
 emerge --verbose --quiet sys-kernel/gentoo-sources

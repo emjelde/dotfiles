@@ -11,11 +11,12 @@
     "boot_wait": "10s",
     "guest_additions_mode": "disable",
     "headless": "{{user `headless`}}",
-    "source_path": "output-virtualbox-iso/Gentoo.ovf",
+    "output_directory": "build/gentoo-salt",
+    "source_path": "build/gentoo-iso/gentoo-iso.ovf",
     "ssh_password": "{{user `ssh_password`}}",
     "ssh_username": "{{user `ssh_username`}}",
     "shutdown_command": "shutdown -h now",
-    "vm_name": "Gentoo",
+    "vm_name": "gentoo-salt",
     "vboxmanage": [
       [ "modifyvm", "{{.Name}}", "--cpus", "12" ],
       [ "modifyvm", "{{.Name}}", "--firmware", "efi" ],
@@ -41,7 +42,7 @@
     "destination": "/tmp/pillar.asc"
   },{
     "type": "file",
-    "source": "salt/salt",
+    "source": "build/salt",
     "destination": "/tmp/salt"
   },{
     "type": "shell",
@@ -49,7 +50,7 @@
       "MINION_ID={{user `minion_id`}}"
     ],
     "scripts": [
-      "salt/install"
+      "salt/01-install"
     ]
   }]
 }

@@ -2,7 +2,7 @@
 
 set -u
 
-SALT_DIR=salt/salt
+SALT_DIR=build/salt
 read -r -d '' DOTFILES_INCLUDE <<'EOF'
 import yaml
 
@@ -12,8 +12,7 @@ for line in include:
    print(line[1:])
 EOF
 
-# set after read as it appears to return a
-# non-zero return code when reaching EOF
+# set after read as it has a non-zero return code when reaching EOF
 set -e
 
 rm -rf "$SALT_DIR"

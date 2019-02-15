@@ -7,7 +7,8 @@ CPUS=$(nproc --all)
 MEMORY=20480
 VIDEO_MEMORY=128
 
-cat << EOF > vm-variables.json
+BUILD=build
+cat << EOF > ${BUILD}/vm-variables.json
 {
   "cpuflags": "${CPU_FLAGS##*CPU_FLAGS_X86: }",
   "cpus": "${CPUS}",

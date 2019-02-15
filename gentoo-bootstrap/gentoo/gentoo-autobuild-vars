@@ -12,14 +12,13 @@ EBUILD_REPOSITORY_SIGNING_KEY=0xDCD05B71EAB94199527F44ACDB6B8C1F96D8BF6D
 DIST="${MIRROR}/releases/${ARCH}/autobuilds"
 ISO_PATH=$(wget -q -O- "${DIST}/latest-install-${ARCH}-minimal.txt" | tail -n 1 | cut -f 1 -d ' ')
 ISO="$(basename "$ISO_PATH")"
+BUILD=build
 AUTOBUILD="$(dirname "$ISO_PATH")"
-AUTOBUILD_DIR="autobuilds/${AUTOBUILD}"
-AUTOBUILD_KEYRING="autobuilds/keyring"
+AUTOBUILD_DIR="${BUILD}/autobuilds/${AUTOBUILD}"
+AUTOBUILD_KEYRING="${BUILD}/autobuilds/keyring"
 
 mkdir --parents "$AUTOBUILD_DIR"
-wget --continue \
-     --directory-prefix "${AUTOBUILD_DIR}" \
-     "${DIST}/${ISO_PATH}" "${DIST}/${ISO_PATH}.CONTENTS" "${DIST}/${ISO_PATH}.DIGESTS.asc"
+wget --continue --directory-prefix "${AUTOBUILD_DIR}" "${DIST}/${ISO_PATH}"{,.CONTENTS,.DIGESTS.asc}
 
 OLD_UMASK=$(umask)
 umask 077
@@ -38,7 +37,7 @@ ISO_CHECKSUM="$(awk '/# SHA512 HASH/{getline; print}' ${ISO}.DIGESTS.asc)"
 echo "$ISO_CHECKSUM" | sha512sum --check --status -
 cd -
 ISO_CHECKSUM=$(echo "$ISO_CHECKSUM" | head -n 1 | cut -f 1 -d ' ')
-cat << EOF > autobuild-variables.json
+cat << EOF > ${BUILD}/autobuild-variables.json
 {
   "arch": "${ARCH}",
   "iso_checksum": "${ISO_CHECKSUM}",

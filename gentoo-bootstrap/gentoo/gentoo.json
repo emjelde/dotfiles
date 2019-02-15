@@ -26,10 +26,11 @@
     "iso_url": "{{user `iso_url`}}",
     "iso_checksum": "{{user `iso_checksum`}}",
     "iso_checksum_type": "sha512",
+    "output_directory": "build/gentoo-iso",
     "ssh_username": "{{user `ssh_username`}}",
     "ssh_password": "{{user `ssh_password`}}",
     "shutdown_command": "shutdown -h now",
-    "vm_name": "Gentoo",
+    "vm_name": "gentoo-iso",
     "vboxmanage": [
       [ "modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}" ],
       [ "modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}" ]
@@ -41,7 +42,7 @@
     "destination": "/tmp"
   },{
     "type": "file",
-    "source": "autobuilds/keyring",
+    "source": "build/autobuilds/keyring",
     "destination": "/tmp"
   },{
     "type": "file",
@@ -63,16 +64,16 @@
       "SWAP_DEVICE=/dev/sda2"
    ],
     "scripts": [
-      "scripts/01-partition",
-      "scripts/02-stage3",
-      "scripts/03-mounts",
-      "scripts/04-resolvconf",
-      "scripts/05-portage",
-      "scripts/06-timezone",
-      "scripts/07-fstab",
-      "scripts/08-kernel",
-      "scripts/09-network",
-      "scripts/10-system"
+      "gentoo/01-partition",
+      "gentoo/02-stage3",
+      "gentoo/03-mounts",
+      "gentoo/04-resolvconf",
+      "gentoo/05-portage",
+      "gentoo/06-timezone",
+      "gentoo/07-fstab",
+      "gentoo/08-kernel",
+      "gentoo/09-network",
+      "gentoo/10-system"
     ]
   }]
 }
