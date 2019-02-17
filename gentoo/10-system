@@ -3,6 +3,8 @@
 chroot /mnt/gentoo /bin/bash -uex <<'EOF'
 echo root:secret | chpasswd
 
+eselect profile set default/linux/amd64/17.0/desktop
+
 # configure ssh for second stage provisioning
 sed --in-place 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
 sed --in-place 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config

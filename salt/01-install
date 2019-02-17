@@ -1,7 +1,7 @@
 #!/bin/bash -uex
 
-eselect profile set default/linux/amd64/17.0/desktop
-
+# Salt keywords are managed here as well as in salt/init.sls.
+# It is probably best to keep them in sync.
 mkdir --parents /etc/portage/package.accept_keywords/app-admin
 echo '<app-admin/salt-2018.3.0' >> /etc/portage/package.accept_keywords/app-admin/salt
 
@@ -24,7 +24,12 @@ umask "${OLD_UMASK}"
 
 mkdir --parents /srv/salt /srv/pillar
 cp -r /tmp/pillar/* /srv/pillar
-cp -r /tmp/salt/* /tmp/top.sls /srv/salt
+cp -r /tmp/salt/* /srv/salt
+cat > /srv/salt/top.sls <<'EOF'
+base:
+  '*':
+    - dotfiles
+EOF
 
 rc-service salt-minion start
 salt-call state.highstate --log-level info

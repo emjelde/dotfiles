@@ -8,8 +8,11 @@ include:
   - .htop
   - .java
   - .pass
+  - .portage
+  - .salt
   - .smartcard
   - .ssh
+  - .system
   - .thunderbird
   - .tmux
   - .urxvt

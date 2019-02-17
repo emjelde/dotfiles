@@ -30,10 +30,6 @@
     "destination": "/tmp/minion"
   },{
     "type": "file",
-    "source": "salt/top.sls",
-    "destination": "/tmp/top.sls"
-  },{
-    "type": "file",
     "source": "salt/pillar",
     "destination": "/tmp/pillar"
   },{

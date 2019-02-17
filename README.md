@@ -1,55 +1,24 @@
 # Dotfiles
 
-This project uses a configuration management framework called
-[salt](https://docs.saltstack.com/en/latest/) to coordinate installation and
-configuration of tools for my personal desktop/workstation.
+In Linux it is common for programs to use your home directory `~` for it's text
+based configuration files. These files usually start with a dot character and
+is why they are sometimes called dotfiles. Dotfiles usually remain hidden when
+using commands like `ls` to list the directory contents and interestingly this
+was likely an [unintended consequence](https://plus.google.com/+RobPikeTheHuman/posts/R58WgWwN9jp)
+of trying to make `ls` not show `.` and `..` (links to the current and parent
+directory).
 
-![My workstation](workstation.png)
+This repository helps to manage my own dotfiles using a configuration
+management framework called [salt](https://docs.saltstack.com/en/latest/) and
+goes a bit further to also coordinate installation of the programs themselves.
 
----
+The salt state system uses the SLS (**S**a**L**t **S**tate) files in this
+repository as a representation of the state in which the system should be in.
+Actions performed by salt's state modules ensure a well-known state and are
+idempotent so applying the action multiple times results in no changes.
 
-## Configuration
-
-The salt state system uses the sls files as a representation of the state in
-which the system should be in.
-
-These states make use of custom grains
-
-**/etc/salt/grains:**
-
-```
-user: evan
-user_home: /home/evan
-xdg_config_home: /home/evan/.config
-xdg_data_home: /home/evan/.local/share
-```
-
-a pillar for the ssh identity files in ssh/init.sls
-
-**/srv/pillar/dotfiles/ssh/init.sls:**
-
-```
-.ssh/bitbucket/id_rsa: {{ identity }}
-.ssh/github/id_rsa: {{ identity }}
-.ssh/visualstudio/id_rsa: {{ identity }}
-```
-
-**/srv/pillar/top.sls:**
-
-```
-base:
-  '*':
-    - dotfiles.ssh
-```
-
-## Thanks
-
-This project was inspired by:
-
-[saltstack-dotfiles](https://github.com/rawkode/saltstack-dotfiles)
-
-[salt-states](https://github.com/shadowfax-chc/salt-states)
-
-[gentoo-packer](https://github.com/d11wtq/gentoo-packer)
-
-Many thanks to all the contributors of these projects.
+If starting from a clean repository the default goal for `make` will build a
+Gentoo Linux virtual machine image and fully provision it up to the latest
+state of repository. This image can serve as the next version of the system.
+Additional goals will be provided to incrementally update the system as changes
+are made to the repository.

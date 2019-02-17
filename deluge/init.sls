@@ -1,6 +1,11 @@
+include:
+  - ..portage
+
 deluge:
   pkg.installed:
     - name: net-p2p/deluge
+    - require:
+      - portage_config: boost-flags
   portage_config.flags:
     - name: net-p2p/deluge
     - use:

@@ -1,3 +1,3 @@
-/gentoo-bootstrap/build/
-/gentoo-bootstrap/salt/pillar.asc
-/gentoo-bootstrap/salt/pillar/
+/build/
+/salt/pillar.asc
+/salt/pillar/

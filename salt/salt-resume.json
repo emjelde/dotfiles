@@ -34,7 +34,7 @@
   },{
     "type": "shell",
     "scripts": [
-      "salt/resume"
+      "salt/01-resume"
     ]
   }]
 }

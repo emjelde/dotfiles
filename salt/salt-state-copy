@@ -1,16 +1,10 @@
 #!/bin/bash
 #
-# Prepare the packer salt build by collecting salt states. This is done to
-# manage the desired folder structure. All states listed in the init.sls file
-# and gentoo folder at the root of the project are included.
+# Prepare the packer salt build by collecting all salt states listed in the
+# salt/dotfiles.sls file. This is done to manage the desired directory
+# structure.
 #
-# This script is using a YAML parser for Python (dev-python/pyyaml) to read the
-# init.sls file. My version of salt has a dependency on pyyaml so this works at
-# the moment with little effort.
-#
-# For convenience a mock pillar is generated if no pillar already exists. This
-# has the potential to allow for the execution of zero configuration test
-# builds.
+# For testing a mock pillar can be generated if no pillar already exists.
 #
 
 set -u
@@ -24,7 +18,7 @@ SALT_DIR=${BUILD}/salt
 read -r -d '' DOTFILES_INCLUDE <<'EOF'
 import yaml
 
-include = yaml.load(open('../init.sls'))['include']
+include = yaml.load(open('salt/dotfiles.sls'))['include']
 
 for line in include:
    print(line[1:])
@@ -40,12 +34,9 @@ echo "dotfiles"
 for SLS in $(python -c "$DOTFILES_INCLUDE")
 do
    echo "  ${SLS}"
-   cp --recursive "../${SLS}" "${SALT_DIR}/dotfiles/"
+   cp --recursive "${SLS}" "${SALT_DIR}/dotfiles/"
 done
-cp ../init.sls "${SALT_DIR}/dotfiles/"
-
-echo "gentoo"
-cp --recursive ../gentoo "${SALT_DIR}/gentoo"
+cp salt/dotfiles.sls "${SALT_DIR}/dotfiles/init.sls"
 
 #
 # generate pillar if needed

@@ -45,9 +45,9 @@ nod /dev/urandom 0600 0 0 c 1 9
 nod /dev/zero 0600 0 0 c 1 5
 
 dir /etc 0755 0 0
-file /etc/fstab /usr/src/initramfs/fstab 0644 0 0
+file /etc/fstab ${INITRAMFS_DIR}/fstab 0644 0 0
 
-file init /usr/src/initramfs/init 0755 0 0
+file init ${INITRAMFS_DIR}/init 0755 0 0
 
 dir /lib64 0755 0 0
 file /lib64/ld-linux-x86-64.so.2 /lib64/ld-linux-x86-64.so.2 0755 0 0
