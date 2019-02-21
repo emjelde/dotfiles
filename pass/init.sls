@@ -27,11 +27,12 @@ pass:
 
 # Allow access to password manager from Firefox
 
-{% set passff_host_version = '1.0.2' %}
+{% set passff_host_version = '1.1.0' %}
 passff-host:
   pkg.installed:
     - name: www-plugins/passff-host
     - require:
+      - pkg: firefox
       - pkg: pass
   portage_config.flags:
     - name: =www-plugins/passff-host-{{ passff_host_version }}
@@ -56,7 +57,5 @@ passff-host-flags:
     - name: www-plugins/passff-host
     - use:
       - firefox
-    - require:
-      - pkg: firefox
     - require_in:
       - pkg: passff-host
