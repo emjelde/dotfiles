@@ -2,9 +2,9 @@
 
 set -uex
 
-ARCH=${ARCH:-amd64}
-MIRROR=${MIRROR:-http://distfiles.gentoo.org}
-RSYNC_MIRROR=${RSYNC_MIRROR:-rsync://rsync11.us.gentoo.org/gentoo-portage}
+ARCH=amd64
+MIRROR=${DIST_MIRROR:-http://distfiles.gentoo.org}
+RSYNC_MIRROR=${RSYNC_MIRROR:-rsync://rsync.gentoo.org/gentoo-portage}
 
 WEEKLY_RELEASE_SIGNING_KEY=0x13EBBDBEDE7A12775DFDB1BABB572E0E2D182910
 EBUILD_REPOSITORY_SIGNING_KEY=0xDCD05B71EAB94199527F44ACDB6B8C1F96D8BF6D

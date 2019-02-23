@@ -21,29 +21,34 @@ all: $(BUILD)/gentoo-salt
 clean:
 	rm -rf $(BUILD)
 
+define source-env =
+if [ -f .env ]; then
+	set -o allexport
+	source .env
+	set +o allexport
+fi
+endef
+
 autobuild_vars = $(BUILD)/autobuild-variables.json
-
-$(autobuild_vars):
-	./gentoo/gentoo-autobuild-vars
-
 vm_vars = $(BUILD)/vm-variables.json
 
-$(vm_vars):
-	./gentoo/gentoo-vm-vars
-
-$(BUILD)/salt:
-	./salt/salt-state-copy
-
-$(BUILD)/gentoo-iso: $(autobuild_vars) $(vm_vars)
+$(BUILD)/gentoo-iso:
+	$(source-env)
+	gentoo/gentoo-autobuild-vars
+	gentoo/gentoo-vm-vars
 	export PACKER_LOG_PATH=$(BUILD)/gentoo-iso.log
 	packer build -var-file=$(autobuild_vars) -var-file=$(vm_vars) gentoo/gentoo.json
 
-$(BUILD)/gentoo-salt: $(BUILD)/gentoo-iso $(BUILD)/salt
+$(BUILD)/gentoo-salt: $(BUILD)/gentoo-iso
+	$(source-env)
+	gentoo/gentoo-vm-vars
+	salt/salt-state-copy
 	export PACKER_LOG_PATH=$(BUILD)/gentoo-salt.log
 	packer build -var-file=$(vm_vars) salt/salt.json
 
 .PHONY: resume
 resume:
+	$(source-env)
 	test -d $(BUILD)/gentoo-salt && \
 	rm -rf $(BUILD)/gentoo-salt.last && \
 	mv $(BUILD)/gentoo-salt $(BUILD)/gentoo-salt.last && \

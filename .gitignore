@@ -1,3 +1,4 @@
+/.env
 /build/
 /salt/pillar.asc
 /salt/pillar/
