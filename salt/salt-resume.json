@@ -6,22 +6,40 @@
     "ssh_password": "correcthorsebatterystaple"
   },
   "builders": [{
-    "type": "virtualbox-ovf",
-    "boot_wait": "10s",
-    "guest_additions_mode": "disable",
-    "headless": "{{user `headless`}}",
-    "output_directory": "build/gentoo-salt",
-    "source_path": "build/gentoo-salt.last/gentoo-salt.ovf",
-    "ssh_password": "{{user `ssh_password`}}",
-    "ssh_username": "{{user `ssh_username`}}",
-    "shutdown_command": "shutdown -h now",
+    "type": "qemu",
     "vm_name": "gentoo-salt",
+    "output_directory": "build/gentoo-salt",
+    "disk_image": "true",
+    "cpus": "{{user `cpus`}}",
+    "memory": "{{user `memory`}}",
+    "disk_interface": "ide",
+    "net_device": "e1000",
+    "qemuargs": [
+       ["-bios", "/usr/share/edk2-ovmf/OVMF.fd"]
+    ],
+    "headless": "{{user `headless`}}",
+    "iso_url": "build/gentoo-salt.last/gentoo-salt",
+    "iso_checksum_type": "none",
+    "ssh_username": "{{user `ssh_username`}}",
+    "ssh_password": "{{user `ssh_password`}}",
+    "shutdown_command": "shutdown -h now"
+  },{
+    "type": "virtualbox-ovf",
+    "vm_name": "gentoo-salt",
+    "output_directory": "build/gentoo-salt",
+    "guest_additions_mode": "disable",
     "vboxmanage": [
       [ "modifyvm", "{{.Name}}", "--cpus", "12" ],
       [ "modifyvm", "{{.Name}}", "--firmware", "efi" ],
       [ "modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}" ],
-      [ "modifyvm", "{{.Name}}", "--vram", "{{user `vram`}}" ]
-    ]
+      [ "modifyvm", "{{.Name}}", "--vram", "{{user `vram`}}" ],
+      [ "modifyvm", "{{.Name}}", "--nictype1", "82540EM" ]
+    ],
+    "headless": "{{user `headless`}}",
+    "source_path": "build/gentoo-salt.last/gentoo-salt.ovf",
+    "ssh_password": "{{user `ssh_password`}}",
+    "ssh_username": "{{user `ssh_username`}}",
+    "shutdown_command": "shutdown -h now"
   }],
   "provisioners": [{
     "type": "file",

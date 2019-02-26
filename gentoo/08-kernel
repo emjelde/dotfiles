@@ -37,6 +37,7 @@ emerge --verbose --quiet sys-kernel/gentoo-sources
 cd /usr/src/linux
 cp /tmp/kernel/kernel.config .config
 make --quiet listnewconfig
+make --quiet kvmconfig
 make --quiet olddefconfig
 make --quiet --jobs $CPUS
 make --quiet modules_install

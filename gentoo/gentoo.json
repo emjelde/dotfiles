@@ -1,12 +1,55 @@
 {
-  "description": "Stage 3 Gentoo Installation (VirtualBox)",
+  "description": "Gentoo Linux (iso)",
   "variables": {
     "headless": "true",
     "ssh_username": "root",
     "ssh_password": "correcthorsebatterystaple"
   },
   "builders": [{
+    "type": "qemu",
+    "vm_name": "gentoo-iso",
+    "output_directory": "build/gentoo-iso",
+    "cpus": "{{user `cpus`}}",
+    "memory": "{{user `memory`}}",
+    "disk_interface": "ide",
+    "net_device": "e1000",
+    "headless": "{{user `headless`}}",
+    "iso_url": "{{user `iso_url`}}",
+    "iso_checksum": "{{user `iso_checksum`}}",
+    "iso_checksum_type": "sha512",
+    "ssh_username": "{{user `ssh_username`}}",
+    "ssh_password": "{{user `ssh_password`}}",
+    "boot_command": [
+      "gentoo-nofb<enter>",
+      "<wait10>",
+      "<enter>",
+      "<wait20s>",
+      "passwd {{user `ssh_username`}}<enter>",
+      "{{user `ssh_password`}}<enter>",
+      "{{user `ssh_password`}}<enter>",
+      "sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config<enter>",
+      "sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config<enter>",
+      "/etc/init.d/sshd start<enter>"
+    ],
+    "shutdown_command": "shutdown -h now"
+  },{
     "type": "virtualbox-iso",
+    "vm_name": "gentoo-iso",
+    "output_directory": "build/gentoo-iso",
+    "guest_os_type": "Gentoo_64",
+    "guest_additions_mode": "disable",
+    "vboxmanage": [
+      [ "modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}" ],
+      [ "modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}" ],
+      [ "modifyvm", "{{.Name}}", "--vram", "{{user `vram`}}" ],
+      [ "modifyvm", "{{.Name}}", "--nictype1", "82540EM" ]
+    ],
+    "headless": "{{user `headless`}}",
+    "iso_url": "{{user `iso_url`}}",
+    "iso_checksum": "{{user `iso_checksum`}}",
+    "iso_checksum_type": "sha512",
+    "ssh_username": "{{user `ssh_username`}}",
+    "ssh_password": "{{user `ssh_password`}}",
     "boot_command": [
       "gentoo-nofb<enter>",
       "<wait10>",
@@ -19,22 +62,7 @@
       "sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config<enter>",
       "/etc/init.d/sshd start<enter>"
     ],
-    "boot_wait": "5s",
-    "guest_os_type": "Gentoo_64",
-    "guest_additions_mode": "disable",
-    "headless": "{{user `headless`}}",
-    "iso_url": "{{user `iso_url`}}",
-    "iso_checksum": "{{user `iso_checksum`}}",
-    "iso_checksum_type": "sha512",
-    "output_directory": "build/gentoo-iso",
-    "ssh_username": "{{user `ssh_username`}}",
-    "ssh_password": "{{user `ssh_password`}}",
-    "shutdown_command": "shutdown -h now",
-    "vm_name": "gentoo-iso",
-    "vboxmanage": [
-      [ "modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}" ],
-      [ "modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}" ]
-    ]
+    "shutdown_command": "shutdown -h now"
   }],
   "provisioners": [{
     "type": "file",
@@ -62,7 +90,7 @@
       "SOURCE=/tmp",
       "STAGE3={{user `stage3`}}",
       "SWAP_DEVICE=/dev/sda2"
-   ],
+    ],
     "scripts": [
       "gentoo/01-partition",
       "gentoo/02-stage3",
