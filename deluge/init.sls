@@ -1,11 +1,6 @@
-include:
-  - ..portage
-
 deluge:
   pkg.installed:
     - name: net-p2p/deluge
-    - require:
-      - portage_config: boost-flags
   portage_config.flags:
     - name: net-p2p/deluge
     - use:
@@ -20,3 +15,11 @@ libtorrent-rasterbar-flags:
       - python
     - require_in:
       - pkg: deluge
+    - require:
+      - portage_config: boost-flags
+
+boost-flags:
+  portage_config.flags:
+    - name: dev-libs/boost
+    - use:
+      - python

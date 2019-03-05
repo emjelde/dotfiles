@@ -30,9 +30,17 @@ firefox:
       - pkg: firefox
 {% endfor %}
 
+python-flags:
+  portage_config.flags:
+    - name: dev-lang/python
+    - use:
+      - sqlite
+    - require_in:
+      - pkg: firefox
+
 sqlite-flags:
   portage_config.flags:
-    - name: =dev-db/sqlite-3.25.3
+    - name: dev-db/sqlite
     - use:
       - secure-delete
     - require_in:
