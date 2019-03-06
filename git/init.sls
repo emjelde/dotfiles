@@ -1,3 +1,6 @@
+include:
+  - ..bash
+
 git:
   pkg.installed:
     - name: dev-vcs/git
@@ -24,5 +27,26 @@ git-config:
     - source: salt://dotfiles/git/config
     - user: {{ grains.user }}
     - group: {{ grains.user }}
+    - makedirs: true
     - require:
       - pkg: git
+
+git-prompt-bashrc.d:
+  file.managed:
+    - name: {{ grains.user_home }}/.bashrc.d/git-prompt
+    - source: salt://dotfiles/git/git-prompt
+    - user: {{ grains.user }}
+    - group: {{ grains.user }}
+    - makedirs: true
+    - require:
+      - pkg: git
+
+git-prompt-bashrc:
+  file.accumulated:
+    - name: .bashrc.d
+    - filename: {{ grains.user_home }}/.bashrc
+    - text: source .bashrc.d/git-prompt
+    - require_in:
+      - file: bashrc
+    - require:
+      - file: git-prompt-bashrc.d

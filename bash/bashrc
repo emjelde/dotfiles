@@ -99,6 +99,8 @@ fi
 
 ## Source .bashrc.d
 
-for sh in .bashrc.d/* ; do
-  [[ -r ${sh} ]] && source "${sh}"
-done
+{{ accumulator['.bashrc.d']|join('\n') }}
+source .bashrc.d/aliases
+source .bashrc.d/calc-function
+source .bashrc.d/say-function
+source .bashrc.d/screenshot-function
