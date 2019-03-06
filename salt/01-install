@@ -20,11 +20,6 @@ umask "${OLD_UMASK}"
 mkdir --parents /srv/salt /srv/pillar
 cp -r /tmp/pillar/* /srv/pillar
 cp -r /tmp/salt/* /srv/salt
-cat > /srv/salt/top.sls <<'EOF'
-base:
-  '*':
-    - dotfiles
-EOF
 
 rc-service salt-minion start
 salt-call state.highstate --log-level info

@@ -1,42 +1,57 @@
 #!/bin/bash
 #
-# Prepare the packer salt build by collecting all salt states listed in the
-# salt/dotfiles.sls file. This is done to manage the desired directory
-# structure.
+# Prepare the packer salt build by collecting all salt states. This is done to
+# manage the desired directory structure.
 #
 # For testing a mock pillar can be generated if no pillar already exists.
 #
 
-set -u
+set -ue
 
 #
 # copy salt states into build
 #
 
 BUILD=build
-SALT_DIR=${BUILD}/salt
-read -r -d '' DOTFILES_INCLUDE <<'EOF'
-import yaml
-
-include = yaml.load(open('salt/dotfiles.sls'))['include']
-
-for line in include:
-   print(line[1:])
-EOF
-
-# set after read as it has a non-zero return code when reaching EOF
-set -e
+SALT_DIR="${SALT_DIR-${BUILD}/salt}"
 
 rm -rf "$SALT_DIR"
-mkdir --parents "${SALT_DIR}/dotfiles"
+mkdir --parents "${SALT_DIR}"/dotfiles
 
 echo "dotfiles"
-for SLS in $(python -c "$DOTFILES_INCLUDE")
-do
-   echo "  ${SLS}"
-   cp --recursive "${SLS}" "${SALT_DIR}/dotfiles/"
-done
-cp salt/dotfiles.sls "${SALT_DIR}/dotfiles/init.sls"
+echo "include:" > "${SALT_DIR}"/dotfiles/init.sls
+
+copy_state() {
+   cp --recursive "$1" "${SALT_DIR}"/dotfiles/
+   echo "  $1"
+   echo "  - .$1" >> "${SALT_DIR}"/dotfiles/init.sls
+}
+
+copy_state awesome
+copy_state bash
+copy_state deluge
+copy_state firefox
+copy_state git
+copy_state gpg
+copy_state htop
+copy_state java
+copy_state pass
+copy_state portage
+copy_state salt
+copy_state smartcard
+copy_state ssh
+copy_state system
+copy_state thunderbird
+copy_state tmux
+copy_state urxvt
+copy_state vim
+copy_state x11
+
+cat > "${SALT_DIR}"/top.sls <<'EOF'
+base:
+  '*':
+    - dotfiles
+EOF
 
 #
 # generate pillar if needed
