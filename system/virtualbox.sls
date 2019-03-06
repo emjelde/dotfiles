@@ -1,12 +1,11 @@
+include:
+  - ..x11
+
 virtualbox-guest-additions:
   pkg.installed:
     - name: app-emulation/virtualbox-guest-additions
-  portage_config.flags:
-    - name: app-emulation/virtualbox-guest-additions
-    - accept_keywords:
-      - ~ARCH
-    - require_in:
-      - pkg: virtualbox-guest-additions
+    - require:
+      - pkg: x11
   service.running:
     - name: virtualbox-guest-additions
     - enable: true
@@ -19,7 +18,7 @@ libdrm-flags:
     - use:
       - libkms
     - require_in:
-      - pkg: virtualbox-guest-additions
+      - pkg: x11
 
 mesa-flags:
   portage_config.flags:
@@ -27,4 +26,4 @@ mesa-flags:
     - use:
       - xa
     - require_in:
-      - pkg: virtualbox-guest-additions
+      - pkg: x11

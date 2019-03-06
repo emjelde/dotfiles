@@ -6,6 +6,15 @@ CPU_FLAGS=$(command -v cpuid2cpuflags >/dev/null 2>&1 && cpuid2cpuflags || true)
 CPUS=$(nproc --all)
 MEMORY=20480
 VIDEO_MEMORY=128
+USE_VIRTUALBOX=$(
+   if [[ -z ${ISO_BUILD_USE+x} || -z ${SALT_BUILD_USE+x} ||
+         ("${ISO_BUILD_USE}" == *"virtualbox"* &&
+         "${SALT_BUILD_USE}" == *"virtualbox"*) ]]; then
+      echo 'true'
+   else
+      echo 'false'
+   fi
+)
 
 BUILD=build
 cat << EOF > ${BUILD}/vm-variables.json
@@ -13,6 +22,7 @@ cat << EOF > ${BUILD}/vm-variables.json
   "cpuflags": "${CPU_FLAGS##*CPU_FLAGS_X86: }",
   "cpus": "${CPUS}",
   "memory": "${MEMORY}",
-  "vram": "${VIDEO_MEMORY}"
+  "vram": "${VIDEO_MEMORY}",
+  "use_virtualbox": "${USE_VIRTUALBOX}"
 }
 EOF

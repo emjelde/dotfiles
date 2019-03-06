@@ -89,7 +89,8 @@
       "RSYNC_MIRROR={{user `rsync_mirror`}}",
       "SOURCE=/tmp",
       "STAGE3={{user `stage3`}}",
-      "SWAP_DEVICE=/dev/sda2"
+      "SWAP_DEVICE=/dev/sda2",
+      "USE_VIRTUALBOX={{user `use_virtualbox`}}"
     ],
     "scripts": [
       "gentoo/01-partition",

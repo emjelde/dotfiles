@@ -21,31 +21,46 @@ mkdir --parents "${SALT_DIR}"/dotfiles
 echo "dotfiles"
 echo "include:" > "${SALT_DIR}"/dotfiles/init.sls
 
-copy_state() {
-   cp --recursive "$1" "${SALT_DIR}"/dotfiles/
+add_to_init() {
    echo "  $1"
    echo "  - .$1" >> "${SALT_DIR}"/dotfiles/init.sls
 }
 
-copy_state awesome
-copy_state bash
-copy_state deluge
-copy_state firefox
-copy_state git
-copy_state gpg
-copy_state htop
-copy_state java
-copy_state pass
-copy_state portage
-copy_state salt
-copy_state smartcard
-copy_state ssh
-copy_state system
-copy_state thunderbird
-copy_state tmux
-copy_state urxvt
-copy_state vim
-copy_state x11
+statedir() {
+   cp --recursive "$1" "${SALT_DIR}"/dotfiles/
+   add_to_init $1
+}
+
+statefile() {
+   cp --parents "${1/\./\/}.sls" "${SALT_DIR}"/dotfiles/
+   add_to_init $1
+}
+
+statedir awesome
+statedir bash
+statedir deluge
+statedir firefox
+statedir git
+statedir gpg
+statedir htop
+statedir java
+statedir pass
+statedir portage
+statedir salt
+statedir smartcard
+statedir ssh
+statefile 'system.fonts'
+statefile 'system.locale'
+statefile 'system.system'
+statefile 'system.time'
+if [[ -z ${SALT_BUILD_USE+x} || "${SALT_BUILD_USE}" == *"virtualbox"* ]]; then
+   statefile 'system.virtualbox'
+fi
+statedir thunderbird
+statedir tmux
+statedir urxvt
+statedir vim
+statedir x11
 
 cat > "${SALT_DIR}"/top.sls <<'EOF'
 base:

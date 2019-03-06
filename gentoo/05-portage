@@ -26,9 +26,16 @@ tar --extract \
     --directory /mnt/gentoo${PORTDIR}
 
 cp --recursive "${SOURCE}/portage" /mnt/gentoo/tmp/
+
+if [ "$USE_VIRTUALBOX" = 'true' ]; then
+   export VIDEO_CARDS='$VIDEO_CARDS vmware'
+else
+   export VIDEO_CARDS='$VIDEO_CARDS'
+fi
+
 chroot /mnt/gentoo /bin/bash -uex <<'EOF'
 mkdir --parents /etc/portage/repos.conf
-envsubst '$CPUS $PORTDIR $DISTDIR $CPU_FLAGS_X86' < /tmp/portage/make.conf > /etc/portage/make.conf
+envsubst '$CPUS $PORTDIR $DISTDIR $CPU_FLAGS_X86 $VIDEO_CARDS' < /tmp/portage/make.conf > /etc/portage/make.conf
 envsubst '$PORTDIR $RSYNC_MIRROR' < /tmp/portage/gentoo.conf > /etc/portage/repos.conf/gentoo.conf
 rm --recursive /tmp/portage
 EOF
