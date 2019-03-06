@@ -25,12 +25,8 @@
   }],
   "provisioners": [{
     "type": "file",
-    "source": "salt/salt",
+    "source": "build/salt",
     "destination": "/tmp/salt"
-  },{
-    "type": "file",
-    "source": "salt/top.sls",
-    "destination": "/tmp/top.sls"
   },{
     "type": "shell",
     "scripts": [

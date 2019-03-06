@@ -2,6 +2,6 @@
 
 rm -rf /srv/salt
 mkdir /srv/salt
-cp -r /tmp/salt/* /tmp/top.sls /srv/salt
+cp -r /tmp/salt/* /srv/salt
 
 salt-call state.highstate --log-level info

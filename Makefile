@@ -53,6 +53,7 @@ resume:
 	rm -rf $(BUILD)/gentoo-salt.last && \
 	mv $(BUILD)/gentoo-salt $(BUILD)/gentoo-salt.last && \
 	./salt/salt-state-copy && \
+	export PACKER_LOG_PATH=$(BUILD)/gentoo-salt.log
 	packer build -var-file=$(BUILD)/vm-variables.json salt/salt-resume.json
 
 .PHONY: abort-resume
