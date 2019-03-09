@@ -56,7 +56,7 @@ ssh-{{ host }}-config:
         HostName {{ host }}
         Port 22
         User {{ username }}
-        IdentityFile ~/.ssh/{{ identityfile }}
+        IdentityFile {{ grains.user_home }}/.ssh/{{ identityfile }}
     - require_in:
       - file: ssh
       - ssh_known_hosts: ssh-{{ host }}
