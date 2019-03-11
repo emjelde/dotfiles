@@ -7,4 +7,4 @@ tmux:
     - user: {{ grains.user }}
     - group: {{ grains.user }}
     - require:
-      - pkg: app-misc/tmux
+      - pkg: tmux

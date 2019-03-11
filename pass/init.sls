@@ -35,9 +35,13 @@ passff-host:
       - pkg: firefox
       - pkg: pass
   portage_config.flags:
-    - name: =www-plugins/passff-host-{{ passff_host_version }}
-    - accept_keywords:
-      - ~ARCH
+    - names:
+      - =www-plugins/passff-host-{{ passff_host_version }}:
+        - accept_keywords:
+          - ~ARCH
+      - www-plugins/passff-host:
+        - use:
+          - firefox
     - require_in:
       - pkg: passff-host
   file.managed:
@@ -49,13 +53,5 @@ passff-host:
         PASSWORD_STORE_SIGNING_KEY: {{ signing_key }}
         version: {{ passff_host_version }}
     - makedirs: true
-    - require_in:
-      - pkg: passff-host
-
-passff-host-flags:
-  portage_config.flags:
-    - name: www-plugins/passff-host
-    - use:
-      - firefox
     - require_in:
       - pkg: passff-host

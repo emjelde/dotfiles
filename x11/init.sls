@@ -1,10 +1,6 @@
 x11:
   pkg.installed:
     - name: x11-base/xorg-x11
-  portage_config.flags:
-    - name: x11-base/xorg-server
-    - require_in:
-      - pkg: x11
 
 x11-progs:
   pkg.installed:

@@ -2,15 +2,12 @@ media-fonts:
   pkg.installed:
     - names:
       - media-fonts/corefonts
+      - media-fonts/dejavu
       - media-fonts/liberation-fonts
       - media-fonts/noto
       - media-fonts/noto-cjk
       - media-fonts/roboto
       - media-fonts/source-pro
-
-media-fonts-dejavu:
-  pkg.installed:
-    - name: media-fonts/dejavu
 
 # fonts should really be configured through eselect but salt.states.eselect
 # only supports the 'set' action and we need an 'enable' action
@@ -27,5 +24,5 @@ media-fonts-dejavu-{{ loop.index }}:
     - name: /etc/fonts/conf.d/{{ conf }}
     - target: /etc/fonts/conf.avail/{{ conf }}
     - require:
-      - pkg: media-fonts-dejavu
+      - pkg: media-fonts/dejavu
 {% endfor %}
