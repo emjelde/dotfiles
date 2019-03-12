@@ -28,6 +28,9 @@ git-config:
     - user: {{ grains.user }}
     - group: {{ grains.user }}
     - makedirs: true
+    - template: jinja
+    - defaults:
+        signingkey: {{ grains.gpg_signing_key }}
     - require:
       - pkg: git
 

@@ -1,7 +1,7 @@
 [user]
    name = Evan Mjelde
    email = evan@mjel.de
-   signingkey = 23963D530C8A9B2DBFC61FCA92BEB0268C8FE597
+   signingkey = {{ signingkey }}
 [alias]
    co = checkout
    st = status

@@ -4,7 +4,6 @@ include:
 
 # Install password manager
 
-{% set signing_key = '23963D530C8A9B2DBFC61FCA92BEB0268C8FE597' %}
 pass:
   pkg.installed:
     - name: app-admin/pass
@@ -21,7 +20,7 @@ pass:
         ## Pass
 
         export PASSWORD_STORE_DIR="${XDG_DATA_HOME}/pass"
-        export PASSWORD_STORE_SIGNING_KEY={{ signing_key }}
+        export PASSWORD_STORE_SIGNING_KEY={{ grains.gpg_signing_key }}
     - require_in:
       - file: bashrc
 
@@ -50,7 +49,7 @@ passff-host:
     - template: jinja
     - defaults:
         PASSWORD_STORE_DIR: {{ grains.xdg_data_home }}/pass
-        PASSWORD_STORE_SIGNING_KEY: {{ signing_key }}
+        PASSWORD_STORE_SIGNING_KEY: {{ grains.gpg_signing_key }}
         version: {{ passff_host_version }}
     - makedirs: true
     - require_in:

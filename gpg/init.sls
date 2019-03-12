@@ -38,6 +38,9 @@ gpg.conf:
     - source: salt://dotfiles/gpg/gpg.conf
     - user: {{ grains.user }}
     - group: {{ grains.user }}
+    - template: jinja
+    - defaults:
+        default_key: {{ grains.gpg_signing_key }}
     - require:
       - file: gpg-homedir
 

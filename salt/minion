@@ -7,6 +7,7 @@
 # Custom static grains for this minion can be specified here and used in SLS
 # files just like all other grains.
 grains:
+  gpg_signing_key: 23963D530C8A9B2DBFC61FCA92BEB0268C8FE597
   user: evan
   user_home: /home/evan
   xdg_config_home: /home/evan/.config
