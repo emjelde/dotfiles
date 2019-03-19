@@ -29,11 +29,11 @@
     "output_directory": "build/gentoo-salt",
     "guest_additions_mode": "disable",
     "vboxmanage": [
-      [ "modifyvm", "{{.Name}}", "--cpus", "12" ],
-      [ "modifyvm", "{{.Name}}", "--firmware", "efi" ],
-      [ "modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}" ],
-      [ "modifyvm", "{{.Name}}", "--vram", "{{user `vram`}}" ],
-      [ "modifyvm", "{{.Name}}", "--nictype1", "82540EM" ]
+      ["modifyvm", "{{.Name}}", "--cpus", "12"],
+      ["modifyvm", "{{.Name}}", "--firmware", "efi"],
+      ["modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}"],
+      ["modifyvm", "{{.Name}}", "--vram", "{{user `vram`}}"],
+      ["modifyvm", "{{.Name}}", "--nictype1", "82540EM"]
     ],
     "headless": "{{user `headless`}}",
     "source_path": "build/gentoo-salt.last/gentoo-salt.ovf",

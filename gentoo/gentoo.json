@@ -39,10 +39,10 @@
     "guest_os_type": "Gentoo_64",
     "guest_additions_mode": "disable",
     "vboxmanage": [
-      [ "modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}" ],
-      [ "modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}" ],
-      [ "modifyvm", "{{.Name}}", "--vram", "{{user `vram`}}" ],
-      [ "modifyvm", "{{.Name}}", "--nictype1", "82540EM" ]
+      ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"],
+      ["modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}"],
+      ["modifyvm", "{{.Name}}", "--vram", "{{user `vram`}}"],
+      ["modifyvm", "{{.Name}}", "--nictype1", "82540EM"]
     ],
     "headless": "{{user `headless`}}",
     "iso_url": "{{user `iso_url`}}",
