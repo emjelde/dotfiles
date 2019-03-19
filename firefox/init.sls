@@ -5,14 +5,15 @@ firefox:
 firefox-keywords:
   portage_config.flags:
     - names:
+      - =dev-db/sqlite-3.27.2
       - =dev-lang/rust-1.32.0
-      - =dev-libs/nss-3.42.1
-      - =dev-util/cbindgen-0.7.1
+      - =dev-libs/nss-3.43
+      - =dev-util/cbindgen-0.8.2
       - =media-libs/libvpx-1.7.0
       - =media-libs/libwebp-1.0.2
       - =virtual/cargo-1.32.0
       - =virtual/rust-1.32.0
-      - =www-client/firefox-65.0.2
+      - =www-client/firefox-66.0-r1
     - accept_keywords:
       - ~ARCH
     - require_in:
