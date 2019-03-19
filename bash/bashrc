@@ -78,15 +78,15 @@ shopt -s cdspell 2> /dev/null
 
 # Where user-specific configurations should be written
 # (analogous to /etc)
-XDG_CONFIG_HOME=$HOME/.config
+export XDG_CONFIG_HOME=$HOME/.config
 
 # Where user-specific non-essential (cached) data should be
 # written (analogous to /var/cache)
-XDG_CACHE_HOME=$HOME/.cache
+export XDG_CACHE_HOME=$HOME/.cache
 
 # Where user-specific data files should be written
 # (analogous to /usr/share)
-XDG_DATA_HOME=$HOME/.local/share
+export XDG_DATA_HOME=$HOME/.local/share
 
 # Used for non-essential, user-specific data files such as
 # sockets,named pipes, etc.
