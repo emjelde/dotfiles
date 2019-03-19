@@ -36,7 +36,6 @@ file /bin/bash /bin/bash 0755 0 0
 file /bin/cat /bin/cat 0755 0 0
 file /bin/mount /bin/mount 0755 0 0
 file /bin/sleep /bin/sleep 0755 0 0
-file /bin/umount /bin/umount 0755 0 0
 
 dir /dev 0755 0 0
 nod /dev/console 0600 0 0 c 5 1
