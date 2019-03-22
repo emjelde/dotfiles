@@ -1,5 +1,9 @@
 #!/bin/bash -uex
 
+# Set the time allowing a big adjustment and quit. The base system files should
+# be extracted with accurate time stamps.
+ntpd --quit --panicgate
+
 tarball="stage3-amd64-${STAGE3}.tar.xz"
 stage3_url="${MIRROR}/releases/${ARCH}/autobuilds/${STAGE3}/${tarball}"
 
