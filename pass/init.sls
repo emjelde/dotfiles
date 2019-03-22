@@ -7,12 +7,6 @@ include:
 pass:
   pkg.installed:
     - name: app-admin/pass
-  portage_config.flags:
-    - name: app-admin/pass
-    - accept_keywords:
-      - ~ARCH
-    - require_in:
-      - pkg: pass
   file.accumulated:
     - name: .bashrc
     - filename: {{ grains.user_home }}/.bashrc
