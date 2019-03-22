@@ -6,7 +6,7 @@ mkdir --parents /etc/portage/package.{accept_keywords,use}/app-admin
 echo '<app-admin/salt-2018.3.0' > /etc/portage/package.accept_keywords/app-admin/salt
 echo 'app-admin/salt gnupg portage vim-syntax' > /etc/portage/package.use/app-admin/salt
 
-emerge --verbose --quiet app-admin/salt
+emerge --quiet app-admin/salt
 rc-update add salt-minion
 
 cp /tmp/minion /etc/salt/minion

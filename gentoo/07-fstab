@@ -15,7 +15,7 @@ ROOT_UUID="$(blkid -s UUID -o value ${ROOT_DEVICE})"
 SWAP_UUID="$(blkid -s UUID -o value ${SWAP_DEVICE})"
 
 chroot /mnt/gentoo /bin/bash -uex <<EOF
-emerge --quiet --verbose --oneshot sys-fs/btrfs-progs
+emerge --quiet --oneshot sys-fs/btrfs-progs
 
 cat > /etc/fstab <<'DATA'
 # <fs>              <mount>                 <type>   <opts>                              <dump/pass>

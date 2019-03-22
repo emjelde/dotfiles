@@ -51,5 +51,5 @@ emerge --sync --quiet
 # suppress notification about news items
 eselect news read --quiet all
 
-emerge --verbose --quiet --update --deep --newuse @system
+emerge --quiet --update --deep --newuse @system
 EOF

@@ -33,7 +33,7 @@ cp /tmp/kernel/tuz.patch /etc/portage/patches/sys-kernel/gentoo-sources/
 #
 # Build kernel
 #
-emerge --verbose --quiet sys-kernel/gentoo-sources
+emerge --quiet sys-kernel/gentoo-sources
 cd /usr/src/linux
 cp /tmp/kernel/kernel.config .config
 make --quiet listnewconfig
