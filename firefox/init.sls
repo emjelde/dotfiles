@@ -9,6 +9,8 @@ firefox-keywords:
       - =dev-lang/rust-1.32.0
       - =dev-libs/nss-3.43
       - =dev-util/cbindgen-0.8.2
+      - =media-libs/dav1d-0.2.1
+      - =media-libs/libaom-1.0.0-r1
       - =media-libs/libvpx-1.7.0
       - =media-libs/libwebp-1.0.2
       - =virtual/cargo-1.32.0
