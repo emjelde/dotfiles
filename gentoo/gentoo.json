@@ -3,7 +3,8 @@
   "variables": {
     "headless": "true",
     "ssh_username": "root",
-    "ssh_password": "correcthorsebatterystaple"
+    "ssh_password": "correcthorsebatterystaple",
+    "root_volume_group": "roflpc"
   },
   "builders": [{
     "type": "qemu",
@@ -85,11 +86,12 @@
       "CPU_FLAGS_X86={{user `cpuflags`}}",
       "CPUS={{user `cpus`}}",
       "MIRROR={{user `mirror`}}",
-      "ROOT_DEVICE=/dev/sda3",
+      "ROOT_DEVICE=/dev/{{user `root_volume_group`}}/root",
+      "ROOT_VOLUME_GROUP={{user `root_volume_group`}}",
       "RSYNC_MIRROR={{user `rsync_mirror`}}",
       "SOURCE=/tmp",
       "STAGE3={{user `stage3`}}",
-      "SWAP_DEVICE=/dev/sda2",
+      "SWAP_DEVICE=/dev/{{user `root_volume_group`}}/swap",
       "USE_VIRTUALBOX={{user `use_virtualbox`}}"
     ],
     "scripts": [

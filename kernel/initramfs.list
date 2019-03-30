@@ -87,3 +87,12 @@ file /sbin/btrfs /sbin/btrfs 0755 0 0
 file /lib64/liblzo2.so.2 /lib64/liblzo2.so.2 0755 0 0
 file /lib64/libz.so.1 /lib64/libz.so.1 0755 0 0
 file /usr/lib64/libzstd.so.1 /usr/lib64/libzstd.so.1 0755 0 0
+
+# LVM2 (device-mapper) support
+
+file /sbin/lvm /sbin/lvm 0755 0 0
+
+file /lib64/libdevmapper-event.so.1.02 /lib64/libdevmapper-event.so.1.02 0755 0 0
+file /lib64/libdevmapper.so.1.02 /lib64/libdevmapper.so.1.02 0755 0 0
+file /lib64/libm.so.6 /lib64/libm.so.6 0755 0 0
+file /lib64/libudev.so.1 /lib64/libudev.so.1 0755 0 0

@@ -2,11 +2,13 @@
 
 sgdisk \
   --new 1:0:+128M --typecode 1:EF00 --change-name 1:"linux-boot" \
-  --new 2:0:+1G   --typecode 2:8200 --change-name 2:"swap"       \
-  --new 3:0:0     --typecode 3:8300 --change-name 3:"linux-root" \
+  --new 2:0:0     --typecode 2:8E00 --change-name 2:"linux-lvm" \
   --print /dev/sda
 
-sync
+pvcreate /dev/sda2
+vgcreate ${ROOT_VOLUME_GROUP} /dev/sda2
+lvcreate --name swap --size 1G ${ROOT_VOLUME_GROUP}
+lvcreate --name root --extents 50%VG ${ROOT_VOLUME_GROUP}
 
 mkfs.vfat "${BOOT_DEVICE}"
 mkfs.btrfs "${ROOT_DEVICE}"

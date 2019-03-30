@@ -15,6 +15,9 @@ ROOT_UUID="$(blkid -s UUID -o value ${ROOT_DEVICE})"
 SWAP_UUID="$(blkid -s UUID -o value ${SWAP_DEVICE})"
 
 chroot /mnt/gentoo /bin/bash -uex <<EOF
+emerge --quiet sys-fs/lvm2
+rc-update add lvm boot
+
 emerge --quiet --oneshot sys-fs/btrfs-progs
 
 cat > /etc/fstab <<'DATA'

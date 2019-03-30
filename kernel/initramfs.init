@@ -10,6 +10,18 @@ mount -t sysfs none /sys
 mount -t devtmpfs none /dev
 mount -t tmpfs tmpfs /run
 
+lvm vgchange --activate y "$ROOT_VOLUME_GROUP"
+if [ "$?" -ne 0 ]; then
+   echo "Error: Failed to start LVM."
+   exec bash
+fi
+
+lvm vgscan --mknodes
+if [ "$?" -ne 0 ]; then
+   echo "Error: Failed to make LVM nodes."
+   exec bash
+fi
+
 mount /new-root
 if [ "$?" -ne 0 ]; then
    echo "Error: Mount root failed."

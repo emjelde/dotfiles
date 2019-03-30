@@ -11,8 +11,6 @@ case "$ARCH" in
   ;;
 esac
 
-export ROOT_UUID="$(blkid -s UUID -o value ${ROOT_DEVICE})"
-
 chroot /mnt/gentoo /bin/bash -uex <<'EOF'
 #
 # Prepare initramfs
@@ -21,8 +19,8 @@ source <(grep CONFIG_INITRAMFS_SOURCE /tmp/kernel/kernel.config)
 export INITRAMFS_DIR=$(dirname $CONFIG_INITRAMFS_SOURCE)
 mkdir --parents "$INITRAMFS_DIR"
 envsubst '$INITRAMFS_DIR' < /tmp/kernel/initramfs.list > $CONFIG_INITRAMFS_SOURCE
-envsubst '$ROOT_UUID' < /tmp/kernel/initramfs.init > "$INITRAMFS_DIR"/init
-envsubst '$ROOT_UUID' < /tmp/kernel/initramfs.fstab > "$INITRAMFS_DIR"/fstab
+envsubst '$ROOT_VOLUME_GROUP' < /tmp/kernel/initramfs.init > "$INITRAMFS_DIR"/init
+envsubst '$ROOT_DEVICE' < /tmp/kernel/initramfs.fstab > "$INITRAMFS_DIR"/fstab
 
 #
 # Apply custom kernel patches
