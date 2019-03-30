@@ -36,6 +36,7 @@ statefile() {
    add_to_init $1
 }
 
+statedir portage
 statedir awesome
 statedir bash
 statedir deluge
@@ -45,7 +46,6 @@ statedir gpg
 statedir htop
 statedir java
 statedir pass
-statedir portage
 statedir salt
 statedir smartcard
 statedir ssh

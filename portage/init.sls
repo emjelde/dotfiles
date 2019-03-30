@@ -1,3 +1,6 @@
+include:
+  - .useflags
+
 gentools:
   pkg.installed:
     - names:
