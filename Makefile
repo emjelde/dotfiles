@@ -33,17 +33,17 @@ autobuild_vars = $(BUILD)/autobuild-variables.json
 vm_vars = $(BUILD)/vm-variables.json
 
 $(BUILD)/gentoo-iso:
-	$(source-env)
-	gentoo/gentoo-autobuild-vars
-	gentoo/gentoo-vm-vars
-	export PACKER_LOG_PATH=$(BUILD)/gentoo-iso.log
+	$(source-env) && \
+	gentoo/gentoo-autobuild-vars && \
+	gentoo/gentoo-vm-vars && \
+	export PACKER_LOG_PATH=$(BUILD)/gentoo-iso.log && \
 	packer build -only=$${ISO_BUILD_USE-virtualbox-iso} -var-file=$(autobuild_vars) -var-file=$(vm_vars) gentoo/gentoo.json
 
 $(BUILD)/gentoo-salt: $(BUILD)/gentoo-iso
-	$(source-env)
-	gentoo/gentoo-vm-vars
-	salt/salt-state-copy
-	export PACKER_LOG_PATH=$(BUILD)/gentoo-salt.log
+	$(source-env) && \
+	gentoo/gentoo-vm-vars && \
+	salt/salt-state-copy && \
+	export PACKER_LOG_PATH=$(BUILD)/gentoo-salt.log && \
 	packer build -only=$${SALT_BUILD_USE-virtualbox-ovf} -var-file=$(vm_vars) salt/salt.json
 
 .PHONY: resume
@@ -52,7 +52,7 @@ resume:
 	test -d $(BUILD)/gentoo-salt && \
 	rm -rf $(BUILD)/gentoo-salt.last && \
 	mv $(BUILD)/gentoo-salt $(BUILD)/gentoo-salt.last && \
-	./salt/salt-state-copy && \
+	salt/salt-state-copy && \
 	export PACKER_LOG_PATH=$(BUILD)/gentoo-salt.log
 	packer build -only=$${SALT_BUILD_USE-virtualbox-ovf} -var-file=$(BUILD)/vm-variables.json salt/salt-resume.json
 
