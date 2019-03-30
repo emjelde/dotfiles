@@ -1,85 +1,19 @@
 #!/bin/bash
 
-init_arg="/sbin/init"
-shell_checkpoint=0
+export PATH="/sbin:/bin"
 
-root_device=""
-root_device_uuid="$ROOT_UUID"
+echo -n "Waiting for devices..."
+sleep 3
 
-die() {
-   local message="${1}"
-   echo "${message}"
+mount -t proc none /proc
+mount -t sysfs none /sys
+mount -t devtmpfs none /dev
+mount -t tmpfs tmpfs /run
+
+mount /new-root
+if [ "$?" -ne 0 ]; then
+   echo "Error: Mount root failed."
    exec bash
-}
+fi
 
-do_setup() {
-   export PATH="/sbin:/bin"
-
-   echo -n "Waiting for devices..."
-   sleep 3
-
-   mount -t proc none /proc
-   mount -t sysfs none /sys
-   mount -t devtmpfs none /dev
-   mount -t tmpfs tmpfs /run
-
-   parse_cmdl_args
-
-   [ "${shell_checkpoint}" -eq 1 ] && die "Rescue Mode"
-}
-
-parse_cmdl_args() {
-   local cmdline=$(cat /proc/cmdline)
-   for param in ${cmdline}; do
-      case "${param}" in
-         rescue)
-            shell_checkpoint=1
-            ;;
-         root_device=*)
-            root_device="$(echo "${param}" | cut -d'=' -f2)"
-            echo "Using ${root_device} as root device"
-            ;;
-         root_uuid=*)
-            root_device_uuid="$(echo "${param}" | cut -d'=' -f2)"
-            echo "Set ${root_device_uuid} as root device uuid"
-            ;;
-         init=*)
-            init_arg="$(echo "${param}" | cut -d'=' -f2)"
-            ;;
-      esac
-   done
-}
-
-do_mount_root() {
-   if [ -z "${root_device}" ]
-   then
-      root_device="$(/sbin/blkid -U "${root_device_uuid}")"
-      if [ -n "${root_device}" ]
-      then
-         echo "Using ${root_device} as root device"
-      else
-         echo "No device found for UUID \"${root_device_uuid}\""
-      fi
-   fi
-
-   [ -z "${root_device}" ] && die "Error: Root missing."
-
-   mount /new-root
-
-   if [ "$?" -ne 0 ]
-   then
-      die "Error: Mount root failed."
-   fi
-}
-
-do_switch() {
-   exec switch_root /new-root "${init_arg}"
-}
-
-
-main() {
-   do_setup
-   do_mount_root
-   do_switch
-}
-main
+exec switch_root /new-root /sbin/init
