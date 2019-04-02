@@ -9,8 +9,8 @@ media-fonts:
       - media-fonts/roboto
       - media-fonts/source-pro
 
-# fonts should really be configured through eselect but salt.states.eselect
-# only supports the 'set' action and we need an 'enable' action
+# Fonts should really be configured through eselect but salt.states.eselect
+# only supports the 'set' action and we need an 'enable' action.
 {% for conf in
   '20-unhint-small-dejavu-sans.conf',
   '20-unhint-small-dejavu-sans-mono.conf',

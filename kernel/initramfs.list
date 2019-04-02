@@ -1,4 +1,3 @@
-#
 # Initramfs file list
 #
 # Describes files to be included into the initramfs.
@@ -25,11 +24,8 @@
 # <maj>        major number of nod
 # <min>        minor number of nod
 # <hard links> space separated list of other links to file
-#
 
-#
 # Basic commands needed for init
-#
 
 dir /bin 0755 0 0
 file /bin/bash /bin/bash 0755 0 0
@@ -78,9 +74,7 @@ file /sbin/switch_root /sbin/switch_root 0755 0 0
 
 dir /sys 0755 0 0
 
-#
 # Btrfs filesystem support
-#
 
 file /sbin/btrfs /sbin/btrfs 0755 0 0
 

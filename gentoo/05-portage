@@ -48,7 +48,7 @@ ln --symbolic $PORTDIR /usr/portage
 
 emerge --sync --quiet
 
-# suppress notification about news items
+# Suppress notification about news items
 eselect news read --quiet all
 
 emerge --quiet --update --deep --newuse @system

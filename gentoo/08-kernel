@@ -12,9 +12,7 @@ case "$ARCH" in
 esac
 
 chroot /mnt/gentoo /bin/bash -uex <<'EOF'
-#
 # Prepare initramfs
-#
 source <(grep CONFIG_INITRAMFS_SOURCE /tmp/kernel/kernel.config)
 export INITRAMFS_DIR=$(dirname $CONFIG_INITRAMFS_SOURCE)
 mkdir --parents "$INITRAMFS_DIR"
@@ -22,15 +20,11 @@ envsubst '$INITRAMFS_DIR' < /tmp/kernel/initramfs.list > $CONFIG_INITRAMFS_SOURC
 envsubst '$ROOT_VOLUME_GROUP' < /tmp/kernel/initramfs.init > "$INITRAMFS_DIR"/init
 envsubst '$ROOT_DEVICE' < /tmp/kernel/initramfs.fstab > "$INITRAMFS_DIR"/fstab
 
-#
 # Apply custom kernel patches
-#
 mkdir --parents /etc/portage/patches/sys-kernel/gentoo-sources
 cp /tmp/kernel/tuz.patch /etc/portage/patches/sys-kernel/gentoo-sources/
 
-#
 # Build kernel
-#
 emerge --quiet sys-kernel/gentoo-sources
 cd /usr/src/linux
 cp /tmp/kernel/kernel.config .config
@@ -40,9 +34,7 @@ make --quiet olddefconfig
 make --quiet --jobs $CPUS
 make --quiet modules_install
 
-#
 # Copy kernel to boot device
-#
 mkdir --parents /boot/efi/boot
 cp arch/${ARCH}/boot/bzImage /boot/efi/boot/bootx64.efi
 EOF

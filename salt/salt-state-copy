@@ -1,16 +1,13 @@
 #!/bin/bash
-#
+
 # Prepare the packer salt build by collecting all salt states. This is done to
 # manage the desired directory structure.
 #
 # For testing a mock pillar can be generated if no pillar already exists.
-#
 
 set -ue
 
-#
-# copy salt states into build
-#
+# Copy salt states into build
 
 BUILD=build
 SALT_DIR="${SALT_DIR-${BUILD}/salt}"
@@ -68,9 +65,7 @@ base:
     - dotfiles
 EOF
 
-#
-# generate pillar if needed
-#
+# Generate pillar if needed
 
 if [ ! -f salt/pillar.asc ] && [ ! -d salt/pillar ]; then
    echo "[WARN] Generating mock salt/pillar"

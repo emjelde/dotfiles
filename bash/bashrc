@@ -89,7 +89,7 @@ export XDG_CACHE_HOME=$HOME/.cache
 export XDG_DATA_HOME=$HOME/.local/share
 
 # Used for non-essential, user-specific data files such as
-# sockets,named pipes, etc.
+# sockets, named pipes, etc.
 # Usually set by pam_systemd (not used), initialize it here for now
 if [ -z "$XDG_RUNTIME_DIR" ]; then
   export XDG_RUNTIME_DIR=/run/user/$(id -u)
