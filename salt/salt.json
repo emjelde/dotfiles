@@ -30,7 +30,7 @@
     "output_directory": "build/gentoo-salt",
     "guest_additions_mode": "disable",
     "vboxmanage": [
-      ["modifyvm", "{{.Name}}", "--cpus", "12"],
+      ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"],
       ["modifyvm", "{{.Name}}", "--firmware", "efi"],
       ["modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}"],
       ["modifyvm", "{{.Name}}", "--vram", "{{user `vram`}}"],
