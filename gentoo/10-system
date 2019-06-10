@@ -10,7 +10,14 @@ chown evan: /home/evan /snapshots/.evan
 echo evan:correcthorsebatterystaple | chpasswd
 echo root:correcthorsebatterystaple | chpasswd
 
-eselect profile set default/linux/amd64/17.0/desktop
+# Upgrade to 17.1 amd64 profile. Requires removal of lib->lib64 compatibility
+# symlink using unsymlink-lib tool.
+#
+# https://www.gentoo.org/support/news-items/2019-06-05-amd64-17-1-profiles-are-now-stable.html
+emerge --oneshot app-portage/unsymlink-lib
+unsymlink-lib --analyze && unsymlink-lib --migrate && unsymlink-lib --finish
+eselect profile set default/linux/amd64/17.1/desktop
+emerge --oneshot /usr/lib/gcc /lib32 /usr/lib32
 
 # configure ssh for second stage provisioning
 sed --in-place 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
