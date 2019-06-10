@@ -1,7 +1,6 @@
 media-fonts:
   pkg.installed:
     - names:
-      - media-fonts/corefonts
       - media-fonts/dejavu
       - media-fonts/liberation-fonts
       - media-fonts/noto
