@@ -86,6 +86,7 @@ file /usr/lib64/libzstd.so.1 /usr/lib64/libzstd.so.1 0755 0 0
 
 file /sbin/lvm /sbin/lvm 0755 0 0
 
+file /lib64/libaio.so.1 /lib64/libaio.so.1 0755 0 0
 file /lib64/libdevmapper-event.so.1.02 /lib64/libdevmapper-event.so.1.02 0755 0 0
 file /lib64/libdevmapper.so.1.02 /lib64/libdevmapper.so.1.02 0755 0 0
 file /lib64/libm.so.6 /lib64/libm.so.6 0755 0 0
