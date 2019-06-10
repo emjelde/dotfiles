@@ -1,6 +1,6 @@
 x11:
   pkg.installed:
-    - name: x11-base/xorg-x11
+    - name: x11-base/xorg-server
 
 x11-progs:
   pkg.installed:
