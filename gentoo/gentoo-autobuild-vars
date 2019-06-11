@@ -61,7 +61,7 @@ cat << EOF > ${BUILD}/autobuild-variables.json
 {
   "arch": "${ARCH}",
   "iso_checksum": "${ISO_CHECKSUM}",
-  "iso_url": "file://${AUTOBUILD_DIR}/${ISO}",
+  "iso_url": "./${AUTOBUILD_DIR}/${ISO}",
   "mirror": "${MIRROR}",
   "rsync_mirror": "${RSYNC_MIRROR}",
   "stage3": "${AUTOBUILD}"
