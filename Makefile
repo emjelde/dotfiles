@@ -54,7 +54,7 @@ resume:
 	mv $(BUILD)/gentoo-salt $(BUILD)/gentoo-salt.last && \
 	salt/salt-state-copy && \
 	export PACKER_LOG_PATH=$(BUILD)/gentoo-salt.log
-	packer build -only=$${SALT_BUILD_USE-virtualbox-ovf} -var-file=$(BUILD)/vm-variables.json salt/salt-resume.json
+	packer build -only=$${SALT_BUILD_USE-virtualbox-ovf} -var-file=$(vm_vars) salt/salt-resume.json
 
 .PHONY: abort-resume
 abort-resume:

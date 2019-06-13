@@ -11,25 +11,26 @@ set -ue
 
 BUILD=build
 SALT_DIR="${SALT_DIR-${BUILD}/salt}"
+DOTFILES="${SALT_DIR}/dotfiles"
 
 rm -rf "$SALT_DIR"
-mkdir --parents "${SALT_DIR}"/dotfiles
+mkdir --parents "${DOTFILES}"
 
 echo "dotfiles"
-echo "include:" > "${SALT_DIR}"/dotfiles/init.sls
+echo "include:" > "${DOTFILES}/init.sls"
 
 add_to_init() {
    echo "  $1"
-   echo "  - .$1" >> "${SALT_DIR}"/dotfiles/init.sls
+   echo "  - .$1" >> "${DOTFILES}/init.sls"
 }
 
 statedir() {
-   cp --recursive "$1" "${SALT_DIR}"/dotfiles/
+   cp --recursive "$1" "${DOTFILES}"
    add_to_init $1
 }
 
 statefile() {
-   cp --parents "${1/\./\/}.sls" "${SALT_DIR}"/dotfiles/
+   cp --parents "${1/\./\/}.sls" "${DOTFILES}"
    add_to_init $1
 }
 
@@ -59,7 +60,7 @@ statedir urxvt
 statedir vim
 statedir x11
 
-cat > "${SALT_DIR}"/top.sls <<'EOF'
+cat > "${SALT_DIR}/top.sls" <<'EOF'
 base:
   '*':
     - dotfiles
@@ -74,9 +75,8 @@ if [ ! -f salt/pillar.asc ] && [ ! -d salt/pillar ]; then
    SALT_KEYS="$(mktemp -d)" && trap "rm -r \"$SALT_KEYS\"" EXIT
 
    # The mock salt/pillar.asc key uses %transient-key to generate keys faster
-   # along with %no-protection to skip passphrase. This key is not for general
-   # use. Salt does require no passphrase as it works in a non-interactive
-   # mode.
+   # along with %no-protection to skip passphrase. Salt requires no passphrase
+   # as it works in a non-interactive mode. This key is not for general use.
    SALT_KEYS_GPG="${SALT_KEYS}/gpg"
    mkdir "$SALT_KEYS_GPG"
    gpg --quiet --homedir "$SALT_KEYS_GPG" --batch --generate-key 2>/dev/null <<-'EOF'
@@ -121,14 +121,14 @@ if [ ! -f salt/pillar.asc ] && [ ! -d salt/pillar ]; then
 fi
 
 if [ ! -f salt/pillar.asc ]; then
-   (>&2 echo "A pillar GPG key (salt/pillar.asc) is required" \
-             "but a mock pillar key was not generated because salt/pillar" \
-             "already exists.")
+   (>&2 echo 'A pillar GPG key (salt/pillar.asc) is required' \
+             'but a mock pillar key was not generated because salt/pillar' \
+             'already exists.')
    exit 1
 fi
 
 if [ ! -d salt/pillar ]; then
-   (>&2 echo "A pillar (salt/pillar) is required but a mock pillar was not" \
-             "generated because GPG key salt/pillar.asc already exists.")
+   (>&2 echo 'A pillar (salt/pillar) is required but a mock pillar was not' \
+             'generated because GPG key salt/pillar.asc already exists.')
    exit 1
 fi
