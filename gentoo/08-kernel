@@ -16,7 +16,7 @@ chroot /mnt/gentoo /bin/bash -uex <<'EOF'
 source <(grep CONFIG_INITRAMFS_SOURCE /tmp/kernel/kernel.config)
 export INITRAMFS_DIR=$(dirname $CONFIG_INITRAMFS_SOURCE)
 mkdir --parents "$INITRAMFS_DIR"
-envsubst '$INITRAMFS_DIR' < /tmp/kernel/initramfs.list > $CONFIG_INITRAMFS_SOURCE
+envsubst '$INITRAMFS_DIR' < <(/tmp/kernel/initramfs.list) > $CONFIG_INITRAMFS_SOURCE
 envsubst '$ROOT_VOLUME_GROUP' < /tmp/kernel/initramfs.init > "$INITRAMFS_DIR"/init
 envsubst '$ROOT_DEVICE' < /tmp/kernel/initramfs.fstab > "$INITRAMFS_DIR"/fstab
 
