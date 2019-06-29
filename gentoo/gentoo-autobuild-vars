@@ -8,7 +8,13 @@ set -uex
 
 ARCH=amd64
 
-# Gentoo source and Portage tree mirrors, see .env.example for configuration
+# Gentoo source and Portage tree mirrors, if unset automatically select a mirror
+if [ -z ${DIST_MIRROR+x} ]; then
+   DIST_MIRROR=$(mirrorselect -R "${MIRRORSELECT_REGION-North America}" \
+                              -c "${MIRRORSELECT_COUNTRY-USA}" --http -o \
+      | grep 'GENTOO_MIRRORS=' | tr -d '"' | sed 's/\/$//')
+   DIST_MIRROR="${DIST_MIRROR#GENTOO_MIRRORS=}"
+fi
 MIRROR=${DIST_MIRROR:-http://distfiles.gentoo.org}
 RSYNC_MIRROR=${RSYNC_MIRROR:-rsync://rsync.gentoo.org/gentoo-portage}
 

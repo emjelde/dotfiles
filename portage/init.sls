@@ -7,6 +7,7 @@ gentools:
       - app-portage/cpuid2cpuflags
       - app-portage/genlop
       - app-portage/gentoolkit
+      - app-portage/mirrorselect
 
 eix:
   pkg.installed:
