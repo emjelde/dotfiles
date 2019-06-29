@@ -8,11 +8,11 @@ mount --read-write --options defaults,noatime,subvol=evan "$ROOT_DEVICE" /mnt/ge
 mount --read-write --options defaults,noatime "$ROOT_DEVICE" /mnt/gentoo/snapshots/.evan
 mount --read-write --options defaults,noatime "$ROOT_DEVICE" /mnt/gentoo/snapshots/.root
 
-BOOT_UUID="$(blkid -s UUID -o value ${BOOT_DEVICE})"
-HOME_UUID="$(blkid -s UUID -o value ${ROOT_DEVICE})"
-PORT_UUID="$(blkid -s UUID -o value ${ROOT_DEVICE})"
-ROOT_UUID="$(blkid -s UUID -o value ${ROOT_DEVICE})"
-SWAP_UUID="$(blkid -s UUID -o value ${SWAP_DEVICE})"
+BOOT_UUID="$(blkid -s UUID -o value "$BOOT_DEVICE")"
+HOME_UUID="$(blkid -s UUID -o value "$ROOT_DEVICE")"
+PORT_UUID="$(blkid -s UUID -o value "$ROOT_DEVICE")"
+ROOT_UUID="$(blkid -s UUID -o value "$ROOT_DEVICE")"
+SWAP_UUID="$(blkid -s UUID -o value "$SWAP_DEVICE")"
 
 chroot /mnt/gentoo /bin/bash -uex <<EOF
 emerge --quiet sys-fs/lvm2

@@ -6,12 +6,12 @@ sgdisk \
   --print /dev/sda
 
 pvcreate /dev/sda2
-vgcreate ${ROOT_VOLUME_GROUP} /dev/sda2
-lvcreate --name swap --size 1G ${ROOT_VOLUME_GROUP}
-lvcreate --name root --extents 50%VG ${ROOT_VOLUME_GROUP}
+vgcreate "$ROOT_VOLUME_GROUP" /dev/sda2
+lvcreate --name swap --size 1G "$ROOT_VOLUME_GROUP"
+lvcreate --name root --extents 50%VG "$ROOT_VOLUME_GROUP"
 
-mkfs.vfat "${BOOT_DEVICE}"
-mkfs.btrfs "${ROOT_DEVICE}"
+mkfs.vfat "$BOOT_DEVICE"
+mkfs.btrfs "$ROOT_DEVICE"
 
-mkswap "${SWAP_DEVICE}"
-swapon "${SWAP_DEVICE}"
+mkswap "$SWAP_DEVICE"
+swapon "$SWAP_DEVICE"

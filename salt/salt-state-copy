@@ -26,12 +26,12 @@ add_to_init() {
 
 statedir() {
    cp --recursive "$1" "${DOTFILES}"
-   add_to_init $1
+   add_to_init "$1"
 }
 
 statefile() {
    cp --parents "${1/\./\/}.sls" "${DOTFILES}"
-   add_to_init $1
+   add_to_init "$1"
 }
 
 statedir portage
