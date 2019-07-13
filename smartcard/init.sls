@@ -7,8 +7,8 @@ nitrokey:
     - name: app-crypt/nitrokey-app
   portage_config.flags:
     - names:
-      - =app-crypt/libnitrokey-3.3
-      - =app-crypt/nitrokey-app-1.3.1
+      - =app-crypt/libnitrokey-3.5
+      - =app-crypt/nitrokey-app-1.4
       - =dev-libs/cppcodec-0.2
     - accept_keywords:
       - ~ARCH
