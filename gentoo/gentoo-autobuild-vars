@@ -10,8 +10,8 @@ ARCH=amd64
 
 # Gentoo source and Portage tree mirrors, if unset automatically select a mirror
 if [ -z ${DIST_MIRROR+x} ]; then
-   DIST_MIRROR=$(mirrorselect -R "${MIRRORSELECT_REGION-North America}" \
-                              -c "${MIRRORSELECT_COUNTRY-USA}" --http -o \
+   DIST_MIRROR=$(mirrorselect -R "${MIRRORSELECT_REGION:-North America}" \
+                              -c "${MIRRORSELECT_COUNTRY:-USA}" --http -o \
       | grep 'GENTOO_MIRRORS=' | tr -d '"' | sed 's/\/$//')
    DIST_MIRROR="${DIST_MIRROR#GENTOO_MIRRORS=}"
 fi
