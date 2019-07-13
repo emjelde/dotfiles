@@ -1,3 +1,5 @@
+# Makefile for dotfiles
+
 BUILD = build
 SHELL = /bin/bash
 

@@ -19,7 +19,7 @@ unsymlink-lib --analyze && unsymlink-lib --migrate && unsymlink-lib --finish
 eselect profile set default/linux/amd64/17.1/desktop
 emerge --oneshot /usr/lib/gcc /lib32 /usr/lib32
 
-# configure ssh for second stage provisioning
+# Configure ssh for second stage provisioning
 sed --in-place 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
 sed --in-place 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 rc-update add sshd default

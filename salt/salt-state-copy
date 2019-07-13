@@ -102,6 +102,10 @@ if [ ! -f salt/pillar.asc ] && [ ! -d salt/pillar ]; then
 	EOF
    SALT_KEYS_SSH="${SALT_KEYS}/ssh"
    mkdir "$SALT_KEYS_SSH"
+   # -q (silence ssh-keygen)
+   # -t (type of key)
+   # -N (new passphrase)
+   # -f (filename)
    ssh-keygen -q -t rsa -N '' -f "${SALT_KEYS_SSH}"/id_rsa
    gpg --quiet --homedir "$SALT_KEYS_GPG" --encrypt --recipient salt-master --armor "${SALT_KEYS_SSH}"/id_rsa
    IDENTITY=$(<"${SALT_KEYS_SSH}"/id_rsa.asc)

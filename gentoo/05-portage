@@ -4,7 +4,7 @@ tarball='portage-latest.tar.xz'
 snapshots_url="${MIRROR}/snapshots/${tarball}"
 
 tarball_temp="$(mktemp -d)" && trap "rm -r \"$tarball_temp\"" EXIT
-wget --directory-prefix="$tarball_temp" --quiet "$snapshots_url"{,.gpgsig}
+wget --directory-prefix="$tarball_temp" --quiet "$snapshots_url"{.gpgsig,}
 
 gpgv --quiet --homedir "${AUTOBUILD_KEYRING}" "${tarball_temp}/${tarball}"{.gpgsig,}
 

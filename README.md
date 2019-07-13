@@ -1,24 +1,69 @@
 # Dotfiles
 
-In Linux it is common for programs to use your home directory `~` for it's text
-based configuration files. These files usually start with a dot character and
-is why they are sometimes called dotfiles. Dotfiles usually remain hidden when
-using commands like `ls` to list the directory contents and interestingly this
-was likely an [unintended consequence](https://plus.google.com/+RobPikeTheHuman/posts/R58WgWwN9jp)
-of trying to make `ls` not show `.` and `..` (links to the current and parent
-directory).
+This repository helps to manage my own dotfiles and installation of the
+packages using a configuration management framework called
+[Salt](https://docs.saltstack.com/en/latest/).
 
-This repository helps to manage my own dotfiles using a configuration
-management framework called [salt](https://docs.saltstack.com/en/latest/) and
-goes a bit further to also coordinate installation of the programs themselves.
+The default goal for `make` creates and provisions a Gentoo machine image using
+[Packer](https://packer.io).
 
-The salt state system uses the SLS (**S**a**L**t **S**tate) files in this
-repository as a representation of the state in which the system should be in.
-Actions performed by salt's state modules ensure a well-known state and are
-idempotent so applying the action multiple times results in no changes.
+## Getting Started
 
-If starting from a clean repository the default goal for `make` will build a
-Gentoo Linux virtual machine image and fully provision it up to the latest
-state of repository. This image can serve as the next version of the system.
-Additional goals will be provided to incrementally update the system as changes
-are made to the repository.
+Install Packer on Gentoo which currently requires using testing keywords, you
+can add these as shown below:
+
+```sh
+# Add testing keywords
+mkdir --parents /etc/portage/package.accept_keywords/dev-util
+echo =dev-util/packer-1.3.5 > /etc/portage/package.accept_keywords/dev-util/packer
+
+# Install Packer
+emerge dev-util/packer
+```
+
+I've tested most successfully with version 1.3.5, but Packer also provides
+additional [install options](https://www.packer.io/intro/getting-started/install.html).
+
+The configuration supports two kinds of Packer builders for VirtualBox and
+QEMU:
+
+```sh
+# Install VirtualBox
+emerge app-emulation/virtualbox
+
+# or install QEMU
+emerge app-emulation/qemu
+```
+
+The make command will use the VirtualBox builder by default. To use the QEMU
+builder, make a copy of the `.env.example` file named `.env` in the same
+directory and change `ISO_BUILD_USE` and `SALT_BUILD_USE` to `qemu`:
+
+```
+ISO_BUILD_USE=qemu
+SALT_BUILD_USE=qemu
+```
+
+Now run the make command:
+
+```sh
+make
+```
+
+This will start a staged build process that will create a Gentoo base system
+and then reboot into that Gentoo base system to install and configure the
+packages and copy the dotfiles.
+
+Here's an overview of the process:
+
+Starting with the `gentoo/gentoo-autobuild-vars` script the latest Gentoo
+minimal install ISO is downloaded and used as the boot medium for Packer.
+Packer will provision the base system using `gentoo/gentoo.json` along with the
+scripts under `gentoo`. This will create the VM image `build/gentoo-iso`.
+
+Next, the salt state is prepared using `salt/salt-state-copy`. Packer then
+boots the VM image `build/gentoo-iso` and using `salt/salt.json` Packer will
+install and run Salt using the script `salt/01-install`. This will create the
+VM image `build/gentoo-salt`.
+
+Ending with a Gentoo machine built and configured with the latest packages.

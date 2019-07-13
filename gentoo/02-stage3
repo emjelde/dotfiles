@@ -1,15 +1,24 @@
 #!/bin/bash -uex
 
+# Install stage 3 tarball which contains an almost-complete and
+# almost-functional Gentoo system.
+#
+# https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Stage
+
 # Set the time allowing a big adjustment and quit. The base system files should
 # be extracted with accurate time stamps.
 ntpd --quit --panicgate
 
+# Choose multilib (32-bit and 64-bit) stage 3 for now because 32-bit is still
+# needed for some applications.
 tarball="stage3-amd64-${STAGE3}.tar.xz"
 stage3_url="${MIRROR}/releases/${ARCH}/autobuilds/${STAGE3}/${tarball}"
 
+# Download stage file making sure to remove it later
 tarball_temp="$(mktemp -d)" && trap "rm -r \"$tarball_temp\"" EXIT
-wget --directory-prefix="$tarball_temp" --quiet "$stage3_url"{,.DIGESTS.asc}
+wget --directory-prefix="$tarball_temp" --quiet "$stage3_url"{.DIGESTS.asc,}
 
+# Verify and validate stage file
 gpgv --quiet --homedir "${AUTOBUILD_KEYRING}" "${tarball_temp}/${tarball}.DIGESTS.asc"
 cd "$tarball_temp" || exit
 awk '/# SHA512 HASH/{getline; print}' "${tarball}.DIGESTS.asc" \
@@ -17,6 +26,7 @@ awk '/# SHA512 HASH/{getline; print}' "${tarball}.DIGESTS.asc" \
    | sha512sum --check --status -
 cd -
 
+# Create a subvolume for the base system
 mkdir --parents /mnt/btrfs
 mount --read-write --options defaults,noatime "$ROOT_DEVICE" /mnt/btrfs
 btrfs subvolume create /mnt/btrfs/root
@@ -24,6 +34,7 @@ btrfs subvolume create /mnt/btrfs/root
 mkdir --parents /mnt/gentoo
 mount --read-write --options defaults,noatime,subvol=root "$ROOT_DEVICE" /mnt/gentoo
 
+# Unpack stage tarball
 tar --extract \
     --xz \
     --preserve-permissions \

@@ -6,17 +6,13 @@
 # /usr/src/linux/usr/gen_init_cpio.
 #
 # # a comment
-# file <name> <location> <mode> <uid> <gid> [<hard links>]
-# dir <name> <mode> <uid> <gid>
-# nod <name> <mode> <uid> <gid> <dev_type> <maj> <min>
-# slink <name> <target> <mode> <uid> <gid>
-# pipe <name> <mode> <uid> <gid>
-# sock <name> <mode> <uid> <gid>
+# file  <name> <location> <mode> <uid> <gid> [<hard links>]
+# dir   <name> <mode>     <uid>  <gid>
+# nod   <name> <mode>     <uid>  <gid> <dev_type> <maj> <min>
 #
 # <name>       name of the file/dir/nod/etc in the archive
 # <location>   location of the file in the current filesystem
 #              expands shell variables quoted with ${}
-# <target>     link target
 # <mode>       mode/permissions of the file
 # <uid>        user id (0=root)
 # <gid>        group id (0=root)
