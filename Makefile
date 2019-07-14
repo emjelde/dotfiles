@@ -31,32 +31,51 @@ define source-env =
 	fi
 endef
 
+define packer-builder-iso =
+	if [ "$${PACKER_BUILDER:-virtualbox}" = 'virtualbox' ]; then
+		only=virtualbox-iso
+	else
+		only="$$PACKER_BUILDER"
+	fi
+endef
+
+define packer-builder-salt =
+	if [ "$${PACKER_BUILDER:-virtualbox}" = 'virtualbox' ]; then
+		only=virtualbox-ovf
+	else
+		only="$$PACKER_BUILDER"
+	fi
+endef
+
 autobuild_vars = $(BUILD)/autobuild-variables.json
 vm_vars = $(BUILD)/vm-variables.json
 
 $(BUILD)/gentoo-iso:
 	$(source-env) && \
+	$(packer-builder-iso) && \
 	gentoo/gentoo-autobuild-vars && \
 	gentoo/gentoo-vm-vars && \
 	export PACKER_LOG_PATH=$(BUILD)/gentoo-iso.log && \
-	packer build -only=$${ISO_BUILD_USE-virtualbox-iso} -var-file=$(autobuild_vars) -var-file=$(vm_vars) gentoo/gentoo.json
+	packer build -only=$$only -var-file=$(autobuild_vars) -var-file=$(vm_vars) gentoo/gentoo.json
 
 $(BUILD)/gentoo-salt: $(BUILD)/gentoo-iso
 	$(source-env) && \
+	$(packer-builder-salt) && \
 	gentoo/gentoo-vm-vars && \
 	salt/salt-state-copy && \
 	export PACKER_LOG_PATH=$(BUILD)/gentoo-salt.log && \
-	packer build -only=$${SALT_BUILD_USE-virtualbox-ovf} -var-file=$(vm_vars) salt/salt.json
+	packer build -only=$$only -var-file=$(vm_vars) salt/salt.json
 
 .PHONY: resume
 resume:
-	$(source-env)
+	$(source-env) && \
+	$(packer-builder-salt) && \
 	test -d $(BUILD)/gentoo-salt && \
 	rm -rf $(BUILD)/gentoo-salt.last && \
 	mv $(BUILD)/gentoo-salt $(BUILD)/gentoo-salt.last && \
 	salt/salt-state-copy && \
-	export PACKER_LOG_PATH=$(BUILD)/gentoo-salt.log
-	packer build -only=$${SALT_BUILD_USE-virtualbox-ovf} -var-file=$(vm_vars) salt/salt-resume.json
+	export PACKER_LOG_PATH=$(BUILD)/gentoo-salt.log && \
+	packer build -only=$$only -var-file=$(vm_vars) salt/salt-resume.json
 
 .PHONY: abort-resume
 abort-resume:

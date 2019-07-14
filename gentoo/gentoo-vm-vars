@@ -30,9 +30,7 @@ VIDEO_MEMORY=${VIDEO_MEMORY:=128} # 128 MB is arbitrary
 
 # If true the VirtualBox kernel module and guest additions will be installed
 USE_VIRTUALBOX=$(
-   if [[ -z ${ISO_BUILD_USE+x} || -z ${SALT_BUILD_USE+x} ||
-         ("${ISO_BUILD_USE}" == *"virtualbox"* &&
-         "${SALT_BUILD_USE}" == *"virtualbox"*) ]]; then
+   if [ "${PACKER_BUILDER:-virtualbox}" = "virtualbox" ]; then
       echo 'true'
    else
       echo 'false'

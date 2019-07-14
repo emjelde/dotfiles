@@ -37,11 +37,10 @@ emerge app-emulation/qemu
 
 The make command will use the VirtualBox builder by default. To use the QEMU
 builder, make a copy of the `.env.example` file named `.env` in the same
-directory and change `ISO_BUILD_USE` and `SALT_BUILD_USE` to `qemu`:
+directory and change `PACKER_BUILDER` to `qemu`:
 
 ```
-ISO_BUILD_USE=qemu
-SALT_BUILD_USE=qemu
+PACKER_BUILDER=qemu
 ```
 
 Now run the make command:

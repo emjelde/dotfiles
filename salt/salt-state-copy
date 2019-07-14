@@ -51,7 +51,7 @@ statefile 'system.fonts'
 statefile 'system.locale'
 statefile 'system.system'
 statefile 'system.time'
-if [[ -z ${SALT_BUILD_USE+x} || "${SALT_BUILD_USE}" == *"virtualbox"* ]]; then
+if [ "${PACKER_BUILDER:-virtualbox}" = "virtualbox" ]; then
    statefile 'system.virtualbox'
 fi
 statedir thunderbird
