@@ -24,11 +24,11 @@ clean:
 	rm -rf $(BUILD)
 
 define source-env =
-if [ -f .env ]; then
-	set -o allexport
-	source .env
-	set +o allexport
-fi
+	if [ -f .env ]; then
+		set -o allexport
+		source .env
+		set +o allexport
+	fi
 endef
 
 autobuild_vars = $(BUILD)/autobuild-variables.json
