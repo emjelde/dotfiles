@@ -1,6 +1,7 @@
 #!/bin/bash -uex
 
 cp --recursive "${SOURCE}/kernel" /mnt/gentoo/tmp/
+cp /dev/shm/initramfs.key /mnt/gentoo/tmp/kernel/
 trap "rm --recursive /mnt/gentoo/tmp/kernel" EXIT
 
 OLD_ARCH=${ARCH}
@@ -11,18 +12,22 @@ case "$ARCH" in
   ;;
 esac
 
+export LUKS_UUID="$(blkid -s UUID -o value "$LUKS_DEVICE")"
+
 chroot /mnt/gentoo /bin/bash -uex <<'EOF'
 # Prepare initramfs
 emerge --quiet \
    sys-fs/btrfs-progs \
+   sys-fs/cryptsetup \
    sys-fs/lvm2
 rc-update add lvm boot
 source <(grep CONFIG_INITRAMFS_SOURCE /tmp/kernel/kernel.config)
 export INITRAMFS_DIR=$(dirname $CONFIG_INITRAMFS_SOURCE)
 mkdir --parents "$INITRAMFS_DIR"
 envsubst '$INITRAMFS_DIR' < <(/tmp/kernel/initramfs.list) > $CONFIG_INITRAMFS_SOURCE
-envsubst '$ROOT_VOLUME_GROUP' < /tmp/kernel/initramfs.init > "${INITRAMFS_DIR}/init"
+envsubst '$LUKS_UUID $ROOT_VOLUME_GROUP' < /tmp/kernel/initramfs.init > "${INITRAMFS_DIR}/init"
 envsubst '$ROOT_DEVICE' < /tmp/kernel/initramfs.fstab > "${INITRAMFS_DIR}/fstab"
+cp /tmp/kernel/initramfs.key "${INITRAMFS_DIR}/key"
 
 # Apply custom kernel patches
 mkdir --parents /etc/portage/patches/sys-kernel/gentoo-sources

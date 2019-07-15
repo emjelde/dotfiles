@@ -7,12 +7,22 @@
 
 sgdisk \
   --new 1:0:+128M --typecode 1:EF00 --change-name 1:"linux-boot" \
-  --new 2:0:0     --typecode 2:8E00 --change-name 2:"linux-lvm" \
+  --new 2:0:0     --typecode 2:8300 --change-name 2:"linux-luks" \
   --print /dev/sda
 
+# Encrypting with LUKS
+OLD_UMASK="$(umask)"
+umask 077
+dd if=/dev/urandom of=/dev/shm/initramfs.key bs=1 count=4096
+umask "$OLD_UMASK"
+# Format using /dev/urandom to speed up the volume key generation. This will
+# produce a low-quality volume key which should be replaced before actual use.
+cryptsetup luksFormat --use-urandom --key-file /dev/shm/initramfs.key "$LUKS_DEVICE"
+cryptsetup open --type luks --key-file /dev/shm/initramfs.key "$LUKS_DEVICE" linux-lvm
+
 # Using LVM to allow for more flexibility and control over partitions
-pvcreate /dev/sda2
-vgcreate "$ROOT_VOLUME_GROUP" /dev/sda2
+pvcreate /dev/mapper/linux-lvm
+vgcreate "$ROOT_VOLUME_GROUP" /dev/mapper/linux-lvm
 lvcreate --name swap --size 1G "$ROOT_VOLUME_GROUP"
 lvcreate --name root --extents 50%VG "$ROOT_VOLUME_GROUP"
 

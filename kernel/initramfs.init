@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export PATH="/sbin:/bin"
+export PATH="/sbin:/bin:/usr/bin"
 
 echo -n "Waiting for devices..."
 sleep 3
@@ -9,6 +9,20 @@ mount -t proc none /proc
 mount -t sysfs none /sys
 mount -t devtmpfs none /dev
 mount -t tmpfs tmpfs /run
+
+device="$(/sbin/blkid --uuid "$LUKS_UUID")"
+
+cryptsetup isLuks "$device"
+if [ "$?" -ne 0 ]; then
+   echo "Error: $device is not an encrypted device."
+   exec bash
+fi
+
+cryptsetup open --allow-discards --key-file /etc/key "$device" linux-lvm
+if [ "$?" -ne 0 ]; then
+   echo "Error: Failed to open encrypted device."
+   exec bash
+fi
 
 lvm vgchange --activate y "$ROOT_VOLUME_GROUP"
 if [ "$?" -ne 0 ]; then

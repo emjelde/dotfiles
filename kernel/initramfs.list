@@ -34,6 +34,8 @@ dir /proc 0755 0 0
 dir /run 0755 0 0
 dir /sbin 0755 0 0
 dir /sys 0755 0 0
+dir /usr 0755 0 0
+dir /usr/bin 0755 0 0
 dir /usr/lib64 0755 0 0
 
 nod /dev/console 0600 0 0 c 5 1
@@ -46,6 +48,7 @@ nod /dev/urandom 0600 0 0 c 1 9
 nod /dev/zero 0600 0 0 c 1 5
 
 file /etc/fstab ${INITRAMFS_DIR}/fstab 0644 0 0
+file /etc/key ${INITRAMFS_DIR}/key 0600 0 0
 file init ${INITRAMFS_DIR}/init 0755 0 0
 EOF
 
@@ -59,6 +62,7 @@ lddtree -l /bin/mount
 lddtree -l /bin/sleep
 lddtree -l /sbin/blkid
 lddtree -l /sbin/btrfs
+lddtree -l /sbin/cryptsetup
 lddtree -l /sbin/lvm
 lddtree -l /sbin/switch_root
 ) | sort --unique \

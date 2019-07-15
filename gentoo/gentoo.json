@@ -85,6 +85,7 @@
       "BOOT_DEVICE=/dev/sda1",
       "CPU_FLAGS_X86={{user `cpuflags`}}",
       "CPUS={{user `cpus`}}",
+      "LUKS_DEVICE=/dev/sda2",
       "MIRROR={{user `mirror`}}",
       "ROOT_DEVICE=/dev/{{user `root_volume_group`}}/root",
       "ROOT_VOLUME_GROUP={{user `root_volume_group`}}",
