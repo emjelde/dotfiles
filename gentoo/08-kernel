@@ -4,14 +4,6 @@ cp --recursive "${SOURCE}/kernel" /mnt/gentoo/tmp/
 cp /dev/shm/initramfs.key /mnt/gentoo/tmp/kernel/
 trap "rm --recursive /mnt/gentoo/tmp/kernel" EXIT
 
-OLD_ARCH=${ARCH}
-
-case "$ARCH" in
-  x86|x86_64|amd64)
-    ARCH=x86
-  ;;
-esac
-
 export LUKS_UUID="$(blkid -s UUID -o value "$LUKS_DEVICE")"
 
 chroot /mnt/gentoo /bin/bash -uex <<'EOF'
@@ -45,7 +37,5 @@ make --quiet modules_install
 
 # Copy kernel to boot device
 mkdir --parents /boot/efi/boot
-cp arch/${ARCH}/boot/bzImage /boot/efi/boot/bootx64.efi
+cp arch/x86_64/boot/bzImage /boot/efi/boot/bootx64.efi
 EOF
-
-ARCH=${OLD_ARCH}

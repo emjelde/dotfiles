@@ -17,9 +17,8 @@ MIRROR=${DIST_MIRROR:-http://distfiles.gentoo.org}
 RSYNC_MIRROR=${RSYNC_MIRROR:-rsync://rsync.gentoo.org/gentoo-portage}
 
 # Get the path to the latest autobuild
-ARCH=amd64
-DIST="${MIRROR}/releases/${ARCH}/autobuilds"
-ISO_PATH=$(wget -q -O- "${DIST}/latest-install-${ARCH}-minimal.txt" | tail -n 1 | cut -f 1 -d ' ')
+DIST="${MIRROR}/releases/amd64/autobuilds"
+ISO_PATH=$(wget -q -O- "${DIST}/latest-install-amd64-minimal.txt" | tail -n 1 | cut -f 1 -d ' ')
 ISO="$(basename "$ISO_PATH")"
 BUILD=build
 AUTOBUILD="$(dirname "$ISO_PATH")"
@@ -65,7 +64,6 @@ ISO_CHECKSUM=$(echo "$ISO_CHECKSUM" | head -n 1 | cut -f 1 -d ' ')
 # Write to a configuration file used by the gentoo/gentoo.json Packer script
 cat << EOF > ${BUILD}/autobuild-variables.json
 {
-  "arch": "${ARCH}",
   "iso_checksum": "${ISO_CHECKSUM}",
   "iso_url": "./${AUTOBUILD_DIR}/${ISO}",
   "mirror": "${MIRROR}",

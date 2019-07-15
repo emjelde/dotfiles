@@ -80,7 +80,6 @@
   },{
     "type": "shell",
     "environment_vars": [
-      "ARCH={{user `arch`}}",
       "AUTOBUILD_KEYRING=/tmp/keyring",
       "BOOT_DEVICE=/dev/sda1",
       "CPU_FLAGS_X86={{user `cpuflags`}}",
