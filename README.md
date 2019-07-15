@@ -2,10 +2,10 @@
 
 This repository helps to manage my own dotfiles and installation of the
 packages using a configuration management framework called
-[Salt](https://docs.saltstack.com/en/latest/).
+[Salt](https://docs.saltstack.com/en/latest/topics/states/).
 
 The default goal for `make` creates and provisions a Gentoo machine image using
-[Packer](https://packer.io).
+[Packer](https://packer.io/intro/index.html).
 
 ## Getting Started
 
@@ -21,8 +21,8 @@ echo =dev-util/packer-1.3.5 > /etc/portage/package.accept_keywords/dev-util/pack
 emerge dev-util/packer
 ```
 
-I've tested most successfully with version 1.3.5, but Packer also provides
-additional [install options](https://www.packer.io/intro/getting-started/install.html).
+Packer also provides additional
+[install options](https://www.packer.io/intro/getting-started/install.html).
 
 The configuration supports two kinds of Packer builders for VirtualBox and
 QEMU:
@@ -49,9 +49,9 @@ Now run the make command:
 make
 ```
 
-This will start a staged build process that will create a Gentoo base system
-and then reboot into that Gentoo base system to install and configure the
-packages and copy the dotfiles.
+This starts a staged build process that will create a Gentoo base system and
+then reboot into that Gentoo base system to install and configure the packages
+and copy the dotfiles.
 
 Here's an overview of the process:
 
@@ -64,5 +64,3 @@ Next, the salt state is prepared using `salt/salt-state-copy`. Packer then
 boots the VM image `build/gentoo-iso` and using `salt/salt.json` Packer will
 install and run Salt using the script `salt/01-install`. This will create the
 VM image `build/gentoo-salt`.
-
-Ending with a Gentoo machine built and configured with the latest packages.

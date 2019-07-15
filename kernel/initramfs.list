@@ -22,9 +22,7 @@ lddtree -l /sbin/switch_root
 
 # dir <name> <mode> <uid> <gid>
 #
-# <name>     name of the file/dir/nod/etc in the archive
-# <location> location of the file in the current filesystem
-#            expands shell variables quoted with ${}
+# <name>     name of the dir in the archive
 # <mode>     mode/permissions of the file
 # <uid>      user id (0=root)
 # <gid>      group id (0=root)
@@ -47,6 +45,10 @@ EOF
 
 # nod <name> <mode> <uid> <gid> <dev_type> <maj> <min>
 #
+# <name>     name of the nod in the archive
+# <mode>     mode/permissions of the file
+# <uid>      user id (0=root)
+# <gid>      group id (0=root)
 # <dev_type> device type (b=block, c=character)
 # <maj>      major number of nod
 # <min>      minor number of nod
@@ -63,6 +65,13 @@ nod /dev/zero 0600 0 0 c 1 5
 EOF
 
 # file <name> <location> <mode> <uid> <gid>
+#
+# <name>     name of the file in the archive
+# <location> location of the file in the current filesystem
+#            expands shell variables quoted with ${}
+# <mode>     mode/permissions of the file
+# <uid>      user id (0=root)
+# <gid>      group id (0=root)
 cat << 'EOF'
 
 file /etc/fstab ${INITRAMFS_DIR}/fstab 0644 0 0

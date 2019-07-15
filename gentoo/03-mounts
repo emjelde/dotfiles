@@ -1,5 +1,6 @@
 #!/bin/bash -uex
 
+# Make certain filesystems available in the new environment
 mount --read-write "${BOOT_DEVICE}" /mnt/gentoo/boot
 mount --types proc proc /mnt/gentoo/proc
 mount --rbind /sys /mnt/gentoo/sys
