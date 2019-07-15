@@ -9,26 +9,19 @@ mount --read-write --options defaults,noatime "$ROOT_DEVICE" /mnt/gentoo/snapsho
 mount --read-write --options defaults,noatime "$ROOT_DEVICE" /mnt/gentoo/snapshots/.root
 
 BOOT_UUID="$(blkid -s UUID -o value "$BOOT_DEVICE")"
-HOME_UUID="$(blkid -s UUID -o value "$ROOT_DEVICE")"
-PORT_UUID="$(blkid -s UUID -o value "$ROOT_DEVICE")"
 ROOT_UUID="$(blkid -s UUID -o value "$ROOT_DEVICE")"
 SWAP_UUID="$(blkid -s UUID -o value "$SWAP_DEVICE")"
 
 chroot /mnt/gentoo /bin/bash -uex <<EOF
-emerge --quiet sys-fs/lvm2
-rc-update add lvm boot
-
-emerge --quiet --oneshot sys-fs/btrfs-progs
-
 cat > /etc/fstab <<'DATA'
 # <fs>              <mount>                 <type>   <opts>                              <dump/pass>
 UUID=${ROOT_UUID}   /                       btrfs    defaults,noatime,subvol=root        0 0
 UUID=${BOOT_UUID}   /boot                   vfat     noauto,noatime                      0 0
-UUID=${HOME_UUID}   /home/evan              btrfs    defaults,noatime,subvol=evan        0 0
-UUID=${HOME_UUID}   /snapshots/.evan        btrfs    defaults,noatime                    0 0
+UUID=${ROOT_UUID}   /home/evan              btrfs    defaults,noatime,subvol=evan        0 0
+UUID=${ROOT_UUID}   /snapshots/.evan        btrfs    defaults,noatime                    0 0
 UUID=${ROOT_UUID}   /snapshots/.root        btrfs    defaults,noatime                    0 0
-UUID=${PORT_UUID}   /var/gentoo/distfiles   btrfs    defaults,noatime,subvol=distfiles   0 0
-UUID=${PORT_UUID}   /var/gentoo/repos       btrfs    defaults,noatime,subvol=repos       0 0
+UUID=${ROOT_UUID}   /var/gentoo/distfiles   btrfs    defaults,noatime,subvol=distfiles   0 0
+UUID=${ROOT_UUID}   /var/gentoo/repos       btrfs    defaults,noatime,subvol=repos       0 0
 UUID=${SWAP_UUID}   none                    swap     sw                                  0 0
 DATA
 EOF
