@@ -8,7 +8,7 @@ set -ue
 # Add the following commands and their dependencies to the list.
 # The lddtree command belongs to app-misc/pax-utils and is already provided in
 # stage3.
-lddtree=$(
+lddtree=$(echo "$(
 lddtree -l /bin/bash
 lddtree -l /bin/cat
 lddtree -l /bin/mount
@@ -18,7 +18,7 @@ lddtree -l /sbin/btrfs
 lddtree -l /sbin/cryptsetup
 lddtree -l /sbin/lvm
 lddtree -l /sbin/switch_root
-)
+)" | sort --unique)
 
 # dir <name> <mode> <uid> <gid>
 #
@@ -32,7 +32,6 @@ echo "$lddtree" | xargs dirname
 cat << 'EOF'
 /dev
 /etc
-/lib64
 /mnt
 /new-root
 /proc
@@ -79,6 +78,4 @@ file /etc/key ${INITRAMFS_DIR}/key 0600 0 0
 file init ${INITRAMFS_DIR}/init 0755 0 0
 
 EOF
-echo "$lddtree" \
-  | sort --unique \
-  | sed 's/\(.*\)/file \1 \1 0755 0 0/'
+echo "$lddtree" | sed 's/\(.*\)/file \1 \1 0755 0 0/'
