@@ -20,8 +20,8 @@ UUID=${BOOT_UUID}   /boot                   vfat     noauto,noatime             
 UUID=${ROOT_UUID}   /home/evan              btrfs    defaults,noatime,subvol=evan        0 0
 UUID=${ROOT_UUID}   /snapshots/.evan        btrfs    defaults,noatime                    0 0
 UUID=${ROOT_UUID}   /snapshots/.root        btrfs    defaults,noatime                    0 0
-UUID=${ROOT_UUID}   /var/gentoo/distfiles   btrfs    defaults,noatime,subvol=distfiles   0 0
-UUID=${ROOT_UUID}   /var/gentoo/repos       btrfs    defaults,noatime,subvol=repos       0 0
+UUID=${ROOT_UUID}   /var/cache/distfiles    btrfs    defaults,noatime,subvol=distfiles   0 0
+UUID=${ROOT_UUID}   /var/db/repos           btrfs    defaults,noatime,subvol=repos       0 0
 UUID=${SWAP_UUID}   none                    swap     sw                                  0 0
 DATA
 EOF

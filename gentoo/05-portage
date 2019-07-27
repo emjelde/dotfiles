@@ -2,9 +2,9 @@
 
 # Configure Portage
 
-REPOSDIR=/var/gentoo/repos
+REPOSDIR=/var/db/repos
 export PORTDIR=${REPOSDIR}/gentoo
-export DISTDIR=/var/gentoo/distfiles
+export DISTDIR=/var/cache/distfiles
 mkdir --parents /mnt/gentoo{$REPOSDIR,$DISTDIR}
 btrfs subvolume create /mnt/btrfs/repos
 btrfs subvolume create /mnt/btrfs/distfiles
@@ -25,6 +25,7 @@ cd "$tarball_temp" || exit
 md5sum --check --status "${tarball}.md5sum"
 cd -
 
+# Unpack the snapshot
 mkdir /mnt/gentoo${PORTDIR}
 tar --extract \
     --xz \
@@ -33,6 +34,7 @@ tar --extract \
     --strip-components=1 \
     --directory /mnt/gentoo${PORTDIR}
 
+# Configure Portage and substitute build variables
 cp --recursive "${SOURCE}/portage" /mnt/gentoo/tmp/
 
 if [ "$USE_VIRTUALBOX" = 'true' ]; then
