@@ -1,12 +1,6 @@
 #!/bin/bash -uex
 
-tarball='portage-latest.tar.xz'
-snapshots_url="${MIRROR}/snapshots/${tarball}"
-
-tarball_temp="$(mktemp -d)" && trap "rm -r \"$tarball_temp\"" EXIT
-wget --directory-prefix="$tarball_temp" --quiet "$snapshots_url"{.gpgsig,}
-
-gpgv --quiet --homedir "${AUTOBUILD_KEYRING}" "${tarball_temp}/${tarball}"{.gpgsig,}
+# Configure Portage
 
 REPOSDIR=/var/gentoo/repos
 export PORTDIR=${REPOSDIR}/gentoo
@@ -16,6 +10,20 @@ btrfs subvolume create /mnt/btrfs/repos
 btrfs subvolume create /mnt/btrfs/distfiles
 mount --read-write --options defaults,noatime,subvol=repos "$ROOT_DEVICE" /mnt/gentoo${REPOSDIR}
 mount --read-write --options defaults,noatime,subvol=distfiles "$ROOT_DEVICE" /mnt/gentoo${DISTDIR}
+
+# Use the latest daily snapshot
+tarball='portage-latest.tar.xz'
+snapshots_url="${MIRROR}/snapshots/${tarball}"
+
+# Download a snapshot of the main ebuild repository
+tarball_temp="$(mktemp -d)" && trap "rm -r \"$tarball_temp\"" EXIT
+wget --directory-prefix="$tarball_temp" --quiet "$snapshots_url"{.gpgsig,.md5sum,}
+
+# Verify and validate snapshot
+gpgv --quiet --homedir "${AUTOBUILD_KEYRING}" "${tarball_temp}/${tarball}"{.gpgsig,}
+cd "$tarball_temp" || exit
+md5sum --check --status "${tarball}.md5sum"
+cd -
 
 mkdir /mnt/gentoo${PORTDIR}
 tar --extract \
