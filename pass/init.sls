@@ -20,7 +20,7 @@ pass:
 
 # Allow access to password manager from Firefox
 
-{% set passff_host_version = '1.2.0' %}
+{% set passff_host_version = '1.2.0-r1' %}
 passff-host:
   pkg.installed:
     - name: www-plugins/passff-host
