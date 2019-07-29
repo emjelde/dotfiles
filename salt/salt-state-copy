@@ -9,7 +9,6 @@ set -ue
 
 # Copy salt states into build
 
-BUILD=build
 SALT_DIR="${SALT_DIR-${BUILD}/salt}"
 DOTFILES="${SALT_DIR}/dotfiles"
 

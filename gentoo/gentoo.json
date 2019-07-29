@@ -9,7 +9,7 @@
   "builders": [{
     "type": "qemu",
     "vm_name": "gentoo-iso",
-    "output_directory": "build/gentoo-iso",
+    "output_directory": "{{user `build`}}/gentoo-iso",
     "cpus": "{{user `cpus`}}",
     "memory": "{{user `memory`}}",
     "disk_interface": "ide",
@@ -36,7 +36,7 @@
   },{
     "type": "virtualbox-iso",
     "vm_name": "gentoo-iso",
-    "output_directory": "build/gentoo-iso",
+    "output_directory": "{{user `build`}}/gentoo-iso",
     "guest_os_type": "Gentoo_64",
     "guest_additions_mode": "disable",
     "vboxmanage": [
@@ -71,7 +71,7 @@
     "destination": "/tmp"
   },{
     "type": "file",
-    "source": "build/autobuilds/keyring",
+    "source": "{{user `build`}}/autobuilds/keyring",
     "destination": "/tmp"
   },{
     "type": "file",

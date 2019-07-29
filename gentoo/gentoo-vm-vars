@@ -39,9 +39,9 @@ USE_VIRTUALBOX=$(
 
 # Write to a configuration file used by the gentoo/gentoo.json and
 # salt/salt.json Packer scripts.
-BUILD=build
 cat << EOF > ${BUILD}/vm-variables.json
 {
+  "build": "${BUILD}",
   "cpuflags": "${CPU_FLAGS}",
   "cpus": "${CPUS}",
   "memory": "${MEMORY}",

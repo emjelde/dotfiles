@@ -8,7 +8,7 @@
   "builders": [{
     "type": "qemu",
     "vm_name": "gentoo-salt",
-    "output_directory": "build/gentoo-salt",
+    "output_directory": "{{user `build`}}/gentoo-salt",
     "disk_image": "true",
     "cpus": "{{user `cpus`}}",
     "memory": "{{user `memory`}}",
@@ -18,7 +18,7 @@
        ["-bios", "/usr/share/edk2-ovmf/OVMF.fd"]
     ],
     "headless": "{{user `headless`}}",
-    "iso_url": "build/gentoo-salt.last/gentoo-salt",
+    "iso_url": "{{user `build`}}/gentoo-salt.last/gentoo-salt",
     "iso_checksum_type": "none",
     "ssh_username": "{{user `ssh_username`}}",
     "ssh_password": "{{user `ssh_password`}}",
@@ -26,7 +26,7 @@
   },{
     "type": "virtualbox-ovf",
     "vm_name": "gentoo-salt",
-    "output_directory": "build/gentoo-salt",
+    "output_directory": "{{user `build`}}/gentoo-salt",
     "guest_additions_mode": "disable",
     "vboxmanage": [
       ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"],
@@ -36,14 +36,14 @@
       ["modifyvm", "{{.Name}}", "--nictype1", "82540EM"]
     ],
     "headless": "{{user `headless`}}",
-    "source_path": "build/gentoo-salt.last/gentoo-salt.ovf",
+    "source_path": "{{user `build`}}/gentoo-salt.last/gentoo-salt.ovf",
     "ssh_password": "{{user `ssh_password`}}",
     "ssh_username": "{{user `ssh_username`}}",
     "shutdown_command": "shutdown -h now"
   }],
   "provisioners": [{
     "type": "file",
-    "source": "build/salt",
+    "source": "{{user `build`}}/salt",
     "destination": "/tmp/salt"
   },{
     "type": "shell",

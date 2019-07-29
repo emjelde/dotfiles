@@ -1,7 +1,7 @@
 # Makefile for dotfiles
 
-BUILD = build
-SHELL = /bin/bash
+# Location of Packer output including files needed during the build
+export BUILD = build
 
 # When Packer is invoked it sometimes calls out to checkpoint.hashicorp.com to
 # look for new versions of Packer. Disable this for security and privacy
@@ -13,6 +13,8 @@ export PACKER_CACHE_DIR=$(BUILD)/packer_cache
 
 # Enable packer log
 export PACKER_LOG=1
+
+SHELL = /bin/bash
 
 .ONESHELL:
 

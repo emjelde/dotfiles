@@ -20,7 +20,6 @@ RSYNC_MIRROR=${RSYNC_MIRROR:-rsync://rsync.gentoo.org/gentoo-portage}
 DIST="${MIRROR}/releases/amd64/autobuilds"
 ISO_PATH=$(wget -q -O- "${DIST}/latest-install-amd64-minimal.txt" | tail -n 1 | cut -f 1 -d ' ')
 ISO="$(basename "$ISO_PATH")"
-BUILD=build
 AUTOBUILD="$(dirname "$ISO_PATH")"
 AUTOBUILD_DIR="${BUILD}/autobuilds/${AUTOBUILD}"
 AUTOBUILD_KEYRING="${BUILD}/autobuilds/keyring"
