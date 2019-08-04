@@ -6,18 +6,19 @@
 
 set -uex
 
-# Gentoo source and Portage tree mirrors, if unset automatically select a mirror
-if [ -z ${DIST_MIRROR+x} ]; then
-   DIST_MIRROR=$(mirrorselect -R "${MIRRORSELECT_REGION:-North America}" \
-                              -c "${MIRRORSELECT_COUNTRY:-USA}" --http -o \
+# Gentoo source and Portage tree mirrors, if empty automatically select a mirror
+if [ -z ${GENTOO_MIRRORS:-} ]; then
+   GENTOO_MIRRORS=$(mirrorselect -R "${MIRRORSELECT_REGION:-North America}" \
+                                 -c "${MIRRORSELECT_COUNTRY:-USA}" --http -o \
       | grep 'GENTOO_MIRRORS=' | tr -d '"' | sed 's/\/$//')
-   DIST_MIRROR="${DIST_MIRROR#GENTOO_MIRRORS=}"
+   GENTOO_MIRRORS="${GENTOO_MIRRORS#GENTOO_MIRRORS=}"
 fi
-MIRROR=${DIST_MIRROR:-http://distfiles.gentoo.org}
+GENTOO_MIRRORS=${GENTOO_MIRRORS:-http://distfiles.gentoo.org}
+RELEASE_MIRROR=${RELEASE_MIRROR:-${GENTOO_MIRRORS%% *}}
 RSYNC_MIRROR=${RSYNC_MIRROR:-rsync://rsync.gentoo.org/gentoo-portage}
 
 # Get the path to the latest autobuild
-DIST="${MIRROR}/releases/amd64/autobuilds"
+DIST="${RELEASE_MIRROR}/releases/amd64/autobuilds"
 ISO_PATH=$(wget -q -O- "${DIST}/latest-install-amd64-minimal.txt" | tail -n 1 | cut -f 1 -d ' ')
 ISO="$(basename "$ISO_PATH")"
 AUTOBUILD="$(dirname "$ISO_PATH")"
@@ -65,7 +66,8 @@ cat << EOF > ${BUILD}/autobuild-variables.json
 {
   "iso_checksum": "${ISO_CHECKSUM}",
   "iso_url": "./${AUTOBUILD_DIR}/${ISO}",
-  "mirror": "${MIRROR}",
+  "gentoo_mirrors": "${GENTOO_MIRRORS}",
+  "release_mirror": "${RELEASE_MIRROR}",
   "rsync_mirror": "${RSYNC_MIRROR}",
   "stage3": "${AUTOBUILD}"
 }

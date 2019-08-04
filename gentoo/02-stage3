@@ -12,7 +12,7 @@ ntpd --quit --panicgate
 # Choose multilib (32-bit and 64-bit) stage 3 for now because 32-bit is still
 # needed for some applications.
 tarball="stage3-amd64-${STAGE3}.tar.xz"
-stage3_url="${MIRROR}/releases/amd64/autobuilds/${STAGE3}/${tarball}"
+stage3_url="${RELEASE_MIRROR}/releases/amd64/autobuilds/${STAGE3}/${tarball}"
 
 # Download stage file making sure to remove it later
 tarball_temp="$(mktemp -d)" && trap "rm -r \"$tarball_temp\"" EXIT
