@@ -20,7 +20,7 @@ tarball_temp="$(mktemp -d)" && trap "rm -r \"$tarball_temp\"" EXIT
 wget --directory-prefix="$tarball_temp" --quiet "$snapshots_url"{.gpgsig,.md5sum,}
 
 # Verify and validate snapshot
-gpgv --quiet --homedir "${AUTOBUILD_KEYRING}" "${tarball_temp}/${tarball}"{.gpgsig,}
+gpgv --quiet --keyring "$GENTOO_KEYRING" "${tarball_temp}/${tarball}"{.gpgsig,}
 cd "$tarball_temp" || exit
 md5sum --check --status "${tarball}.md5sum"
 cd -

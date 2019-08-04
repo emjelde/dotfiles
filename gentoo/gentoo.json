@@ -71,8 +71,8 @@
     "destination": "/tmp"
   },{
     "type": "file",
-    "source": "{{user `build`}}/autobuilds/keyring",
-    "destination": "/tmp"
+    "source": "{{user `gentoo_keyring`}}",
+    "destination": "/tmp/gentoo-release.asc"
   },{
     "type": "file",
     "source": "portage",
@@ -80,10 +80,10 @@
   },{
     "type": "shell",
     "environment_vars": [
-      "AUTOBUILD_KEYRING=/tmp/keyring",
       "BOOT_DEVICE=/dev/sda1",
       "CPUS={{user `cpus`}}",
       "CPU_FLAGS_X86={{user `cpuflags`}}",
+      "GENTOO_KEYRING=/tmp/gentoo-release.asc",
       "GENTOO_MIRRORS={{user `gentoo_mirrors`}}",
       "LUKS_DEVICE=/dev/sda2",
       "RELEASE_MIRROR={{user `release_mirror`}}",

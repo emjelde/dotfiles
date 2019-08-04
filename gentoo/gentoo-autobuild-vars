@@ -23,36 +23,38 @@ ISO_PATH=$(wget -q -O- "${DIST}/latest-install-amd64-minimal.txt" | tail -n 1 | 
 ISO="$(basename "$ISO_PATH")"
 AUTOBUILD="$(dirname "$ISO_PATH")"
 AUTOBUILD_DIR="${BUILD}/autobuilds/${AUTOBUILD}"
-AUTOBUILD_KEYRING="${BUILD}/autobuilds/keyring"
 
 # Download the Gentoo Linux installation ISO
 mkdir --parents "$AUTOBUILD_DIR"
 wget --continue --directory-prefix "${AUTOBUILD_DIR}" "${DIST}/${ISO_PATH}"{,.CONTENTS,.DIGESTS.asc}
 
-# Create GnuPG keyring for verification.
-# Set safe permissions for the homedir to suppress a warning for unsafe homedir
-# permissions.
-OLD_UMASK=$(umask)
-umask 077
-mkdir --parents "$AUTOBUILD_KEYRING"
+# Try to verify using Gentoo signing keys from
+# app-crypt/openpgp-keys-gentoo-release, otherwise fetch from Gentoo's
+# keyserver.
+GENTOO_KEYRING=/usr/share/openpgp-keys/gentoo-release.asc
+if [ ! -f $GENTOO_KEYRING ]; then
+   OLD_UMASK=$(umask)
+   umask 077
+   GENTOO_KEYS="${BUILD}/openpgp-keys"
+   GENTOO_KEYRING="${GENTOO_KEYS}/gentoo-release.asc"
 
-# Gentoo automated release and ebuild repository signing keys
-# https://www.gentoo.org/downloads/signatures/
-WEEKLY_RELEASE_SIGNING_KEY=13EBBDBEDE7A12775DFDB1BABB572E0E2D182910
-EBUILD_REPOSITORY_SIGNING_KEY=DCD05B71EAB94199527F44ACDB6B8C1F96D8BF6D
+   # Gentoo automated release and ebuild repository signing keys
+   # https://www.gentoo.org/downloads/signatures/
+   WEEKLY_RELEASE_SIGNING_KEY=13EBBDBEDE7A12775DFDB1BABB572E0E2D182910
+   EBUILD_REPOSITORY_SIGNING_KEY=DCD05B71EAB94199527F44ACDB6B8C1F96D8BF6D
 
-# Download the set of keys into a keyring named 'trustedkeys.gpg', the keyring
-# name is important because it's the default keyring used by gpgv.
-gpg --quiet \
-    --homedir "$AUTOBUILD_KEYRING" \
-    --no-default-keyring \
-    --keyring trustedkeys.gpg \
-    --keyserver hkps.pool.sks-keyservers.net \
-    --recv-keys $WEEKLY_RELEASE_SIGNING_KEY $EBUILD_REPOSITORY_SIGNING_KEY
-umask "$OLD_UMASK"
+   mkdir --parents "$GENTOO_KEYS"
+   gpg --quiet \
+       --homedir "$GENTOO_KEYS" \
+       --no-default-keyring \
+       --keyring "$GENTOO_KEYRING" \
+       --keyserver hkps://keys.gentoo.org \
+       --recv-keys $WEEKLY_RELEASE_SIGNING_KEY $EBUILD_REPOSITORY_SIGNING_KEY
+   umask "$OLD_UMASK"
+fi
 
 # Verify ISO has been provided by the Gentoo Infrastructure team
-gpgv --homedir "$AUTOBUILD_KEYRING" "${AUTOBUILD_DIR}/${ISO}.DIGESTS.asc"
+gpgv --quiet --keyring "$GENTOO_KEYRING" "${AUTOBUILD_DIR}/${ISO}.DIGESTS.asc"
 
 # Verify the checksum to make sure the downloaded ISO file is not corrupted
 cd "$AUTOBUILD_DIR" || exit
@@ -66,6 +68,7 @@ cat << EOF > ${BUILD}/autobuild-variables.json
 {
   "iso_checksum": "${ISO_CHECKSUM}",
   "iso_url": "./${AUTOBUILD_DIR}/${ISO}",
+  "gentoo_keyring": "${GENTOO_KEYRING}",
   "gentoo_mirrors": "${GENTOO_MIRRORS}",
   "release_mirror": "${RELEASE_MIRROR}",
   "rsync_mirror": "${RSYNC_MIRROR}",

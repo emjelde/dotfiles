@@ -19,7 +19,7 @@ tarball_temp="$(mktemp -d)" && trap "rm -r \"$tarball_temp\"" EXIT
 wget --directory-prefix="$tarball_temp" --quiet "$stage3_url"{.DIGESTS.asc,}
 
 # Verify and validate stage file
-gpgv --quiet --homedir "${AUTOBUILD_KEYRING}" "${tarball_temp}/${tarball}.DIGESTS.asc"
+gpgv --quiet --keyring "$GENTOO_KEYRING" "${tarball_temp}/${tarball}.DIGESTS.asc"
 cd "$tarball_temp" || exit
 awk '/# SHA512 HASH/{getline; print}' "${tarball}.DIGESTS.asc" \
    | grep "${tarball}$" \
