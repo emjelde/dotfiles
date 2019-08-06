@@ -7,7 +7,7 @@
 set -uex
 
 # Gentoo source and Portage tree mirrors, if empty automatically select a mirror
-if [ -z ${GENTOO_MIRRORS:-} ]; then
+if [ -z "${GENTOO_MIRRORS:-}" ]; then
    GENTOO_MIRRORS=$(mirrorselect -R "${MIRRORSELECT_REGION:-North America}" \
                                  -c "${MIRRORSELECT_COUNTRY:-USA}" --http -o \
       | grep 'GENTOO_MIRRORS=' | tr -d '"' | sed 's/\/$//')
@@ -64,7 +64,7 @@ cd -
 ISO_CHECKSUM=$(echo "$ISO_CHECKSUM" | head -n 1 | cut -f 1 -d ' ')
 
 # Write to a configuration file used by the gentoo/gentoo.json Packer script
-cat << EOF > ${BUILD}/autobuild-variables.json
+cat << EOF > "${BUILD}/autobuild-variables.json"
 {
   "iso_checksum": "${ISO_CHECKSUM}",
   "iso_url": "./${AUTOBUILD_DIR}/${ISO}",
