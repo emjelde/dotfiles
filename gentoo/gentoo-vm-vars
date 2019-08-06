@@ -9,7 +9,7 @@ set -uex
 # in /etc/portage/make.conf.
 #
 # https://wiki.gentoo.org/wiki/CPU_FLAGS_X86
-CPU_FLAGS=${CPU_FLAGS:=$(command -v cpuid2cpuflags >/dev/null 2>&1 && cpuid2cpuflags || true)}
+CPU_FLAGS=${CPU_FLAGS:-$(command -v cpuid2cpuflags >/dev/null 2>&1 && cpuid2cpuflags || true)}
 # Remove label added by cpuid2cpuflags
 CPU_FLAGS="${CPU_FLAGS##*CPU_FLAGS_X86: }"
 
@@ -17,16 +17,16 @@ CPU_FLAGS="${CPU_FLAGS##*CPU_FLAGS_X86: }"
 # MAKEOPTS to set the number of simultaneous jobs.
 #
 # https://wiki.gentoo.org/wiki/MAKEOPTS
-CPUS=${CPUS:=$(nproc --all)}
+CPUS=${CPUS:-$(nproc --all)}
 
 # The amount of RAM, in MB, that the virtual machine should allocate for itself
 # from the host. Compilation can take up a lot of memory and more as the make
 # jobs increase (See CPUS above).
-MEMORY=${MEMORY:=$(echo "($CPUS * 1024 * 1.5) / 1" | bc)} # 1.5 GiB per CPU is an estimate
+MEMORY=${MEMORY:-$(echo "($CPUS * 1024 * 1.5) / 1" | bc)} # 1.5 GiB per CPU is an estimate
 
 # The amount of RAM that the virtual graphics card should have.
 # This is not used in the QEMU build.
-VIDEO_MEMORY=${VIDEO_MEMORY:=128} # 128 MB is arbitrary
+VIDEO_MEMORY=${VIDEO_MEMORY:-128} # 128 MB is arbitrary
 
 # If true the VirtualBox kernel module and guest additions will be installed
 USE_VIRTUALBOX=$(
