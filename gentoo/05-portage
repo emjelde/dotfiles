@@ -56,8 +56,6 @@ EOF
 chroot /mnt/gentoo /bin/bash -uex <<EOF
 ln --symbolic $PORTDIR /usr/portage
 
-emerge --sync --quiet
-
 # Suppress notification about news items
 eselect news read --quiet all
 
