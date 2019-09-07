@@ -25,12 +25,12 @@ CPUS=${CPUS:-$(nproc --all)}
 MEMORY=${MEMORY:-$(echo "($CPUS * 1024 * 1.5) / 1" | bc)} # 1.5 GiB per CPU is an estimate
 
 # The amount of RAM that the virtual graphics card should have.
-# This is not used in the QEMU build.
+# This used in the VirtualBox build.
 VIDEO_MEMORY=${VIDEO_MEMORY:-128} # 128 MB is arbitrary
 
 # If true the VirtualBox kernel module and guest additions will be installed
 USE_VIRTUALBOX=$(
-   if [ "${PACKER_BUILDER:-virtualbox}" = "virtualbox" ]; then
+   if [ "${PACKER_BUILDER}" = "virtualbox" ]; then
       echo 'true'
    else
       echo 'false'

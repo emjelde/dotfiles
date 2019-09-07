@@ -24,24 +24,20 @@ emerge dev-util/packer
 Packer also provides additional
 [install options](https://www.packer.io/intro/getting-started/install.html).
 
-The configuration supports two kinds of Packer builders for VirtualBox and
-QEMU:
+The configuration supports two kinds of Packer builders for QEMU and
+VirtualBox:
 
 ```sh
-# Install VirtualBox
-emerge app-emulation/virtualbox
-
-# or install QEMU
+# Install QEMU
 emerge app-emulation/qemu
+
+# or install VirtualBox
+emerge app-emulation/virtualbox
 ```
 
-The make command will use the VirtualBox builder by default. To use the QEMU
+The make command will use the QEMU builder by default. To use the VirtualBox
 builder, make a copy of the `.env.example` file named `.env` in the same
-directory and change `PACKER_BUILDER` to `qemu`:
-
-```
-PACKER_BUILDER=qemu
-```
+directory and change `PACKER_BUILDER` to `virtualbox`.
 
 Now run the make command:
 

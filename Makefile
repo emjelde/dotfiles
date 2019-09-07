@@ -8,6 +8,9 @@ export BUILD = build
 # reasons.
 export CHECKPOINT_DISABLE = 1
 
+# Default Packer builder
+export PACKER_BUILDER = qemu
+
 # Location of the Packer cache
 export PACKER_CACHE_DIR = $(BUILD)/packer_cache
 
@@ -34,7 +37,7 @@ define source-env =
 endef
 
 define packer-builder-iso =
-	if [ "$${PACKER_BUILDER:-virtualbox}" = 'virtualbox' ]; then
+	if [ "$${PACKER_BUILDER}" = 'virtualbox' ]; then
 		only=virtualbox-iso
 	else
 		only="$$PACKER_BUILDER"
@@ -42,7 +45,7 @@ define packer-builder-iso =
 endef
 
 define packer-builder-salt =
-	if [ "$${PACKER_BUILDER:-virtualbox}" = 'virtualbox' ]; then
+	if [ "$${PACKER_BUILDER}" = 'virtualbox' ]; then
 		only=virtualbox-ovf
 	else
 		only="$$PACKER_BUILDER"
