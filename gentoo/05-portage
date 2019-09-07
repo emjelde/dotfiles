@@ -5,9 +5,11 @@
 REPOSDIR=/var/db/repos
 export PORTDIR=${REPOSDIR}/gentoo
 export DISTDIR=/var/cache/distfiles
+
 mkdir --parents /mnt/gentoo{$REPOSDIR,$DISTDIR}
 btrfs subvolume create /mnt/btrfs/repos
 btrfs subvolume create /mnt/btrfs/distfiles
+
 mount --read-write --options defaults,noatime,subvol=repos "$ROOT_DEVICE" /mnt/gentoo${REPOSDIR}
 mount --read-write --options defaults,noatime,subvol=distfiles "$ROOT_DEVICE" /mnt/gentoo${DISTDIR}
 
@@ -29,12 +31,13 @@ cd -
 mkdir /mnt/gentoo${PORTDIR}
 tar --extract \
     --xz \
-    --numeric-owner \
     --file "${tarball_temp}/${tarball}" \
     --strip-components=1 \
     --directory /mnt/gentoo${PORTDIR}
 
-# Configure Portage and substitute build variables
+chown root:portage /mnt/gentoo${PORTDIR}
+chown root:portage /mnt/gentoo${DISTDIR}
+
 cp --recursive "${SOURCE}/portage" /mnt/gentoo/tmp/
 
 if [ "$USE_VIRTUALBOX" = 'true' ]; then
@@ -49,9 +52,6 @@ envsubst '$CPUS $CPU_FLAGS_X86 $DISTDIR $GENTOO_MIRRORS $PORTDIR $VIDEO_CARDS' <
 envsubst '$PORTDIR $RSYNC_MIRROR' < /tmp/portage/gentoo.conf > /etc/portage/repos.conf/gentoo.conf
 rm --recursive /tmp/portage
 EOF
-
-chown root:portage /mnt/gentoo${PORTDIR}
-chown root:portage /mnt/gentoo${DISTDIR}
 
 chroot /mnt/gentoo /bin/bash -uex <<EOF
 ln --symbolic $PORTDIR /usr/portage

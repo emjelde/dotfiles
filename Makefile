@@ -6,13 +6,13 @@ export BUILD = build
 # When Packer is invoked it sometimes calls out to checkpoint.hashicorp.com to
 # look for new versions of Packer. Disable this for security and privacy
 # reasons.
-export CHECKPOINT_DISABLE=1
+export CHECKPOINT_DISABLE = 1
 
-# Location of the packer cache
-export PACKER_CACHE_DIR=$(BUILD)/packer_cache
+# Location of the Packer cache
+export PACKER_CACHE_DIR = $(BUILD)/packer_cache
 
-# Enable packer log
-export PACKER_LOG=1
+# Enable Packer log
+export PACKER_LOG = 1
 
 SHELL = /bin/bash
 
