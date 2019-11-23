@@ -69,6 +69,8 @@ x-defaults-colors:
       - file: x-defaults
 
 x-modmap:
+  pkg.installed:
+    - name: x11-apps/xmodmap
   file.managed:
     - name: {{ grains.user_home }}/.Xmodmap
     - source: salt://dotfiles/x11/Xmodmap
