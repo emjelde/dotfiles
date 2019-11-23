@@ -20,7 +20,6 @@ pass:
 
 # Allow access to password manager from Firefox
 
-{% set passff_host_version = '1.2.0-r1' %}
 passff-host:
   pkg.installed:
     - name: www-plugins/passff-host
@@ -29,7 +28,7 @@ passff-host:
       - pkg: pass
   portage_config.flags:
     - names:
-      - =www-plugins/passff-host-{{ passff_host_version }}:
+      - =www-plugins/passff-host-1.2.1:
         - accept_keywords:
           - ~ARCH
       - www-plugins/passff-host:
@@ -44,7 +43,7 @@ passff-host:
     - defaults:
         PASSWORD_STORE_DIR: {{ grains.xdg_data_home }}/pass
         PASSWORD_STORE_SIGNING_KEY: {{ grains.gpg_signing_key }}
-        version: {{ passff_host_version }}
+        version: 1.2.1
     - makedirs: true
     - require_in:
       - pkg: passff-host
