@@ -51,6 +51,18 @@ mkdir --parents /etc/portage/repos.conf
 envsubst '$CPUS $CPU_FLAGS_X86 $DISTDIR $GENTOO_MIRRORS $PORTDIR $VIDEO_CARDS' < /tmp/portage/make.conf > /etc/portage/make.conf
 envsubst '$PORTDIR $RSYNC_MIRROR' < /tmp/portage/gentoo.conf > /etc/portage/repos.conf/gentoo.conf
 rm --recursive /tmp/portage
+
+# Configure locales
+cat >> /etc/locale.gen <<'DATA'
+en_US ISO-8859-1
+en_US.UTF-8 UTF-8
+DATA
+
+# Generate locales
+locale-gen
+
+# Set the system-wide locale
+eselect locale set en_US.utf8
 EOF
 
 chroot /mnt/gentoo /bin/bash -uex <<EOF

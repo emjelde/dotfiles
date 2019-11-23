@@ -47,7 +47,6 @@ statedir salt
 statedir smartcard
 statedir ssh
 statefile 'system.fonts'
-statefile 'system.locale'
 statefile 'system.system'
 statefile 'system.time'
 if [ "${PACKER_BUILDER}" = "virtualbox" ]; then
