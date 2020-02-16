@@ -56,7 +56,7 @@ minimal install ISO is downloaded and used as the boot medium for Packer.
 Packer will provision the base system using `gentoo/gentoo.json` along with the
 scripts under `gentoo`. This will create the VM image `build/gentoo-iso`.
 
-Next, the salt state is prepared using `salt/salt-state-copy`. Packer then
+Next, the salt state is prepared using `salt/salt-top`. Packer then
 boots the VM image `build/gentoo-iso` and using `salt/salt.json` Packer will
 install and run Salt using the script `salt/01-install`. This will create the
 VM image `build/gentoo-salt`.

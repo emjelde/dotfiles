@@ -67,7 +67,7 @@ $(BUILD)/gentoo-salt: $(BUILD)/gentoo-iso
 	$(source-env) && \
 	$(packer-builder-salt) && \
 	gentoo/gentoo-vm-vars && \
-	salt/salt-state-copy && \
+	salt/salt-top && \
 	export PACKER_LOG_PATH=$(BUILD)/gentoo-salt.log && \
 	packer build -only=$$only -var-file=$(vm_vars) salt/salt.json
 
@@ -78,7 +78,7 @@ resume:
 	test -d $(BUILD)/gentoo-salt && \
 	rm -rf $(BUILD)/gentoo-salt.last && \
 	mv $(BUILD)/gentoo-salt $(BUILD)/gentoo-salt.last && \
-	salt/salt-state-copy && \
+	salt/salt-top && \
 	export PACKER_LOG_PATH=$(BUILD)/gentoo-salt.log && \
 	packer build -only=$$only -var-file=$(vm_vars) salt/salt-resume.json
 
