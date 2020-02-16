@@ -1,0 +1,74 @@
+#!/bin/bash
+
+set -ue
+
+# Generate pillar if needed
+
+if [ ! -f salt/pillar.asc ] && [ ! -d salt/pillar ]; then
+   echo "[WARN] Generating mock salt/pillar"
+   OLD_UMASK="$(umask)"
+   umask 077
+   SALT_KEYS="$(mktemp -d)" && trap "rm -r \"$SALT_KEYS\"" EXIT
+
+   # The mock salt/pillar.asc key uses %transient-key to generate keys faster
+   # along with %no-protection to skip passphrase. Salt requires no passphrase
+   # as it works in a non-interactive mode. This key is not for general use.
+   SALT_KEYS_GPG="${SALT_KEYS}/gpg"
+   mkdir "$SALT_KEYS_GPG"
+   gpg --quiet --homedir "$SALT_KEYS_GPG" --batch --generate-key 2>/dev/null <<-'EOF'
+	Key-Type: default
+	Subkey-Type: default
+	Name-Real: salt-master
+	Name-Comment: mock key
+	Expire-Date: 0
+	%no-protection
+	%transient-key
+	%commit
+	EOF
+   gpg --quiet --homedir "$SALT_KEYS_GPG" --export-secret-keys --armor > salt/pillar.asc
+
+   # The mock salt/pillar contains a transient SSH private key (id_rsa) with an
+   # empty passphrase for unattended key generation. Even though it is
+   # encrypted to test salt.renderers.gpg it is not for general use.
+   mkdir --parents salt/pillar
+   cat > salt/pillar/top.sls <<-'EOF'
+	base:
+	  '*':
+	    - dotfiles.ssh
+	EOF
+   SALT_KEYS_SSH="${SALT_KEYS}/ssh"
+   mkdir "$SALT_KEYS_SSH"
+   # -q (silence ssh-keygen)
+   # -t (type of key)
+   # -N (new passphrase)
+   # -f (filename)
+   ssh-keygen -q -t rsa -N '' -f "${SALT_KEYS_SSH}"/id_rsa
+   gpg --quiet --homedir "$SALT_KEYS_GPG" --encrypt --recipient salt-master --armor "${SALT_KEYS_SSH}"/id_rsa
+   IDENTITY=$(<"${SALT_KEYS_SSH}"/id_rsa.asc)
+   print_identity() {
+      echo ".ssh/${1}/id_rsa: |"
+      echo "$IDENTITY" | sed 's/^/  /'
+   }
+   mkdir --parents salt/pillar/dotfiles/ssh
+   cat > salt/pillar/dotfiles/ssh/init.sls <<-EOF
+	#!yaml|gpg
+
+	$(print_identity bitbucket)
+	$(print_identity github)
+	$(print_identity visualstudio)
+	EOF
+   umask "$OLD_UMASK"
+fi
+
+if [ ! -f salt/pillar.asc ]; then
+   (>&2 echo 'A pillar GPG key (salt/pillar.asc) is required' \
+             'but a mock pillar key was not generated because salt/pillar' \
+             'already exists.')
+   exit 1
+fi
+
+if [ ! -d salt/pillar ]; then
+   (>&2 echo 'A pillar (salt/pillar) is required but a mock pillar was not' \
+             'generated because GPG key salt/pillar.asc already exists.')
+   exit 1
+fi

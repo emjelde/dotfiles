@@ -68,6 +68,7 @@ $(BUILD)/gentoo-salt: $(BUILD)/gentoo-iso
 	$(packer-builder-salt) && \
 	gentoo/gentoo-vm-vars && \
 	salt/salt-top && \
+	salt/salt-pillar && \
 	export PACKER_LOG_PATH=$(BUILD)/gentoo-salt.log && \
 	packer build -only=$$only -var-file=$(vm_vars) salt/salt.json
 
@@ -79,6 +80,7 @@ resume:
 	rm -rf $(BUILD)/gentoo-salt.last && \
 	mv $(BUILD)/gentoo-salt $(BUILD)/gentoo-salt.last && \
 	salt/salt-top && \
+	salt/salt-pillar && \
 	export PACKER_LOG_PATH=$(BUILD)/gentoo-salt.log && \
 	packer build -only=$$only -var-file=$(vm_vars) salt/salt-resume.json
 
