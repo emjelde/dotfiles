@@ -1,68 +1,6 @@
 #!/bin/bash
 
-# Prepare the packer salt build by collecting all salt states. This is done to
-# manage the desired directory structure.
-#
-# For testing a mock pillar can be generated if no pillar already exists.
-
 set -ue
-
-# Copy salt states into build
-
-SALT_DIR="${SALT_DIR-${BUILD}/salt}"
-DOTFILES="${SALT_DIR}/dotfiles"
-
-rm -rf "$SALT_DIR"
-mkdir --parents "${DOTFILES}"
-
-echo "dotfiles"
-echo "include:" > "${DOTFILES}/init.sls"
-
-add_to_init() {
-   echo "  $1"
-   echo "  - .$1" >> "${DOTFILES}/init.sls"
-}
-
-statedir() {
-   cp --recursive "$1" "${DOTFILES}"
-   add_to_init "$1"
-}
-
-statefile() {
-   cp --parents "${1/\./\/}.sls" "${DOTFILES}"
-   add_to_init "$1"
-}
-
-statedir portage
-statedir awesome
-statedir bash
-statedir deluge
-statedir firefox
-statedir git
-statedir gpg
-statedir htop
-statedir java
-statedir pass
-statedir salt
-statedir smartcard
-statedir ssh
-statefile 'system.fonts'
-statefile 'system.system'
-statefile 'system.time'
-if [ "${PACKER_BUILDER}" = "virtualbox" ]; then
-   statefile 'system.virtualbox'
-fi
-statedir thunderbird
-statedir tmux
-statedir urxvt
-statedir vim
-statedir x11
-
-cat > "${SALT_DIR}/top.sls" <<'EOF'
-base:
-  '*':
-    - dotfiles
-EOF
 
 # Generate pillar if needed
 
