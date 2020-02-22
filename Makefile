@@ -53,20 +53,3 @@ $(BUILD)/gentoo-salt: $(BUILD)/gentoo-iso
 	salt/salt-pillar && \
 	export PACKER_LOG_PATH=$(BUILD)/gentoo-salt.log && \
 	packer build -var-file=$(vm_vars) salt/salt.json
-
-.PHONY: resume
-resume:
-	$(source-env) && \
-	test -d $(BUILD)/gentoo-salt && \
-	rm -rf $(BUILD)/gentoo-salt.last && \
-	mv $(BUILD)/gentoo-salt $(BUILD)/gentoo-salt.last && \
-	salt/salt-top && \
-	salt/salt-pillar && \
-	export PACKER_LOG_PATH=$(BUILD)/gentoo-salt.log && \
-	packer build -var-file=$(vm_vars) salt/salt-resume.json
-
-.PHONY: abort-resume
-abort-resume:
-	test -d $(BUILD)/gentoo-salt.last && \
-	rm -rf $(BUILD)/gentoo-salt && \
-	mv $(BUILD)/gentoo-salt.last $(BUILD)/gentoo-salt
