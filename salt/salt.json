@@ -24,23 +24,6 @@
     "ssh_username": "{{user `ssh_username`}}",
     "ssh_password": "{{user `ssh_password`}}",
     "shutdown_command": "shutdown -h now"
-  },{
-    "type": "virtualbox-ovf",
-    "vm_name": "gentoo-salt",
-    "output_directory": "{{user `build`}}/gentoo-salt",
-    "guest_additions_mode": "disable",
-    "vboxmanage": [
-      ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"],
-      ["modifyvm", "{{.Name}}", "--firmware", "efi"],
-      ["modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}"],
-      ["modifyvm", "{{.Name}}", "--vram", "{{user `vram`}}"],
-      ["modifyvm", "{{.Name}}", "--nictype1", "82540EM"]
-    ],
-    "headless": "{{user `headless`}}",
-    "source_path": "{{user `build`}}/gentoo-iso/gentoo-iso.ovf",
-    "ssh_password": "{{user `ssh_password`}}",
-    "ssh_username": "{{user `ssh_username`}}",
-    "shutdown_command": "shutdown -h now"
   }],
   "provisioners": [{
     "type": "file",

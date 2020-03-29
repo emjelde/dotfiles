@@ -40,15 +40,9 @@ chown root:portage /mnt/gentoo${DISTDIR}
 
 cp --recursive "${SOURCE}/portage" /mnt/gentoo/tmp/
 
-if [ "$USE_VIRTUALBOX" = 'true' ]; then
-   export VIDEO_CARDS='$VIDEO_CARDS vmware'
-else
-   export VIDEO_CARDS='$VIDEO_CARDS'
-fi
-
 chroot /mnt/gentoo /bin/bash -uex <<'EOF'
 mkdir --parents /etc/portage/repos.conf
-envsubst '$CPUS $CPU_FLAGS_X86 $DISTDIR $GENTOO_MIRRORS $PORTDIR $VIDEO_CARDS' < /tmp/portage/make.conf > /etc/portage/make.conf
+envsubst '$CPUS $CPU_FLAGS_X86 $DISTDIR $GENTOO_MIRRORS $PORTDIR' < /tmp/portage/make.conf > /etc/portage/make.conf
 envsubst '$PORTDIR $RSYNC_MIRROR' < /tmp/portage/gentoo.conf > /etc/portage/repos.conf/gentoo.conf
 rm --recursive /tmp/portage
 

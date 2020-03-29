@@ -33,37 +33,6 @@
       "/etc/init.d/sshd start<enter>"
     ],
     "shutdown_command": "shutdown -h now"
-  },{
-    "type": "virtualbox-iso",
-    "vm_name": "gentoo-iso",
-    "output_directory": "{{user `build`}}/gentoo-iso",
-    "guest_os_type": "Gentoo_64",
-    "guest_additions_mode": "disable",
-    "vboxmanage": [
-      ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"],
-      ["modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}"],
-      ["modifyvm", "{{.Name}}", "--vram", "{{user `vram`}}"],
-      ["modifyvm", "{{.Name}}", "--nictype1", "82540EM"]
-    ],
-    "headless": "{{user `headless`}}",
-    "iso_url": "{{user `iso_url`}}",
-    "iso_checksum": "{{user `iso_checksum`}}",
-    "iso_checksum_type": "sha512",
-    "ssh_username": "{{user `ssh_username`}}",
-    "ssh_password": "{{user `ssh_password`}}",
-    "boot_command": [
-      "gentoo-nofb<enter>",
-      "<wait10>",
-      "<enter>",
-      "<wait10>",
-      "passwd {{user `ssh_username`}}<enter>",
-      "{{user `ssh_password`}}<enter>",
-      "{{user `ssh_password`}}<enter>",
-      "sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config<enter>",
-      "sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config<enter>",
-      "/etc/init.d/sshd start<enter>"
-    ],
-    "shutdown_command": "shutdown -h now"
   }],
   "provisioners": [{
     "type": "file",
@@ -92,8 +61,7 @@
       "RSYNC_MIRROR={{user `rsync_mirror`}}",
       "SOURCE=/tmp",
       "STAGE3={{user `stage3`}}",
-      "SWAP_DEVICE=/dev/{{user `root_volume_group`}}/swap",
-      "USE_VIRTUALBOX={{user `use_virtualbox`}}"
+      "SWAP_DEVICE=/dev/{{user `root_volume_group`}}/swap"
     ],
     "scripts": [
       "gentoo/01-partition",

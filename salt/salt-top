@@ -47,9 +47,6 @@ statedir ssh
 statefile 'system.fonts'
 statefile 'system.system'
 statefile 'system.time'
-if [ "${PACKER_BUILDER}" = "virtualbox" ]; then
-   statefile 'system.virtualbox'
-fi
 statedir thunderbird
 statedir tmux
 statedir urxvt
