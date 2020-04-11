@@ -31,27 +31,32 @@ wget --continue --directory-prefix "${AUTOBUILD_DIR}" "${DIST}/${ISO_PATH}"{,.CO
 # Try to verify using Gentoo signing keys from
 # app-crypt/openpgp-keys-gentoo-release, otherwise fetch from Gentoo's
 # keyserver.
-GENTOO_KEYRING=/usr/share/openpgp-keys/gentoo-release.asc
-if [ ! -f $GENTOO_KEYRING ]; then
-   OLD_UMASK=$(umask)
-   umask 077
-   GENTOO_KEYS="${BUILD}/openpgp-keys"
-   GENTOO_KEYRING="${GENTOO_KEYS}/gentoo-release.asc"
+OLD_UMASK=$(umask)
+umask 077
+GENTOO_KEYS="${BUILD}/openpgp-keys"
+GENTOO_KEYRING="${GENTOO_KEYS}/gentoo-release.asc"
 
+mkdir --parents "$GENTOO_KEYS"
+if [ -f /usr/share/openpgp-keys/gentoo-release.asc ]; then
+   gpg --quiet \
+       --homedir "$GENTOO_KEYS" \
+       --no-default-keyring \
+       --keyring "$GENTOO_KEYRING" \
+       --import /usr/share/openpgp-keys/gentoo-release.asc
+else
    # Gentoo automated release and ebuild repository signing keys
    # https://www.gentoo.org/downloads/signatures/
    WEEKLY_RELEASE_SIGNING_KEY=13EBBDBEDE7A12775DFDB1BABB572E0E2D182910
    EBUILD_REPOSITORY_SIGNING_KEY=DCD05B71EAB94199527F44ACDB6B8C1F96D8BF6D
 
-   mkdir --parents "$GENTOO_KEYS"
    gpg --quiet \
        --homedir "$GENTOO_KEYS" \
        --no-default-keyring \
        --keyring "$GENTOO_KEYRING" \
        --keyserver hkps://keys.gentoo.org \
        --recv-keys $WEEKLY_RELEASE_SIGNING_KEY $EBUILD_REPOSITORY_SIGNING_KEY
-   umask "$OLD_UMASK"
 fi
+umask "$OLD_UMASK"
 
 # Verify ISO has been provided by the Gentoo Infrastructure team
 gpgv --quiet --keyring "$GENTOO_KEYRING" "${AUTOBUILD_DIR}/${ISO}.DIGESTS.asc"
