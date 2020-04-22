@@ -100,7 +100,7 @@ fi
 ## Source .bashrc.d
 
 {{ accumulator['.bashrc.d']|join('\n') }}
-source .bashrc.d/aliases
-source .bashrc.d/calc-function
-source .bashrc.d/say-function
-source .bashrc.d/screenshot-function
+source ~/.bashrc.d/aliases
+source ~/.bashrc.d/calc-function
+source ~/.bashrc.d/say-function
+source ~/.bashrc.d/screenshot-function

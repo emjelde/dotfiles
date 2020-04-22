@@ -48,7 +48,7 @@ git-prompt-bashrc:
   file.accumulated:
     - name: .bashrc.d
     - filename: {{ grains.user_home }}/.bashrc
-    - text: source .bashrc.d/git-prompt
+    - text: source ~/.bashrc.d/git-prompt
     - require_in:
       - file: bashrc
     - require:
