@@ -9,7 +9,7 @@ set -uex
 # in /etc/portage/make.conf.
 #
 # https://wiki.gentoo.org/wiki/CPU_FLAGS_X86
-CPU_FLAGS=${CPU_FLAGS:-$(command -v cpuid2cpuflags >/dev/null 2>&1 && cpuid2cpuflags || true)}
+CPU_FLAGS=${CPU_FLAGS:-$(command -v cpuid2cpuflags >/dev/null 2>&1 && cpuid2cpuflags || :)}
 # Remove label added by cpuid2cpuflags
 CPU_FLAGS="${CPU_FLAGS##*CPU_FLAGS_X86: }"
 
