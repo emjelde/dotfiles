@@ -8,9 +8,6 @@ export BUILD = build
 # reasons.
 export CHECKPOINT_DISABLE = 1
 
-# Default Packer builder
-export PACKER_BUILDER = qemu
-
 # Location of the Packer cache
 export PACKER_CACHE_DIR = $(BUILD)/packer_cache
 
