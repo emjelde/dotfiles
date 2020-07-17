@@ -4,12 +4,12 @@ include:
 git:
   pkg.installed:
     - name: dev-vcs/git
+    - require:
+      - portage_config: git
   portage_config.flags:
     - name: dev-vcs/git
     - use:
       - doc
-    - require_in:
-      - pkg: git
 
 git-attributes:
   file.managed:

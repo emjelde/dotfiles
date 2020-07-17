@@ -2,11 +2,14 @@
 
 set -o errexit -o nounset -o xtrace
 
-# Salt keywords are managed here as well as in salt/init.sls.
+# Salt USE flags are managed here as well as in salt/init.sls.
 # It is probably best to keep them in sync.
-mkdir --parents /etc/portage/package.{accept_keywords,use}/app-admin
-echo '<app-admin/salt-2018.3.0' > /etc/portage/package.accept_keywords/app-admin/salt
+mkdir --parents /etc/portage/package.use/{app-admin,net-libs}
 echo 'app-admin/salt gnupg portage vim-syntax' > /etc/portage/package.use/app-admin/salt
+# pyzmq seems to need zeromq drafts enabled?
+# https://bugs.gentoo.org/703252
+# https://bugs.gentoo.org/648088
+echo '>=net-libs/zeromq-4.3.2 drafts' > /etc/portage/package.use/net-libs/zeromq
 
 emerge --quiet app-admin/salt
 rc-update add salt-minion

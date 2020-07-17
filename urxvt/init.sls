@@ -4,6 +4,9 @@ include:
 urxvt:
   pkg.installed:
     - name: x11-terms/rxvt-unicode
+    - require:
+      - portage_config: urxvt
+      - file: .Xdefaults
   portage_config.flags:
     - name: x11-terms/rxvt-unicode
     - use:
@@ -14,8 +17,6 @@ urxvt:
       - pixbuf
       - unicode3
       - xft
-    - require_in:
-      - pkg: urxvt
   file.accumulated:
     - name: .Xdefaults
     - filename: {{ grains.user_home }}/.Xdefaults
@@ -30,7 +31,5 @@ urxvt:
         URxvt*shading: 8
         URxvt*transparent: true
         URxvt*visualBell: false
-    - require:
-      - pkg: urxvt
     - require_in:
       - file: x-defaults
