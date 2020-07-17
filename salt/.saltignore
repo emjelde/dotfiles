@@ -1,0 +1,5 @@
+01-install
+minion
+salt-pillar
+salt-top
+salt.json

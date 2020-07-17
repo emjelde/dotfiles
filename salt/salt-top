@@ -21,11 +21,19 @@ add_to_init() {
    echo "  - .$1" >> "${DOTFILES}/init.sls"
 }
 
+# Copies the entire state directory ignoring files listed in .saltignore
 statedir() {
-   cp --recursive "$1" "${DOTFILES}"
+   if [ -f "${1}/.saltignore" ]; then
+      GLOBIGNORE=$(tr '\n' ':' < <(sed "s/.*/${1}\/&/" < "${1}/.saltignore"))
+   else
+      GLOBIGNORE=.
+   fi
+   cp --parents --recursive "$1"/* "${DOTFILES}"
+   unset GLOBIGNORE
    add_to_init "$1"
 }
 
+# Copies an individual salt state file
 statefile() {
    cp --parents "${1/\./\/}.sls" "${DOTFILES}"
    add_to_init "$1"
