@@ -3,7 +3,7 @@
 # Prepare the packer salt build by collecting all salt states. This is done to
 # manage the desired directory structure.
 
-set -ue
+set -o errexit -o nounset
 
 # Copy salt states into build
 

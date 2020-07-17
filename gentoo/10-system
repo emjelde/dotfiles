@@ -1,6 +1,10 @@
-#!/bin/bash -uex
+#!/bin/bash
 
-chroot /mnt/gentoo /bin/bash -uex <<'EOF'
+set -o errexit -o xtrace
+
+chroot /mnt/gentoo /bin/bash <<'EOF'
+set -o errexit -o nounset -o xtrace
+
 UID_GID=1337
 groupadd -g $UID_GID evan
 useradd --no-create-home --uid $UID_GID --gid $UID_GID --groups wheel --shell /bin/bash evan

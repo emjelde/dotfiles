@@ -1,5 +1,6 @@
-#!/bin/bash -uex
+#!/bin/bash
 
-chroot /mnt/gentoo /bin/bash -uex <<EOF
+chroot /mnt/gentoo /bin/bash <<EOF
+set -o errexit -o xtrace
 ln --symbolic --no-dereference --force /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
 EOF

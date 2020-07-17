@@ -4,7 +4,7 @@
 #
 # https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Media
 
-set -uex
+set -o errexit -o nounset -o xtrace
 
 # Gentoo source and Portage tree mirrors, if empty automatically select a mirror
 if [ -z "${GENTOO_MIRRORS:-}" ]; then

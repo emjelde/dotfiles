@@ -1,9 +1,11 @@
-#!/bin/bash -uex
+#!/bin/bash
 
 # Prepare the disks by adding paritions for system files, boot/kernel files,
 # and swap.
 #
 # https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Disks
+
+set -o errexit -o nounset -o xtrace
 
 sgdisk \
   --new 1:0:+128M --typecode 1:EF00 --change-name 1:"linux-boot" \

@@ -1,4 +1,6 @@
-#!/bin/bash -uex
+#!/bin/bash
+
+set -o errexit -o nounset -o xtrace
 
 cp --recursive "${SOURCE}/kernel" /mnt/gentoo/tmp/
 cp /dev/shm/initramfs.key /mnt/gentoo/tmp/kernel/
@@ -6,7 +8,9 @@ trap "rm --recursive /mnt/gentoo/tmp/kernel" EXIT
 
 export LUKS_UUID="$(blkid -s UUID -o value "$LUKS_DEVICE")"
 
-chroot /mnt/gentoo /bin/bash -uex <<'EOF'
+chroot /mnt/gentoo /bin/bash <<'EOF'
+set -o errexit -o nounset -o xtrace
+
 # Prepare initramfs
 emerge --quiet \
    sys-fs/btrfs-progs \

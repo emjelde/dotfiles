@@ -1,6 +1,8 @@
-#!/bin/bash -uex
+#!/bin/bash
 
-chroot /mnt/gentoo /bin/bash -uex <<'EOF'
+chroot /mnt/gentoo /bin/bash <<'EOF'
+set -o errexit -o xtrace
+
 ln -s /etc/init.d/net.lo /etc/init.d/net.enp0s3
 rc-update add net.enp0s3 default
 emerge --quiet net-misc/dhcpcd

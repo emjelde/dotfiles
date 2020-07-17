@@ -1,9 +1,11 @@
-#!/bin/bash -uex
+#!/bin/bash
 
 # Install stage 3 tarball which contains an almost-complete and
 # almost-functional Gentoo system.
 #
 # https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Stage
+
+set -o errexit -o nounset -o xtrace
 
 # Set the time allowing a big adjustment and quit. The base system files should
 # be extracted with accurate time stamps.

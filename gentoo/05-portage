@@ -1,4 +1,6 @@
-#!/bin/bash -uex
+#!/bin/bash
+
+set -o errexit -o nounset -o xtrace
 
 # Configure Portage
 
@@ -40,7 +42,9 @@ chown root:portage /mnt/gentoo${DISTDIR}
 
 cp --recursive "${SOURCE}/portage" /mnt/gentoo/tmp/
 
-chroot /mnt/gentoo /bin/bash -uex <<'EOF'
+chroot /mnt/gentoo /bin/bash <<'EOF'
+set -o errexit -o nounset -o xtrace
+
 mkdir --parents /etc/portage/repos.conf
 envsubst '$CPUS $CPU_FLAGS_X86 $DISTDIR $GENTOO_MIRRORS $PORTDIR' < /tmp/portage/make.conf > /etc/portage/make.conf
 envsubst '$PORTDIR $RSYNC_MIRROR' < /tmp/portage/gentoo.conf > /etc/portage/repos.conf/gentoo.conf
@@ -59,7 +63,9 @@ locale-gen
 eselect locale set en_US.utf8
 EOF
 
-chroot /mnt/gentoo /bin/bash -uex <<EOF
+chroot /mnt/gentoo /bin/bash <<EOF
+set -o errexit -o nounset -o xtrace
+
 ln --symbolic $PORTDIR /usr/portage
 
 # Suppress notification about news items

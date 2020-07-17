@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -ue
+set -o errexit -o nounset
 
 # Generate pillar if needed
 

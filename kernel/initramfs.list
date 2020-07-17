@@ -3,7 +3,7 @@
 # Generate a file list to include files into the initramfs using the Linux
 # kernel utility /usr/src/linux/usr/gen_init_cpio.
 
-set -ue
+set -o errexit -o nounset
 
 # Add the following commands and their dependencies to the list.
 # The lddtree command belongs to app-misc/pax-utils and is already provided in

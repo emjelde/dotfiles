@@ -1,4 +1,6 @@
-#!/bin/bash -uex
+#!/bin/bash
+
+set -o errexit -o nounset -o xtrace
 
 mkdir --parents /mnt/gentoo/home/evan
 mkdir --parents /mnt/gentoo/snapshots/.{evan,root}
@@ -12,7 +14,9 @@ BOOT_UUID="$(blkid -s UUID -o value "$BOOT_DEVICE")"
 ROOT_UUID="$(blkid -s UUID -o value "$ROOT_DEVICE")"
 SWAP_UUID="$(blkid -s UUID -o value "$SWAP_DEVICE")"
 
-chroot /mnt/gentoo /bin/bash -uex <<EOF
+chroot /mnt/gentoo /bin/bash <<EOF
+set -o errexit -o nounset -o xtrace
+
 cat > /etc/fstab <<'DATA'
 # <fs>              <mount>                 <type>   <opts>                              <dump/pass>
 UUID=${ROOT_UUID}   /                       btrfs    defaults,noatime,subvol=root        0 0

@@ -1,4 +1,6 @@
-#!/bin/bash -uex
+#!/bin/bash
+
+set -o errexit -o nounset -o xtrace
 
 # Copy DNS info to ensure that networking works after entering new environment
 cp --dereference /etc/resolv.conf /mnt/gentoo/etc/

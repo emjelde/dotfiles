@@ -2,7 +2,7 @@
 
 # Detect and optimize for system resources
 
-set -uex
+set -o errexit -o nounset -o xtrace
 
 # Use cpuid2cpuflags utility to query a listing of CPU flags supported by the
 # system's processor. The flags are used by Portage to optimize package builds
