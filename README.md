@@ -9,13 +9,12 @@ The default goal for `make` creates and provisions a Gentoo machine image using
 
 ## Getting Started
 
-Install Packer on Gentoo which currently requires using accept keywords, you
+Install Packer on Gentoo which currently requires accept keywords changes, you
 can add these as shown below:
 
 ```sh
-# Add accept keywords
 mkdir --parents /etc/portage/package.accept_keywords/dev-util
-echo =dev-util/packer-1.3.5 > /etc/portage/package.accept_keywords/dev-util/packer
+echo =dev-util/packer-1.4.5 > /etc/portage/package.accept_keywords/dev-util/packer
 
 # Install Packer
 emerge dev-util/packer
