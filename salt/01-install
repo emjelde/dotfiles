@@ -24,5 +24,7 @@ mkdir --parents /srv/salt /srv/pillar
 cp -r /tmp/pillar/* /srv/pillar
 cp -r /tmp/salt/* /srv/salt
 
+eselect profile set default/linux/amd64/17.1/desktop
+
 rc-service salt-minion start
 salt-call state.highstate --log-level info

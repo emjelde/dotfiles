@@ -70,8 +70,4 @@ ln --symbolic $PORTDIR /usr/portage
 
 # Suppress notification about news items
 eselect news read --quiet all
-
-eselect profile set default/linux/amd64/17.1
-
-emerge --quiet --update --deep --newuse @system
 EOF

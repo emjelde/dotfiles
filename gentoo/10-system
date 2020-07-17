@@ -14,8 +14,6 @@ chown evan: /home/evan /snapshots/.evan
 echo evan:correcthorsebatterystaple | chpasswd
 echo root:correcthorsebatterystaple | chpasswd
 
-eselect profile set default/linux/amd64/17.1/desktop
-
 # Configure ssh for second stage provisioning
 sed --in-place 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
 sed --in-place 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
