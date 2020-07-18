@@ -1,7 +1,10 @@
 {
   "description": "Gentoo Linux (salt)",
   "variables": {
+    "build": "{{env `BUILD`}}",
+    "cpus": "{{env `CPUS`}}",
     "headless": "true",
+    "memory": "",
     "minion_id": "roflpc",
     "ssh_username": "root",
     "ssh_password": "correcthorsebatterystaple"

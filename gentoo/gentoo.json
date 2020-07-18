@@ -1,10 +1,21 @@
 {
   "description": "Gentoo Linux (iso)",
   "variables": {
+    "build": "{{env `BUILD`}}",
+    "cpuflags": "{{env `CPU_FLAGS`}}",
+    "cpus": "{{env `CPUS`}}",
+    "gentoo_keyring": "{{env `GENTOO_KEYRING`}}",
+    "gentoo_mirrors": "{{env `GENTOO_MIRRORS`}}",
+    "gentoo_release_mirror": "{{env `RELEASE_MIRROR`}}",
+    "gentoo_rsync_mirror": "{{env `RSYNC_MIRROR`}}",
     "headless": "true",
+    "iso_checksum": "",
+    "iso_url": "",
+    "memory": "",
+    "root_volume_group": "roflpc",
     "ssh_username": "root",
     "ssh_password": "correcthorsebatterystaple",
-    "root_volume_group": "roflpc"
+    "stage3": "{{env `STAGE3`}}"
   },
   "builders": [{
     "type": "qemu",
@@ -55,10 +66,10 @@
       "GENTOO_KEYRING=/tmp/gentoo-release.asc",
       "GENTOO_MIRRORS={{user `gentoo_mirrors`}}",
       "LUKS_DEVICE=/dev/sda2",
-      "RELEASE_MIRROR={{user `release_mirror`}}",
+      "RELEASE_MIRROR={{user `gentoo_release_mirror`}}",
       "ROOT_DEVICE=/dev/{{user `root_volume_group`}}/root",
       "ROOT_VOLUME_GROUP={{user `root_volume_group`}}",
-      "RSYNC_MIRROR={{user `rsync_mirror`}}",
+      "RSYNC_MIRROR={{user `gentoo_rsync_mirror`}}",
       "SOURCE=/tmp",
       "STAGE3={{user `stage3`}}",
       "SWAP_DEVICE=/dev/{{user `root_volume_group`}}/swap"

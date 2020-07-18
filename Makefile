@@ -38,14 +38,14 @@ vm_vars = $(BUILD)/vm-variables.json
 
 $(BUILD)/gentoo-iso:
 	$(source-env) && \
-	gentoo/gentoo-autobuild-vars && \
-	gentoo/gentoo-vm-vars && \
+	source gentoo/gentoo-autobuild-vars && \
+	source gentoo/gentoo-vm-vars && \
 	export PACKER_LOG_PATH=$(BUILD)/gentoo-iso.log && \
 	packer build -var-file=$(autobuild_vars) -var-file=$(vm_vars) gentoo/gentoo.json
 
 $(BUILD)/gentoo-salt: $(BUILD)/gentoo-iso
 	$(source-env) && \
-	gentoo/gentoo-vm-vars && \
+	source gentoo/gentoo-vm-vars && \
 	salt/salt-top && \
 	salt/salt-pillar && \
 	export PACKER_LOG_PATH=$(BUILD)/gentoo-salt.log && \
