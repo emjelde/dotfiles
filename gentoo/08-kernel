@@ -17,10 +17,11 @@ emerge --quiet \
    sys-fs/cryptsetup \
    sys-fs/lvm2
 rc-update add lvm boot
-source <(grep CONFIG_INITRAMFS_SOURCE /tmp/kernel/kernel.config)
-export INITRAMFS_DIR=$(dirname $CONFIG_INITRAMFS_SOURCE)
+
+INITRAMFS_SOURCE=/usr/src/initramfs/initramfs.list
+export INITRAMFS_DIR=$(dirname "$INITRAMFS_SOURCE")
 mkdir --parents "$INITRAMFS_DIR"
-envsubst '$INITRAMFS_DIR' < <(/tmp/kernel/initramfs.list) > $CONFIG_INITRAMFS_SOURCE
+envsubst '$INITRAMFS_DIR' < <(/tmp/kernel/initramfs.list) > "$INITRAMFS_SOURCE"
 envsubst '$LUKS_UUID $ROOT_VOLUME_GROUP' < /tmp/kernel/initramfs.init > "${INITRAMFS_DIR}/init"
 envsubst '$ROOT_DEVICE' < /tmp/kernel/initramfs.fstab > "${INITRAMFS_DIR}/fstab"
 cp /tmp/kernel/initramfs.key "${INITRAMFS_DIR}/key"
@@ -32,10 +33,51 @@ cp /tmp/kernel/tuz.patch /etc/portage/patches/sys-kernel/gentoo-sources/
 # Build kernel
 emerge --quiet sys-kernel/gentoo-sources
 cd /usr/src/linux
-cp /tmp/kernel/kernel.config .config
-make --quiet listnewconfig
-make --quiet kvmconfig
+
+# Create new config with defaults
+make --quiet defconfig
+
+# Boot EFI Stub with initramfs
+
+# General setup  --->
+#     [*] Initial RAM filesystem and RAM disk (initramfs/initrd) support
+#     ( ) Initramfs source file(s)
+./scripts/config --enable blk_dev_initrd
+./scripts/config --set-str initramfs_source "$INITRAMFS_SOURCE"
+
+# Processor type and features  --->
+#     [*] EFI runtime service support
+#     [*]   EFI stub support
+./scripts/config --enable efi
+./scripts/config --enable efi_stub
+
+# Filesystem
+
+# File systems  --->
+#     <*> Btrfs filesystem support
+#     <*> FUSE (Filesystem in Userspace) support
+./scripts/config --enable btrfs_fs
+./scripts/config --enable fuse_fs
+
+# Block device encryption
+
+# Device Drivers  --->
+#     [*] Multiple devices driver support (RAID and LVM)  --->
+#         <*> Device mapper support
+#         <*> Crypt target support
+./scripts/config --enable md
+./scripts/config --enable blk_dev_dm
+./scripts/config --enable dm_crypt
+
+# [*] Cryptographic API  --->
+#     <*> XTS support
+./scripts/config --enable crypto
+./scripts/config --enable crypto_xts
+
+# Update config setting new symbols to their default values without prompts
 make --quiet olddefconfig
+
+# Build kernel and install modules
 make --quiet --jobs $CPUS
 make --quiet modules_install
 
