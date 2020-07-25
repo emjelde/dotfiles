@@ -41,8 +41,8 @@
     ]
   },{
     "type": "file",
-    "source": "salt/minion",
-    "destination": "/tmp/minion"
+    "source": "salt/salt.conf",
+    "destination": "/tmp/salt.conf"
   },{
     "type": "file",
     "generated": "true",

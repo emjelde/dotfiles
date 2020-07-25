@@ -1,5 +1,5 @@
-minion
 salt-apply
 salt-pillar
 salt-top
+salt.conf
 salt.json
