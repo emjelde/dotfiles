@@ -1,14 +1,25 @@
 #!/bin/bash
 
-# Prepare the packer salt build by collecting all salt states. This is done to
-# manage the desired directory structure.
+# Prepare the salt state tree
 
 set -o errexit -o nounset
 
-# Copy salt states into build
-
-SALT_DIR="${SALT_DIR-${BUILD}/salt}"
+SALT_DIR="${SALT_DIR:-/srv/salt}"
 DOTFILES="${SALT_DIR}/dotfiles"
+
+force=false
+
+while [ "$#" -gt 0 ]; do
+   case $1 in
+      -f|--force) force=true ;;
+   esac
+   shift
+done
+
+if [ -d "$SALT_DIR" ] && ! $force; then
+   (>&2 echo 'Refusing to replace salt states without --force')
+   exit 128
+fi
 
 rm -rf "$SALT_DIR"
 mkdir --parents "${DOTFILES}"

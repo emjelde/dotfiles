@@ -1,21 +1,21 @@
 #!/bin/bash
 
-set -o errexit -o nounset
-
 # Generate pillar if needed
 
-if [ ! -f salt/pillar.asc ] && [ ! -d salt/pillar ]; then
-   echo "[WARN] Generating mock salt/pillar"
+set -o errexit -o nounset
+
+PILLAR_DIR="${PILLAR_DIR:-/srv/pillar}"
+SALT_KEYS="${SALT_KEYS:-/etc/salt/gpgkeys}"
+
+if [ ! -d "$SALT_KEYS" ] && [ ! -d "$PILLAR_DIR" ]; then
+   echo "[WARN] Generating mock ${PILLAR_DIR}"
    OLD_UMASK="$(umask)"
    umask 077
-   SALT_KEYS="$(mktemp -d)" && trap "rm -r \"$SALT_KEYS\"" EXIT
-
-   # The mock salt/pillar.asc key uses %transient-key to generate keys faster
-   # along with %no-protection to skip passphrase. Salt requires no passphrase
-   # as it works in a non-interactive mode. This key is not for general use.
-   SALT_KEYS_GPG="${SALT_KEYS}/gpg"
-   mkdir "$SALT_KEYS_GPG"
-   gpg --quiet --homedir "$SALT_KEYS_GPG" --batch --generate-key 2>/dev/null <<-'EOF'
+   # The mock pillar key uses %transient-key to generate keys faster along with
+   # %no-protection to skip passphrase. Salt requires no passphrase as it works
+   # in a non-interactive mode.
+   mkdir --parents "$SALT_KEYS"
+   gpg --quiet --homedir "$SALT_KEYS" --batch --generate-key 2>/dev/null <<-'EOF'
 	Key-Type: default
 	Subkey-Type: default
 	Name-Real: salt-master
@@ -25,32 +25,30 @@ if [ ! -f salt/pillar.asc ] && [ ! -d salt/pillar ]; then
 	%transient-key
 	%commit
 	EOF
-   gpg --quiet --homedir "$SALT_KEYS_GPG" --export-secret-keys --armor > salt/pillar.asc
 
-   # The mock salt/pillar contains a transient SSH private key (id_rsa) with an
-   # empty passphrase for unattended key generation. Even though it is
-   # encrypted to test salt.renderers.gpg it is not for general use.
-   mkdir --parents salt/pillar
-   cat > salt/pillar/top.sls <<-'EOF'
+   # The mock pillar contains a transient SSH private key (id_rsa) with an
+   # empty passphrase for unattended key generation. It is encrypted to
+   # demonstrate salt.renderers.gpg.
+   mkdir --parents "$PILLAR_DIR"
+   cat > "${PILLAR_DIR}/top.sls" <<-'EOF'
 	base:
 	  '*':
 	    - dotfiles.ssh
 	EOF
-   SALT_KEYS_SSH="${SALT_KEYS}/ssh"
-   mkdir "$SALT_KEYS_SSH"
+   SALT_KEYS_SSH="$(mktemp -d)" && trap "rm -r \"$SALT_KEYS_SSH\"" EXIT
    # -q (silence ssh-keygen)
    # -t (type of key)
    # -N (new passphrase)
    # -f (filename)
-   ssh-keygen -q -t rsa -N '' -f "${SALT_KEYS_SSH}"/id_rsa
-   gpg --quiet --homedir "$SALT_KEYS_GPG" --encrypt --recipient salt-master --armor "${SALT_KEYS_SSH}"/id_rsa
+   ssh-keygen -q -t rsa -N '' -f "${SALT_KEYS_SSH}/id_rsa"
+   gpg --quiet --homedir "$SALT_KEYS" --encrypt --recipient salt-master --armor "${SALT_KEYS_SSH}/id_rsa"
    IDENTITY=$(<"${SALT_KEYS_SSH}"/id_rsa.asc)
    print_identity() {
       echo ".ssh/${1}/id_rsa: |"
       echo "$IDENTITY" | sed 's/^/  /'
    }
-   mkdir --parents salt/pillar/dotfiles/ssh
-   cat > salt/pillar/dotfiles/ssh/init.sls <<-EOF
+   mkdir --parents "${PILLAR_DIR}/dotfiles/ssh"
+   cat > "${PILLAR_DIR}/dotfiles/ssh/init.sls" <<-EOF
 	#!yaml|gpg
 
 	$(print_identity bitbucket)
@@ -58,17 +56,16 @@ if [ ! -f salt/pillar.asc ] && [ ! -d salt/pillar ]; then
 	$(print_identity visualstudio)
 	EOF
    umask "$OLD_UMASK"
-fi
+else
+   if [ ! -d "$SALT_KEYS" ]; then
+      (>&2 echo "A salt GPG key '${SALT_KEYS}' is required but a mock key was" \
+                "not generated because '${PILLAR_DIR}' already exists.")
+      exit 1
+   fi
 
-if [ ! -f salt/pillar.asc ]; then
-   (>&2 echo 'A pillar GPG key (salt/pillar.asc) is required' \
-             'but a mock pillar key was not generated because salt/pillar' \
-             'already exists.')
-   exit 1
-fi
-
-if [ ! -d salt/pillar ]; then
-   (>&2 echo 'A pillar (salt/pillar) is required but a mock pillar was not' \
-             'generated because GPG key salt/pillar.asc already exists.')
-   exit 1
+   if [ ! -d "$PILLAR_DIR" ]; then
+      (>&2 echo "A pillar '${PILLAR_DIR}' is required but a mock pillar was" \
+                "not generated because GPG key '${SALT_KEYS}' already exists.")
+      exit 1
+   fi
 fi

@@ -1,0 +1,56 @@
+#!/bin/bash
+
+# Apply salt states
+
+set -o errexit -o nounset
+
+args=("$@")
+dry_run=
+
+help=$(cat <<'USAGE'
+Usage: salt/salt-apply [OPTION]
+
+  -f, --force    Replace salt states if they already exist
+  -n, --dry-run  Use the test mode when applying salt states to avoid changes
+  -h, --help     Display this help and exit
+USAGE
+)
+
+while [ "$#" -gt 0 ]; do
+   case $1 in
+      # Run states in a test mode
+      -n|--dry-run) dry_run='test=True' ;;
+      -h|--help) echo "$help"; exit ;;
+   esac
+   shift
+done
+
+# Install salt if needed
+if ! command -v salt-call > /dev/null 2>&1; then
+   # Salt USE flags are managed here as well as in salt/init.sls.
+   # It is probably best to keep them in sync.
+   mkdir --parents /etc/portage/package.use/app-admin
+   echo 'app-admin/salt gnupg portage vim-syntax' > /etc/portage/package.use/app-admin/salt
+   # pyzmq seems to need zeromq drafts enabled?
+   # https://bugs.gentoo.org/703252
+   # https://bugs.gentoo.org/648088
+   mkdir --parents /etc/portage/package.use/net-libs
+   echo '>=net-libs/zeromq-4.3.2 drafts' > /etc/portage/package.use/net-libs/zeromq
+
+   emerge --quiet app-admin/salt
+
+   cp "${SOURCE:-salt}/minion" /etc/salt/minion
+   echo $MINION_ID > /etc/salt/minion_id
+fi
+
+# Replace salt states
+if salt/salt-top "${args[@]}"; then :
+else
+   # Continue when --force is not used
+   [ $? -ne 128 ] && exit 1
+fi
+
+# Generate pillar if needed
+salt/salt-pillar
+
+salt-call state.apply --log-level info "$dry_run"

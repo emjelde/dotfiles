@@ -33,7 +33,7 @@ wget --continue --directory-prefix "${AUTOBUILD_DIR}" "${DIST}/${ISO_PATH}"{,.CO
 # keyserver.
 OLD_UMASK=$(umask)
 umask 077
-GENTOO_KEYS="${BUILD}/openpgp-keys"
+GENTOO_KEYS="${BUILD}/gentoo-keys"
 GENTOO_KEYRING="${GENTOO_KEYS}/gentoo-release.asc"
 
 mkdir --parents "$GENTOO_KEYS"

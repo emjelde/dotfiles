@@ -1,6 +1,10 @@
 include:
   - .useflags
 
+profile:
+  eselect.set:
+    - target: default/linux/amd64/17.1/desktop
+
 gentools:
   pkg.installed:
     - names:

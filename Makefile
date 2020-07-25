@@ -46,7 +46,5 @@ $(BUILD)/gentoo-iso:
 $(BUILD)/gentoo-salt: $(BUILD)/gentoo-iso
 	$(source-env) && \
 	source gentoo/gentoo-vm-vars && \
-	salt/salt-top && \
-	salt/salt-pillar && \
 	export PACKER_LOG_PATH=$(BUILD)/gentoo-salt.log && \
 	packer build -var-file=$(vm_vars) salt/salt.json

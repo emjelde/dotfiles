@@ -29,28 +29,43 @@
     "shutdown_command": "shutdown -h now"
   }],
   "provisioners": [{
+    "type": "shell-local",
+    "environment_vars": [
+      "PILLAR_DIR={{user `build`}}/pillar",
+      "SALT_DIR={{user `build`}}/salt",
+      "SALT_KEYS={{user `build`}}/salt-keys"
+    ],
+    "inline": [
+      "salt/salt-top",
+      "salt/salt-pillar"
+    ]
+  },{
     "type": "file",
     "source": "salt/minion",
     "destination": "/tmp/minion"
   },{
     "type": "file",
-    "source": "salt/pillar",
-    "destination": "/tmp/pillar"
+    "generated": "true",
+    "source": "{{user `build`}}/pillar",
+    "destination": "/srv/pillar"
   },{
     "type": "file",
-    "source": "salt/pillar.asc",
-    "destination": "/tmp/pillar.asc"
-  },{
-    "type": "file",
+    "generated": "true",
     "source": "{{user `build`}}/salt",
-    "destination": "/tmp/salt"
+    "destination": "/srv/salt"
+  },{
+    "type": "file",
+    "generated": "true",
+    "source": "{{user `build`}}/salt-keys",
+    "destination": "/etc/salt/gpgkeys"
   },{
     "type": "shell",
     "environment_vars": [
-      "MINION_ID={{user `minion_id`}}"
+      "MINION_ID={{user `minion_id`}}",
+      "SOURCE=/tmp"
     ],
     "scripts": [
-      "salt/01-install"
+      "salt/salt-apply"
     ]
   }]
 }

@@ -1,13 +1,21 @@
 # Dotfiles
 
-This repository helps to manage my own dotfiles and installation of the
-packages using a configuration management framework called
-[Salt](https://docs.saltstack.com/en/latest/topics/states/).
+This repository helps to capture my current workstation configuration and
+automate the setup and update process using the
+[Salt](https://docs.saltstack.com/en/latest/topics/states) configuration
+management framework.
 
-The default goal for `make` creates and provisions a Gentoo machine image using
-[Packer](https://packer.io/intro/index.html).
+## Usage
 
-## Getting Started
+Configuration changes that are managed by Salt can be applied by running
+`salt/salt-apply`, this is usually the case for configuration referenced in
+*sls* files. The other configuration not managed under Salt occurs in a
+separate build process that is part of the initial Gentoo installation.
+
+### Fresh install
+
+The default goal for `make` creates a Gentoo machine image using
+[Packer](https://packer.io/intro).
 
 Install Packer on Gentoo which currently requires accept keywords changes, you
 can add these as shown below:
@@ -21,7 +29,7 @@ emerge dev-util/packer
 ```
 
 Packer also provides additional
-[install options](https://www.packer.io/intro/getting-started/install.html).
+[install options](https://www.packer.io/intro/getting-started/install).
 
 The configuration uses the Packer builder for QEMU:
 
@@ -44,10 +52,10 @@ Here's an overview of the process:
 
 Starting with the `gentoo/gentoo-autobuild-vars` script the latest Gentoo
 minimal install ISO is downloaded and used as the boot medium for Packer.
-Packer will provision the base system using `gentoo/gentoo.json` along with the
-scripts under `gentoo`. This will create the VM image `build/gentoo-iso`.
+Packer will provision the base system using *gentoo/gentoo.json* along with the
+scripts under *gentoo*. This will create the VM image *build/gentoo-iso*.
 
 Next, the salt state is prepared using `salt/salt-top`. Packer then
-boots the VM image `build/gentoo-iso` and using `salt/salt.json` Packer will
-install and run Salt using the script `salt/01-install`. This will create the
-VM image `build/gentoo-salt`.
+boots the VM image *build/gentoo-iso* and using *salt/salt.json* Packer will
+install and run Salt using the script `salt/salt-apply`. This will create the
+VM image *build/gentoo-salt*.
