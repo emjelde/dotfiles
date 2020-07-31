@@ -75,6 +75,7 @@ cat << 'EOF'
 
 file /etc/fstab ${INITRAMFS_DIR}/fstab 0644 0 0
 file /etc/key ${INITRAMFS_DIR}/key 0600 0 0
+file /lib64/libgcc_s.so.1 ${LIBGCCPATH}/libgcc_s.so.1 0755 0 0
 file init ${INITRAMFS_DIR}/init 0755 0 0
 
 EOF
