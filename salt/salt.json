@@ -36,23 +36,29 @@
       "SALT_KEYS={{user `build`}}/salt-keys"
     ],
     "inline": [
-      "salt/salt-top",
+      "salt/salt-top --force",
       "salt/salt-pillar"
     ]
   },{
+    "type": "shell",
+    "inline": [
+       "mkdir /etc/salt",
+       "mkdir /srv"
+    ]
+  },{
     "type": "file",
-    "source": "salt/salt.conf",
-    "destination": "/tmp/salt.conf"
+    "source": "salt",
+    "destination": "/tmp"
   },{
     "type": "file",
     "generated": "true",
     "source": "{{user `build`}}/pillar",
-    "destination": "/srv/pillar"
+    "destination": "/srv"
   },{
     "type": "file",
     "generated": "true",
     "source": "{{user `build`}}/salt",
-    "destination": "/srv/salt"
+    "destination": "/srv"
   },{
     "type": "file",
     "generated": "true",
@@ -62,10 +68,11 @@
     "type": "shell",
     "environment_vars": [
       "MINION_ID={{user `minion_id`}}",
-      "SOURCE=/tmp"
+      "SOURCE=/tmp/salt"
     ],
-    "scripts": [
-      "salt/salt-apply"
+    "inline": [
+       "cd /tmp",
+       "salt/salt-apply"
     ]
   }]
 }
