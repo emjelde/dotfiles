@@ -28,7 +28,7 @@ passff-host:
       - pkg: pass
   portage_config.flags:
     - names:
-      - =www-plugins/passff-host-1.2.1:
+      - ~www-plugins/passff-host-1.2.1:
         - accept_keywords:
           - ~ARCH
       - www-plugins/passff-host:
