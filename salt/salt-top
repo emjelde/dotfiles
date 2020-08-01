@@ -41,6 +41,17 @@ statedir() {
    fi
    cp --parents --recursive "$1"/* "${DOTFILES}"
    unset GLOBIGNORE
+
+   # Assume files named after the state directory are init files
+   local init_sls="${DOTFILES}/${1}/init.sls"
+   local statedir_sls="${DOTFILES}/${1}/${1}.sls"
+   if [ ! -f "$init_sls" ]; then
+      if ! mv "$statedir_sls" "$init_sls"; then
+         (>&2 echo 'Salt state directory needs an init.sls file')
+         exit 1
+      fi
+   fi
+
    add_to_init "$1"
 }
 
