@@ -19,7 +19,7 @@
     "disk_interface": "ide",
     "net_device": "e1000",
     "qemuargs": [
-       ["-drive", "if=pflash,format=raw,readonly,file=/usr/share/edk2-ovmf/OVMF_CODE.fd"]
+       ["-bios", "/usr/share/edk2-ovmf/OVMF_CODE.fd"]
     ],
     "headless": "{{user `headless`}}",
     "iso_url": "{{user `build`}}/gentoo-iso/gentoo-iso",
