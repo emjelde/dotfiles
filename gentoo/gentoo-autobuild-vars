@@ -26,7 +26,7 @@ AUTOBUILD_DIR="${BUILD}/autobuilds/${AUTOBUILD}"
 
 # Download the Gentoo Linux installation ISO
 mkdir --parents "$AUTOBUILD_DIR"
-wget --continue --directory-prefix "${AUTOBUILD_DIR}" "${DIST}/${ISO_PATH}"{,.CONTENTS,.DIGESTS.asc}
+wget --continue --directory-prefix "${AUTOBUILD_DIR}" "${DIST}/${ISO_PATH}"{,.CONTENTS.gz,.DIGESTS.asc}
 
 # Try to verify using Gentoo signing keys from
 # app-crypt/openpgp-keys-gentoo-release, otherwise fetch from Gentoo's
