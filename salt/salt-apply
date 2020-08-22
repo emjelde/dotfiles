@@ -4,7 +4,7 @@
 
 set -o errexit -o nounset
 
-args=("$@")
+force=
 dry_run=
 
 help=$(cat <<'USAGE'
@@ -16,14 +16,14 @@ Usage: salt/salt-apply [OPTION]
 USAGE
 )
 
-while [ "$#" -gt 0 ]; do
-   case $1 in
-      # Run states in a test mode
-      -n|--dry-run) dry_run='test=True' ;;
-      -h|--help) echo "$help"; exit ;;
-   esac
-   shift
-done
+opts="$(getopt -o fnh -l force,dry-run,help -n salt/salt-apply -- "$@")"
+eval set -- "$opts"
+while true; do case "$1" in
+   -f|--force) shift; force='--force' ;;
+   -n|--dry-run) shift; dry_run='test=True' ;;
+   -h|--help) shift; echo "$help"; exit 0 ;;
+   --) shift; break ;;
+esac done
 
 # Install salt if needed
 if ! command -v salt-call > /dev/null 2>&1; then
@@ -44,7 +44,7 @@ if ! command -v salt-call > /dev/null 2>&1; then
 fi
 
 # Replace salt states
-if salt/salt-top "${args[@]}"; then :
+if salt/salt-top "$force"; then :
 else
    # Continue when --force is not used
    [ $? -ne 128 ] && exit 1

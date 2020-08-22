@@ -9,12 +9,12 @@ DOTFILES="${SALT_DIR}/dotfiles"
 
 force=false
 
-while [ "$#" -gt 0 ]; do
-   case $1 in
-      -f|--force) force=true ;;
-   esac
-   shift
-done
+opts="$(getopt -o f -l force -n salt/salt-top -- "$@")"
+eval set -- "$opts"
+while true; do case "$1" in
+   -f|--force) shift; force=true ;;
+   --) shift; break ;;
+esac done
 
 if [ -d "$SALT_DIR" ] && ! $force; then
    (>&2 echo 'Refusing to replace salt states without --force')

@@ -1,0 +1,137 @@
+#!/bin/bash
+
+# Commands to manage dotfiles
+
+set -o errexit -o nounset
+
+help=$(cat <<'USAGE'
+Usage: dotfiles command
+
+Available commands are:
+  apply  Apply salt states
+  build  Build a Gentoo VM image
+  clean  Remove generated build files
+  help   Display this help and exit
+USAGE
+)
+
+if [ $# -eq 0 ]; then
+   echo "$help"
+   exit 1
+fi
+
+# Location of Packer output including files needed during the build
+export BUILD=${BUILD:-build}
+
+# Environment vars from .env file
+source_env() {
+   if [ -f .env ]; then
+      set -o allexport
+      source .env
+      set +o allexport
+   fi
+}
+
+# Gentoo autobuilds (minimal install ISO and Stage 3 tarball)
+source_autobuild_vars() {
+   autobuild_vars="${BUILD}/autobuild-variables.json"
+
+   source gentoo/gentoo-autobuild-vars
+}
+
+source_vm_vars() {
+   vm_vars="${BUILD}/vm-variables.json"
+
+   # When Packer is invoked it sometimes calls out to checkpoint.hashicorp.com to
+   # look for new versions of Packer. Disable this for security and privacy
+   # reasons.
+   export CHECKPOINT_DISABLE=1
+
+   # Location of the Packer cache
+   export PACKER_CACHE_DIR="${BUILD}/packer_cache"
+
+   # Enable Packer log
+   export PACKER_LOG=1
+
+   # Auto-detect virtual machine vars
+   source gentoo/gentoo-vm-vars
+}
+
+apply() {
+   salt/salt-apply "$@"
+}
+
+build_gentoo_iso() {
+   local only=${1:-false}
+   if [ ! -e "${BUILD}/gentoo-iso" ]; then
+      source_env
+      source_autobuild_vars
+      source_vm_vars
+      export PACKER_LOG_PATH="${BUILD}/gentoo-iso.log"
+      packer build \
+             -var-file="$autobuild_vars" \
+             -var-file="$vm_vars" \
+             gentoo/gentoo.json
+   elif $only; then
+      (>&2 echo 'Nothing to be done for gentoo-iso!')
+      exit 1
+   fi
+}
+
+build_gentoo_salt() {
+   build_gentoo_iso
+
+   if [ ! -e "${BUILD}/gentoo-salt" ]; then
+      source_env
+      source_vm_vars
+      export PACKER_LOG_PATH="${BUILD}/gentoo-salt.log"
+      packer build \
+             -var-file="$vm_vars" \
+             salt/salt.json
+   else
+      (>&2 echo 'Nothing to be done for gentoo-salt!')
+      exit 1
+   fi
+}
+
+build() {
+   local help=$(cat <<-USAGE
+	Usage: dotfiles build [command]
+
+	Builds a Gentoo VM using Packer, the default command is 'salt' if not specified.
+
+	Available commands are:
+	  iso   Build base Gentoo VM
+	  salt  Build base and provision with salt
+	  help  Display this help and exit
+	USAGE
+   )
+
+   if [ $# -eq  0 ]; then
+      build_gentoo_salt
+      exit 0
+   fi
+
+   local only=true
+   case "$1" in
+      iso) shift; build_gentoo_iso $only; ;;
+      salt) shift; build_gentoo_salt ;;
+      help) shift; echo "$help"; exit 0 ;;
+      *) shift; echo "$help"; exit 1 ;;
+   esac
+}
+
+clean() {
+   rm -rf "$BUILD"
+}
+
+# Run relative to the source directory
+cd "${BASH_SOURCE%/*}"
+
+case "$1" in
+   apply) shift; apply "$@" ;;
+   clean) shift; clean "$@" ;;
+   build) shift; build "$@" ;;
+   help) shift; echo "$help"; exit 0 ;;
+   *) shift; echo "$help"; exit 1 ;;
+esac

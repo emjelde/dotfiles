@@ -8,13 +8,13 @@ management framework.
 ## Usage
 
 Configuration changes that are managed by Salt can be applied by running
-`salt/salt-apply`, this is usually the case for configuration referenced in
+`./dotfiles apply`, this is usually the case for configuration referenced in
 *sls* files. The other configuration not managed under Salt occurs in a
 separate build process that is part of the initial Gentoo installation.
 
 ### Fresh install
 
-The default goal for `make` creates a Gentoo machine image using
+The build command creates a Gentoo machine image using
 [Packer](https://packer.io/intro).
 
 Install Packer on Gentoo which currently requires accept keywords changes, you
@@ -38,10 +38,10 @@ The configuration uses the Packer builder for QEMU:
 emerge app-emulation/qemu
 ```
 
-Now run the make command:
+Now run the build command:
 
 ```sh
-make
+./dotfiles build
 ```
 
 This starts a staged build process that will create a Gentoo base system and
