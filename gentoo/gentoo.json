@@ -32,16 +32,7 @@
     "ssh_username": "{{user `ssh_username`}}",
     "ssh_password": "{{user `ssh_password`}}",
     "boot_command": [
-      "gentoo-nofb<enter>",
-      "<wait10>",
-      "<enter>",
-      "<wait20s>",
-      "passwd {{user `ssh_username`}}<enter>",
-      "{{user `ssh_password`}}<enter>",
-      "{{user `ssh_password`}}<enter>",
-      "sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config<enter>",
-      "sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config<enter>",
-      "/etc/init.d/sshd start<enter>"
+      "gentoo-nofb nokeymap dosshd passwd={{user `ssh_password`}}<enter>"
     ],
     "shutdown_command": "shutdown -h now"
   }],
