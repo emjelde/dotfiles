@@ -61,12 +61,6 @@ locale-gen
 
 # Set the system-wide locale
 eselect locale set en_US.utf8
-EOF
-
-chroot /mnt/gentoo /bin/bash <<EOF
-set -o errexit -o nounset -o xtrace
-
-ln --symbolic $PORTDIR /usr/portage
 
 # Suppress notification about news items
 eselect news read --quiet all
