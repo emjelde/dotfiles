@@ -7,6 +7,7 @@ cp /dev/shm/initramfs.key /mnt/gentoo/tmp/kernel/
 trap "rm --recursive /mnt/gentoo/tmp/kernel" EXIT
 
 export LUKS_UUID="$(blkid -s UUID -o value "$LUKS_DEVICE")"
+export ROOT_UUID="$(blkid -s UUID -o value "$ROOT_DEVICE")"
 
 chroot /mnt/gentoo /bin/bash <<'EOF'
 set -o errexit -o nounset -o xtrace
@@ -26,7 +27,7 @@ export INITRAMFS_DIR=$(dirname "$INITRAMFS_SOURCE")
 mkdir --parents "$INITRAMFS_DIR"
 envsubst '$INITRAMFS_DIR $LIBGCCPATH' < <(/tmp/kernel/initramfs.list) > "$INITRAMFS_SOURCE"
 envsubst '$LUKS_UUID $ROOT_VOLUME_GROUP' < /tmp/kernel/initramfs.init > "${INITRAMFS_DIR}/init"
-envsubst '$ROOT_DEVICE' < /tmp/kernel/initramfs.fstab > "${INITRAMFS_DIR}/fstab"
+envsubst '$ROOT_UUID' < /tmp/kernel/initramfs.fstab > "${INITRAMFS_DIR}/fstab"
 cp /tmp/kernel/initramfs.key "${INITRAMFS_DIR}/key"
 
 # Apply custom kernel patches

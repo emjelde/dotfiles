@@ -1,1 +1,1 @@
-$ROOT_DEVICE /new-root btrfs defaults,noatime,subvol=root 0 0
+UUID=$ROOT_UUID /new-root btrfs defaults,noatime,subvol=root 0 0

@@ -30,12 +30,6 @@ if [ "$?" -ne 0 ]; then
    exec bash
 fi
 
-lvm vgscan --mknodes
-if [ "$?" -ne 0 ]; then
-   echo "Error: Failed to make LVM nodes."
-   exec bash
-fi
-
 mount /new-root
 if [ "$?" -ne 0 ]; then
    echo "Error: Mount root failed."
