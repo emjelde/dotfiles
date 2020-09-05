@@ -68,12 +68,15 @@ echo "$ISO_CHECKSUM" | sha512sum --check --status -
 cd -
 ISO_CHECKSUM=$(echo "$ISO_CHECKSUM" | head -n 1 | cut -f 1 -d ' ')
 
-# Write to a configuration file used by the gentoo/gentoo.json Packer script
-cat << EOF > "${BUILD}/autobuild-variables.json"
-{
-  "iso_checksum": "${ISO_CHECKSUM}",
-  "iso_url": "./${AUTOBUILD_DIR}/${ISO}"
-}
+# Configuration needed for Packer
+cat > "${BUILD}/autobuild-variables.pkrvars.hcl" <<EOF
+gentoo_keyring = "${GENTOO_KEYRING}"
+gentoo_mirrors = "${GENTOO_MIRRORS}"
+gentoo_release_mirror = "${RELEASE_MIRROR}"
+gentoo_rsync_mirror = "${RSYNC_MIRROR}"
+iso_checksum = "${ISO_CHECKSUM}"
+iso_url = "./${AUTOBUILD_DIR}/${ISO}"
+stage3 = "${AUTOBUILD}"
 EOF
 
 # Export to be referenced later in the build

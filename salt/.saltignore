@@ -2,4 +2,4 @@ salt-apply
 salt-pillar
 salt-top
 salt.conf
-salt.json
+salt.pkr.hcl

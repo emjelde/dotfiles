@@ -24,12 +24,11 @@ CPUS=${CPUS:-$(nproc --all)}
 # jobs increase (See CPUS above).
 MEMORY=${MEMORY:-$(echo "($CPUS * 1024 * 1.5) / 1" | bc)} # 1.5 GiB per CPU is an estimate
 
-# Write to a configuration file used by the gentoo/gentoo.json and
-# salt/salt.json Packer scripts.
-cat << EOF > ${BUILD}/vm-variables.json
-{
-  "memory": "${MEMORY}"
-}
+# Configuration needed for Packer
+cat > ${BUILD}/vm-variables.pkrvars.hcl <<EOF
+cpuflags = "${CPU_FLAGS}"
+cpus = ${CPUS}
+memory = ${MEMORY}
 EOF
 
 # Export to be referenced later in the build

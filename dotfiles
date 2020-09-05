@@ -34,13 +34,13 @@ source_env() {
 
 # Gentoo autobuilds (minimal install ISO and Stage 3 tarball)
 source_autobuild_vars() {
-   autobuild_vars="${BUILD}/autobuild-variables.json"
+   autobuild_vars="${BUILD}/autobuild-variables.pkrvars.hcl"
 
    source gentoo/gentoo-autobuild-vars
 }
 
 source_vm_vars() {
-   vm_vars="${BUILD}/vm-variables.json"
+   vm_vars="${BUILD}/vm-variables.pkrvars.hcl"
 
    # When Packer is invoked it sometimes calls out to checkpoint.hashicorp.com to
    # look for new versions of Packer. Disable this for security and privacy
@@ -71,7 +71,8 @@ build_gentoo_iso() {
       packer build \
              -var-file="$autobuild_vars" \
              -var-file="$vm_vars" \
-             gentoo/gentoo.json
+             -var build="${BUILD}" \
+             gentoo/gentoo.pkr.hcl
    elif $only; then
       (>&2 echo 'Nothing to be done for gentoo-iso!')
       exit 1
@@ -87,7 +88,8 @@ build_gentoo_salt() {
       export PACKER_LOG_PATH="${BUILD}/gentoo-salt.log"
       packer build \
              -var-file="$vm_vars" \
-             salt/salt.json
+             -var build="${BUILD}" \
+             salt/salt.pkr.hcl
    else
       (>&2 echo 'Nothing to be done for gentoo-salt!')
       exit 1

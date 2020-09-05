@@ -21,8 +21,15 @@ Install Packer on Gentoo which currently requires accept keywords changes, you
 can add these as shown below:
 
 ```sh
+# The HCL2 template files being used requires a Packer version of at least 1.6.0.
+# A version bump (https://bugs.gentoo.org/732174) has been requested but has yet
+# to be pushed through since the ebuild has no current maintainer.
+# Let's cheat a little for now...
+cd /var/db/repos/gentoo/dev-util/packer
+cp packer-1.4.5.ebuild packer-1.6.0.ebuild
+ebuild packer-1.6.0.ebuild manifest
 mkdir --parents /etc/portage/package.accept_keywords/dev-util
-echo =dev-util/packer-1.4.5 > /etc/portage/package.accept_keywords/dev-util/packer
+echo =dev-util/packer-1.6.0 > /etc/portage/package.accept_keywords/dev-util/packer
 
 # Install Packer
 emerge dev-util/packer
@@ -52,10 +59,10 @@ Here's an overview of the process:
 
 Starting with the `gentoo/gentoo-autobuild-vars` script the latest Gentoo
 minimal install ISO is downloaded and used as the boot medium for Packer.
-Packer will provision the base system using *gentoo/gentoo.json* along with the
+Packer will provision the base system using *gentoo/gentoo.pkr.hcl* along with the
 scripts under *gentoo*. This will create the VM image *build/gentoo-iso*.
 
 Next, the salt state is prepared using `salt/salt-top`. Packer then
-boots the VM image *build/gentoo-iso* and using *salt/salt.json* Packer will
+boots the VM image *build/gentoo-iso* and using *salt/salt.pkr.hcl* Packer will
 install and run Salt using the script `salt/salt-apply`. This will create the
 VM image *build/gentoo-salt*.
