@@ -6,9 +6,6 @@ mkdir --parents /mnt/gentoo/home/evan
 mkdir --parents /mnt/gentoo/snapshots/.{evan,root}
 
 btrfs subvolume create /mnt/btrfs/evan
-mount --read-write --options defaults,noatime,subvol=evan "$ROOT_DEVICE" /mnt/gentoo/home/evan
-mount --read-write --options defaults,noatime "$ROOT_DEVICE" /mnt/gentoo/snapshots/.evan
-mount --read-write --options defaults,noatime "$ROOT_DEVICE" /mnt/gentoo/snapshots/.root
 
 BOOT_UUID="$(blkid -s UUID -o value "$BOOT_DEVICE")"
 ROOT_UUID="$(blkid -s UUID -o value "$ROOT_DEVICE")"
