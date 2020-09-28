@@ -34,14 +34,22 @@ source_env() {
 
 # Gentoo autobuilds (minimal install ISO and Stage 3 tarball)
 source_autobuild_vars() {
-   autobuild_vars="${BUILD}/autobuild-variables.pkrvars.hcl"
-
    source gentoo/gentoo-autobuild-vars
+
+   autobuild_vars="${BUILD}/autobuild-variables.pkrvars.hcl"
+   cat > "$autobuild_vars" <<-EOF
+	gentoo_keyring = "${GENTOO_KEYRING}"
+	gentoo_mirrors = "${GENTOO_MIRRORS}"
+	gentoo_release_mirror = "${RELEASE_MIRROR}"
+	gentoo_rsync_mirror = "${RSYNC_MIRROR}"
+	iso_checksum = "${ISO_CHECKSUM}"
+	iso_url = "${ISO_URL}"
+	stage3 = "${STAGE3}"
+	EOF
 }
 
+# Auto-detect virtual machine vars
 source_vm_vars() {
-   vm_vars="${BUILD}/vm-variables.pkrvars.hcl"
-
    # When Packer is invoked it sometimes calls out to checkpoint.hashicorp.com to
    # look for new versions of Packer. Disable this for security and privacy
    # reasons.
@@ -53,8 +61,14 @@ source_vm_vars() {
    # Enable Packer log
    export PACKER_LOG=1
 
-   # Auto-detect virtual machine vars
    source gentoo/gentoo-vm-vars
+
+   vm_vars="${BUILD}/vm-variables.pkrvars.hcl"
+   cat > "$vm_vars" <<-EOF
+	cpuflags = "${CPU_FLAGS}"
+	cpus = ${CPUS}
+	memory = ${MEMORY}
+	EOF
 }
 
 apply() {
