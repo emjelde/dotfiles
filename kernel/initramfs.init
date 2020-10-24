@@ -1,38 +1,34 @@
 #!/bin/bash
 
-export PATH="/sbin:/bin:/usr/bin"
-
-echo -n "Waiting for devices..."
-sleep 3
+export PATH='/sbin:/bin'
 
 mount -t proc none /proc
 mount -t sysfs none /sys
 mount -t devtmpfs none /dev
 mount -t tmpfs tmpfs /run
 
-device="$(/sbin/blkid --uuid "$LUKS_UUID")"
-
-cryptsetup isLuks "$device"
-if [ "$?" -ne 0 ]; then
-   echo "Error: $device is not an encrypted device."
+echo 'Waiting for devices...'
+for try in {1..3}; do
+   luks_device="$(blkid --uuid "$LUKS_UUID")" && break
+   sleep 1
+done
+if [ -z "$luks_device" ]; then
+   echo "Error: Failed to find encrypted device 'UUID=${LUKS_UUID}'."
    exec bash
 fi
 
-cryptsetup open --allow-discards --key-file /etc/key "$device" linux-lvm
-if [ "$?" -ne 0 ]; then
-   echo "Error: Failed to open encrypted device."
+if ! cryptsetup open --allow-discards --key-file /etc/key "$luks_device" linux-lvm; then
+   echo "Error: Failed to open encrypted device '${luks_device}'."
    exec bash
 fi
 
-lvm vgchange --activate y "$ROOT_VOLUME_GROUP"
-if [ "$?" -ne 0 ]; then
-   echo "Error: Failed to start LVM."
+if ! lvm vgchange --activate y "$ROOT_VOLUME_GROUP"; then
+   echo 'Error: Failed to start LVM.'
    exec bash
 fi
 
-mount /new-root
-if [ "$?" -ne 0 ]; then
-   echo "Error: Mount root failed."
+if ! mount /new-root; then
+   echo 'Error: Mount root failed.'
    exec bash
 fi
 

@@ -10,7 +10,6 @@ set -o errexit -o nounset
 # stage3.
 lddtree=$(echo "$(
 lddtree -l /bin/bash
-lddtree -l /bin/cat
 lddtree -l /bin/mount
 lddtree -l /bin/sleep
 lddtree -l /sbin/blkid
@@ -41,27 +40,6 @@ cat << 'EOF'
 EOF
 ) | sort --unique \
   | sed 's/\(.*\)/dir \1 0755 0 0/'
-
-# nod <name> <mode> <uid> <gid> <dev_type> <maj> <min>
-#
-# <name>     name of the nod in the archive
-# <mode>     mode/permissions of the file
-# <uid>      user id (0=root)
-# <gid>      group id (0=root)
-# <dev_type> device type (b=block, c=character)
-# <maj>      major number of nod
-# <min>      minor number of nod
-cat << 'EOF'
-
-nod /dev/console 0600 0 0 c 5 1
-nod /dev/mem 0600 0 0 c 1 1
-nod /dev/null 0600 0 0 c 1 3
-nod /dev/random 0600 0 0 c 1 8
-nod /dev/tty 0600 0 0 c 5 0
-nod /dev/tty1 0600 0 0 c 4 1
-nod /dev/urandom 0600 0 0 c 1 9
-nod /dev/zero 0600 0 0 c 1 5
-EOF
 
 # file <name> <location> <mode> <uid> <gid>
 #
