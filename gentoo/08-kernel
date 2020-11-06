@@ -2,7 +2,7 @@
 
 set -o errexit -o nounset -o xtrace
 
-cp --recursive "${SOURCE}/kernel" /mnt/gentoo/tmp/
+cp --recursive "${SOURCE:-.}/kernel" /mnt/gentoo/tmp/
 cp /dev/shm/initramfs.key /mnt/gentoo/tmp/kernel/
 trap "rm --recursive /mnt/gentoo/tmp/kernel" EXIT
 

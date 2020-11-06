@@ -40,7 +40,7 @@ tar --extract \
 chown root:portage /mnt/gentoo${PORTDIR}
 chown root:portage /mnt/gentoo${DISTDIR}
 
-cp --recursive "${SOURCE}/portage" /mnt/gentoo/tmp/
+cp --recursive "${SOURCE:-.}/portage" /mnt/gentoo/tmp/
 
 chroot /mnt/gentoo /bin/bash <<'EOF'
 set -o errexit -o nounset -o xtrace

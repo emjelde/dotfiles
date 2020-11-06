@@ -104,7 +104,7 @@ build {
   provisioner "shell" {
     environment_vars = [
       "MINION_ID=${var.minion_id}",
-      "SOURCE=/tmp/salt"
+      "SOURCE=/tmp"
     ]
 
     inline = [
