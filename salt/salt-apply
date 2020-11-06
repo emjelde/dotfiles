@@ -40,7 +40,6 @@ if ! command -v salt-call > /dev/null 2>&1; then
    emerge --quiet app-admin/salt
 
    cp "${SOURCE:-.}/salt/salt.conf" /etc/salt/minion
-   echo $MINION_ID > /etc/salt/minion_id
 fi
 
 # Replace salt states

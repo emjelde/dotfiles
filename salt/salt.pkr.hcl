@@ -17,11 +17,6 @@ variable "memory" {
   type = number
 }
 
-variable "minion_id" {
-  type = string
-  default = "roflpc"
-}
-
 variable "ssh_username" {
   type = string
   default = "root"
@@ -103,7 +98,6 @@ build {
 
   provisioner "shell" {
     environment_vars = [
-      "MINION_ID=${var.minion_id}",
       "SOURCE=/tmp"
     ]
 
