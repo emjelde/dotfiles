@@ -62,11 +62,12 @@ fi
 gpgv --quiet --keyring "$GENTOO_KEYRING" "${AUTOBUILD_DIR}/${ISO}.DIGESTS.asc"
 
 # Verify the checksum to make sure the downloaded ISO file is not corrupted
-cd "$AUTOBUILD_DIR" || exit
+ISO_CHECKSUM=$(
+cd "$AUTOBUILD_DIR"
 ISO_CHECKSUM="$(awk '/# SHA512 HASH/{getline; print}' "${ISO}.DIGESTS.asc")"
 echo "$ISO_CHECKSUM" | sha512sum --check --status -
-cd -
-ISO_CHECKSUM=$(echo "$ISO_CHECKSUM" | head -n 1 | cut -f 1 -d ' ')
+echo "$ISO_CHECKSUM" | head -n 1 | cut -f 1 -d ' '
+)
 
 # Export to be referenced later in the build
 export GENTOO_KEYRING
