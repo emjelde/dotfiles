@@ -130,7 +130,7 @@ build() {
 
    local only=true
    case "$1" in
-      iso) shift; build_gentoo_iso $only; ;;
+      iso) shift; build_gentoo_iso $only ;;
       salt) shift; build_gentoo_salt ;;
       help) shift; echo "$help"; exit 0 ;;
       *) shift; echo "$help"; exit 1 ;;
