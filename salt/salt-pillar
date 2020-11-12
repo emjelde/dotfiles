@@ -9,7 +9,6 @@ SALT_KEYS="${SALT_KEYS:-/etc/salt/gpgkeys}"
 
 if [ ! -d "$SALT_KEYS" ] && [ ! -d "$PILLAR_DIR" ]; then
    echo "[WARN] Generating mock ${PILLAR_DIR}"
-   OLD_UMASK="$(umask)"
    umask 077
    # The mock pillar key uses %transient-key to generate keys faster along with
    # %no-protection to skip passphrase. Salt requires no passphrase as it works
@@ -55,7 +54,6 @@ if [ ! -d "$SALT_KEYS" ] && [ ! -d "$PILLAR_DIR" ]; then
 	$(print_identity github)
 	$(print_identity visualstudio)
 	EOF
-   umask "$OLD_UMASK"
 else
    if [ ! -d "$SALT_KEYS" ]; then
       (>&2 echo "A salt GPG key '${SALT_KEYS}' is required but a mock key was" \

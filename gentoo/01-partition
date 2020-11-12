@@ -13,10 +13,7 @@ sgdisk \
   --print /dev/sda
 
 # Encrypting with LUKS
-OLD_UMASK="$(umask)"
-umask 077
-dd if=/dev/urandom of=/dev/shm/initramfs.key bs=1 count=4096
-umask "$OLD_UMASK"
+( umask 077; dd if=/dev/urandom of=/dev/shm/initramfs.key bs=1 count=4096 )
 # Format using /dev/urandom to speed up the volume key generation. This will
 # produce a low-quality volume key which should be replaced before actual use.
 cryptsetup luksFormat --use-urandom --key-file /dev/shm/initramfs.key "$LUKS_DEVICE"

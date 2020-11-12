@@ -31,10 +31,10 @@ wget --continue --directory-prefix "${AUTOBUILD_DIR}" "${DIST}/${ISO_PATH}"{,.CO
 # Try to verify using Gentoo signing keys from
 # app-crypt/openpgp-keys-gentoo-release, otherwise fetch from Gentoo's
 # keyserver.
-OLD_UMASK=$(umask)
-umask 077
 GENTOO_KEYS="${BUILD}/gentoo-keys"
 GENTOO_KEYRING="${GENTOO_KEYS}/gentoo-release.asc"
+(
+umask 077
 
 mkdir --parents "$GENTOO_KEYS"
 if [ -f /usr/share/openpgp-keys/gentoo-release.asc ]; then
@@ -56,7 +56,7 @@ else
        --keyserver hkps://keys.gentoo.org \
        --recv-keys $WEEKLY_RELEASE_SIGNING_KEY $EBUILD_REPOSITORY_SIGNING_KEY
 fi
-umask "$OLD_UMASK"
+)
 
 # Verify ISO has been provided by the Gentoo Infrastructure team
 gpgv --quiet --keyring "$GENTOO_KEYRING" "${AUTOBUILD_DIR}/${ISO}.DIGESTS.asc"
