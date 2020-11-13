@@ -137,8 +137,51 @@ build() {
    esac
 }
 
-clean() {
+# Remove all build output, including any downloaded Gentoo autobuilds,
+# verification keys, caches, and VMs.
+clean_all() {
    rm -rf "$BUILD"
+}
+
+# Remove VM build output. Accepts an optional parameter for the build type to
+# remove, otherwise all VM builds are removed.
+clean_build() {
+   if [ $# -eq 0 ]; then
+      clean_build 'iso'
+      clean_build 'salt'
+   else
+      local type="${1}"
+      rm -rf "${BUILD}/gentoo-${type}"{,.log}
+   fi
+}
+
+# Call on the appropriate clean command
+clean() {
+   local help=$(cat <<-USAGE
+	Usage: dotfiles clean [command]
+
+	Remove build output, the default command is 'all' if not specified.
+
+	Available commands are:
+	  all           Remove all build output
+	  build         Remove 'iso' and 'salt' builds
+	  build <type>  Remove only 'iso' or 'salt' builds
+	  help          Display this help and exit
+	USAGE
+   )
+
+   # Default to the 'all' clean command
+   if [ $# -eq  0 ]; then
+      clean_all
+      exit 0
+   fi
+
+   case "$1" in
+      all) shift; clean_all ;;
+      build) shift; clean_build "$@" ;;
+      help) shift; echo "$help"; exit 0 ;;
+      *) shift; echo "$help"; exit 1 ;;
+   esac
 }
 
 # Run relative to the source directory
