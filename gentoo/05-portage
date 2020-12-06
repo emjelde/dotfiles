@@ -4,19 +4,14 @@ set -o errexit -o nounset -o xtrace
 
 # Configure Portage
 
-REPOSDIR=/var/db/repos
-export PORTDIR=${REPOSDIR}/gentoo
-export DISTDIR=/var/cache/distfiles
-
-mkdir --parents /mnt/gentoo{$REPOSDIR,$DISTDIR}
 btrfs subvolume create /mnt/btrfs/repos
 btrfs subvolume create /mnt/btrfs/distfiles
 
-mount --read-write --options defaults,noatime,subvol=repos "$ROOT_DEVICE" /mnt/gentoo${REPOSDIR}
-mount --read-write --options defaults,noatime,subvol=distfiles "$ROOT_DEVICE" /mnt/gentoo${DISTDIR}
+mount --read-write --options defaults,noatime,subvol=repos "$ROOT_DEVICE" /mnt/gentoo/var/db/repos
+mount --read-write --options defaults,noatime,subvol=distfiles "$ROOT_DEVICE" /mnt/gentoo/var/cache/distfiles
 
 # Use the latest daily snapshot
-tarball='portage-latest.tar.xz'
+tarball=portage-latest.tar.xz
 snapshots_url="${RELEASE_MIRROR}/snapshots/${tarball}"
 
 # Download a snapshot of the main ebuild repository
@@ -31,15 +26,12 @@ md5sum --check --status "${tarball}.md5sum"
 )
 
 # Unpack the snapshot
-mkdir /mnt/gentoo${PORTDIR}
+mkdir /mnt/gentoo/var/db/repos/gentoo
 tar --extract \
     --xz \
     --file "${tarball_temp}/${tarball}" \
     --strip-components=1 \
-    --directory /mnt/gentoo${PORTDIR}
-
-chown root:portage /mnt/gentoo${PORTDIR}
-chown root:portage /mnt/gentoo${DISTDIR}
+    --directory /mnt/gentoo/var/db/repos/gentoo
 
 cp --recursive "${SOURCE:-.}/portage" /mnt/gentoo/tmp/
 
@@ -47,8 +39,8 @@ chroot /mnt/gentoo /bin/bash <<'EOF'
 set -o errexit -o nounset -o xtrace
 
 mkdir --parents /etc/portage/repos.conf
-envsubst '$CPUS $CPU_FLAGS_X86 $DISTDIR $GENTOO_MIRRORS $PORTDIR' < /tmp/portage/make.conf > /etc/portage/make.conf
-envsubst '$PORTDIR $RSYNC_MIRROR' < /tmp/portage/gentoo.conf > /etc/portage/repos.conf/gentoo.conf
+envsubst '$CPUS $CPU_FLAGS_X86 $GENTOO_MIRRORS' < /tmp/portage/make.conf > /etc/portage/make.conf
+envsubst '$RSYNC_MIRROR' < /tmp/portage/gentoo.conf > /etc/portage/repos.conf/gentoo.conf
 rm --recursive /tmp/portage
 
 # Configure locales
