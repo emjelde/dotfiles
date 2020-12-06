@@ -4,11 +4,11 @@ set -o errexit -o nounset -o xtrace
 
 # Configure Portage
 
-btrfs subvolume create /mnt/btrfs/repos
-btrfs subvolume create /mnt/btrfs/distfiles
+btrfs subvolume create "${BTRFS_MOUNT_POINT}/repos"
+btrfs subvolume create "${BTRFS_MOUNT_POINT}/distfiles"
 
-mount --read-write --options defaults,noatime,subvol=repos "$ROOT_DEVICE" /mnt/gentoo/var/db/repos
-mount --read-write --options defaults,noatime,subvol=distfiles "$ROOT_DEVICE" /mnt/gentoo/var/cache/distfiles
+mount --read-write --options defaults,noatime,subvol=repos "$ROOT_DEVICE" "${GENTOO_MOUNT_POINT}/var/db/repos"
+mount --read-write --options defaults,noatime,subvol=distfiles "$ROOT_DEVICE" "${GENTOO_MOUNT_POINT}/var/cache/distfiles"
 
 # Use the latest daily snapshot
 tarball=portage-latest.tar.xz
@@ -26,16 +26,16 @@ md5sum --check --status "${tarball}.md5sum"
 )
 
 # Unpack the snapshot
-mkdir /mnt/gentoo/var/db/repos/gentoo
+mkdir "${GENTOO_MOUNT_POINT}/var/db/repos/gentoo"
 tar --extract \
     --xz \
     --file "${tarball_temp}/${tarball}" \
     --strip-components=1 \
-    --directory /mnt/gentoo/var/db/repos/gentoo
+    --directory "${GENTOO_MOUNT_POINT}/var/db/repos/gentoo"
 
-cp --recursive "${SOURCE:-.}/portage" /mnt/gentoo/tmp/
+cp --recursive "${SOURCE:-.}/portage" "${GENTOO_MOUNT_POINT}/tmp/"
 
-chroot /mnt/gentoo /bin/bash <<'EOF'
+chroot "$GENTOO_MOUNT_POINT" /bin/bash <<'EOF'
 set -o errexit -o nounset -o xtrace
 
 mkdir --parents /etc/portage/repos.conf

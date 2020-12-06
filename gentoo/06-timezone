@@ -1,6 +1,6 @@
 #!/bin/bash
 
-chroot /mnt/gentoo /bin/bash <<EOF
+chroot "$GENTOO_MOUNT_POINT" /bin/bash <<EOF
 set -o errexit -o xtrace
 ln --symbolic --no-dereference --force /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
 EOF

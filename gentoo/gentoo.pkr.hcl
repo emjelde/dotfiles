@@ -107,10 +107,12 @@ build {
   provisioner "shell" {
     environment_vars = [
       "BOOT_DEVICE=/dev/sda1",
+      "BTRFS_MOUNT_POINT=/mnt/btrfs",
       "CPUS=${var.cpus}",
       "CPU_FLAGS_X86=${var.cpuflags}",
       "GENTOO_KEYRING=/tmp/gentoo-release.asc",
       "GENTOO_MIRRORS=${var.gentoo_mirrors}",
+      "GENTOO_MOUNT_POINT=/mnt/gentoo",
       "LUKS_DEVICE=/dev/sda2",
       "RELEASE_MIRROR=${var.gentoo_release_mirror}",
       "ROOT_DEVICE=/dev/${var.root_volume_group}/root",

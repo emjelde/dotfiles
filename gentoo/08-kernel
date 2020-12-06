@@ -2,14 +2,14 @@
 
 set -o errexit -o nounset -o xtrace
 
-cp --recursive "${SOURCE:-.}/kernel" /mnt/gentoo/tmp/
-cp /dev/shm/initramfs.key /mnt/gentoo/tmp/kernel/
-trap "rm --recursive /mnt/gentoo/tmp/kernel" EXIT
+cp --recursive "${SOURCE:-.}/kernel" "${GENTOO_MOUNT_POINT}/tmp/"
+cp /dev/shm/initramfs.key "${GENTOO_MOUNT_POINT}/tmp/kernel/"
+trap "rm --recursive \"${GENTOO_MOUNT_POINT}/tmp/kernel\"" EXIT
 
 export LUKS_UUID="$(blkid -s UUID -o value "$LUKS_DEVICE")"
 export ROOT_UUID="$(blkid -s UUID -o value "$ROOT_DEVICE")"
 
-chroot /mnt/gentoo /bin/bash <<'EOF'
+chroot "$GENTOO_MOUNT_POINT" /bin/bash <<'EOF'
 set -o errexit -o nounset -o xtrace
 
 # Prepare initramfs

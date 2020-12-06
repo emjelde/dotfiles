@@ -3,4 +3,4 @@
 set -o errexit -o nounset -o xtrace
 
 # Copy DNS info to ensure that networking works after entering new environment
-cp --dereference /etc/resolv.conf /mnt/gentoo/etc/
+cp --dereference /etc/resolv.conf "${GENTOO_MOUNT_POINT}/etc/"

@@ -2,7 +2,7 @@
 
 set -o errexit -o xtrace
 
-chroot /mnt/gentoo /bin/bash <<'EOF'
+chroot "$GENTOO_MOUNT_POINT" /bin/bash <<'EOF'
 set -o errexit -o nounset -o xtrace
 
 UID_GID=1337

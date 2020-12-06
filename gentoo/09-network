@@ -1,6 +1,6 @@
 #!/bin/bash
 
-chroot /mnt/gentoo /bin/bash <<'EOF'
+chroot "$GENTOO_MOUNT_POINT" /bin/bash <<'EOF'
 set -o errexit -o xtrace
 
 ln -s /etc/init.d/net.lo /etc/init.d/net.enp0s3

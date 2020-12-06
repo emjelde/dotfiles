@@ -30,12 +30,12 @@ awk '/# SHA512 HASH/{getline; print}' "${tarball}.DIGESTS.asc" \
 )
 
 # Create a subvolume for the base system
-mkdir --parents /mnt/btrfs
-mount --read-write --options defaults,noatime "$ROOT_DEVICE" /mnt/btrfs
-btrfs subvolume create /mnt/btrfs/root
+mkdir --parents "$BTRFS_MOUNT_POINT"
+mount --read-write --options defaults,noatime "$ROOT_DEVICE" "$BTRFS_MOUNT_POINT"
+btrfs subvolume create "${BTRFS_MOUNT_POINT}/root"
 
-mkdir --parents /mnt/gentoo
-mount --read-write --options defaults,noatime,subvol=root "$ROOT_DEVICE" /mnt/gentoo
+mkdir --parents "$GENTOO_MOUNT_POINT"
+mount --read-write --options defaults,noatime,subvol=root "$ROOT_DEVICE" "$GENTOO_MOUNT_POINT"
 
 # Unpack stage tarball
 tar --extract \
@@ -44,4 +44,4 @@ tar --extract \
     --xattrs-include='*.*' \
     --numeric-owner \
     --file "${tarball_temp}/${tarball}" \
-    --directory /mnt/gentoo
+    --directory "$GENTOO_MOUNT_POINT"

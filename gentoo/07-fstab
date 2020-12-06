@@ -2,16 +2,17 @@
 
 set -o errexit -o nounset -o xtrace
 
-mkdir --parents /mnt/gentoo/home/evan
-mkdir --parents /mnt/gentoo/snapshots/.{evan,root}
+mkdir --parents "${GENTOO_MOUNT_POINT}/home/evan"
+mkdir --parents "${GENTOO_MOUNT_POINT}/snapshots/.evan"
+mkdir --parents "${GENTOO_MOUNT_POINT}/snapshots/.root"
 
-btrfs subvolume create /mnt/btrfs/evan
+btrfs subvolume create "${BTRFS_MOUNT_POINT}/evan"
 
 BOOT_UUID="$(blkid -s UUID -o value "$BOOT_DEVICE")"
 ROOT_UUID="$(blkid -s UUID -o value "$ROOT_DEVICE")"
 SWAP_UUID="$(blkid -s UUID -o value "$SWAP_DEVICE")"
 
-chroot /mnt/gentoo /bin/bash <<EOF
+chroot "$GENTOO_MOUNT_POINT" /bin/bash <<EOF
 set -o errexit -o nounset -o xtrace
 
 cat > /etc/fstab <<'DATA'
