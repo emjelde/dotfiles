@@ -15,6 +15,7 @@ Available commands are:
 USAGE
 )
 
+# Display the help if no commands are given
 if [ $# -eq 0 ]; then
    echo "$help"
    exit 1
@@ -23,7 +24,7 @@ fi
 # Location of Packer output including files needed during the build
 export BUILD=${BUILD:-build}
 
-# Environment vars from .env file
+# Source environment variables from the .env file
 source_env() {
    if [ -f .env ]; then
       set -o allexport
@@ -32,7 +33,8 @@ source_env() {
    fi
 }
 
-# Gentoo autobuilds (minimal install ISO and Stage 3 tarball)
+# Download the Gentoo autobuilds (minimal install ISO and Stage 3 tarball) and
+# create the variables needed for the Gentoo base VM Packer build.
 source_autobuild_vars() {
    source gentoo/gentoo-autobuild-vars
 
@@ -48,7 +50,8 @@ source_autobuild_vars() {
 	EOF
 }
 
-# Auto-detect virtual machine vars
+# Auto-detect system capabilities for Gentoo Portage configuration and the
+# Packer build.
 source_vm_vars() {
    # When Packer is invoked it sometimes calls out to checkpoint.hashicorp.com to
    # look for new versions of Packer. Disable this for security and privacy
@@ -71,10 +74,18 @@ source_vm_vars() {
 	EOF
 }
 
+# Call on the salt/salt-apply script to apply salt states. If the salt state
+# files don't already exist they will be copied from this repository to the
+# SALT_DIR (/srv/salt) otherwise use --force, -f to update the existing state
+# files. Use --dry-run, -n to enable the test mode to review any changes that
+# would occur if the states are applied.
 apply() {
    salt/salt-apply "$@"
 }
 
+# Start the Gentoo base VM build only if the build output doesn't already
+# exist. Accepts an optional parameter, if the parameter is true and the build
+# output exists the script exits early.
 build_gentoo_iso() {
    local only=${1:-false}
    if [ ! -e "${BUILD}/gentoo-iso" ]; then
@@ -93,6 +104,8 @@ build_gentoo_iso() {
    fi
 }
 
+# Continue the Gentoo build by applying the salt states to a VM that is backed
+# by the Gentoo base VM. If the base VM doesn't exist it will be built first.
 build_gentoo_salt() {
    build_gentoo_iso
 
@@ -110,6 +123,7 @@ build_gentoo_salt() {
    fi
 }
 
+# Call on the appropriate Gentoo VM build step
 build() {
    local help=$(cat <<-USAGE
 	Usage: dotfiles build [command]
@@ -123,6 +137,7 @@ build() {
 	USAGE
    )
 
+   # Default to the 'salt' build command
    if [ $# -eq  0 ]; then
       build_gentoo_salt
       exit 0
