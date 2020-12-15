@@ -1,9 +1,5 @@
 # Gentoo Linux (iso)
 
-variable "build" {
-  type = string
-}
-
 variable "cpuflags" {
   type = string
 }
@@ -45,6 +41,10 @@ variable "memory" {
   type = number
 }
 
+variable "output_directory" {
+  type = string
+}
+
 variable "root_volume_group" {
   type = string
   default = "roflpc"
@@ -66,7 +66,7 @@ variable "stage3" {
 
 source "qemu" "gentoo-iso" {
   vm_name = "gentoo-iso"
-  output_directory = "${var.build}/gentoo-iso"
+  output_directory = var.output_directory
   cpus = var.cpus
   memory = var.memory
   disk_interface = "ide"

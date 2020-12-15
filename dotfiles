@@ -33,23 +33,6 @@ source_env() {
    fi
 }
 
-# Download the Gentoo autobuilds (minimal install ISO and Stage 3 tarball) and
-# create the variables needed for the Gentoo base VM Packer build.
-source_autobuild_vars() {
-   source gentoo/gentoo-autobuild-vars
-
-   autobuild_vars="${BUILD}/autobuild-variables.pkrvars.hcl"
-   cat > "$autobuild_vars" <<-EOF
-	gentoo_keyring = "${GENTOO_KEYRING}"
-	gentoo_mirrors = "${GENTOO_MIRRORS}"
-	gentoo_release_mirror = "${RELEASE_MIRROR}"
-	gentoo_rsync_mirror = "${RSYNC_MIRROR}"
-	iso_checksum = "${ISO_CHECKSUM}"
-	iso_url = "${ISO_URL}"
-	stage3 = "${STAGE3}"
-	EOF
-}
-
 # Auto-detect system capabilities for Gentoo Portage configuration and the
 # Packer build.
 source_vm_vars() {
@@ -65,13 +48,6 @@ source_vm_vars() {
    export PACKER_LOG=1
 
    source gentoo/gentoo-vm-vars
-
-   vm_vars="${BUILD}/vm-variables.pkrvars.hcl"
-   cat > "$vm_vars" <<-EOF
-	cpuflags = "${CPU_FLAGS}"
-	cpus = ${CPUS}
-	memory = ${MEMORY}
-	EOF
 }
 
 # Call on the salt/salt-apply script to apply salt states. If the salt state
@@ -90,13 +66,24 @@ build_gentoo_iso() {
    local only=${1:-false}
    if [ ! -e "${BUILD}/gentoo-iso" ]; then
       source_env
-      source_autobuild_vars
       source_vm_vars
+
+      # Download the Gentoo autobuilds (minimal install ISO and Stage 3 tarball)
+      source gentoo/gentoo-autobuild-vars
+
       export PACKER_LOG_PATH="${BUILD}/gentoo-iso.log"
       packer build \
-             -var-file="$autobuild_vars" \
-             -var-file="$vm_vars" \
-             -var build="${BUILD}" \
+             -var cpuflags="${CPU_FLAGS}" \
+             -var cpus=${CPUS} \
+             -var memory=${MEMORY} \
+             -var gentoo_keyring="${GENTOO_KEYRING}" \
+             -var gentoo_mirrors="${GENTOO_MIRRORS}" \
+             -var gentoo_release_mirror="${RELEASE_MIRROR}" \
+             -var gentoo_rsync_mirror="${RSYNC_MIRROR}" \
+             -var iso_checksum="${ISO_CHECKSUM}" \
+             -var iso_url="${ISO_URL}" \
+             -var output_directory="${BUILD}/gentoo-iso" \
+             -var stage3="${STAGE3}" \
              gentoo/gentoo.pkr.hcl
    elif $only; then
       (>&2 echo 'Nothing to be done for gentoo-iso!')
@@ -112,10 +99,13 @@ build_gentoo_salt() {
    if [ ! -e "${BUILD}/gentoo-salt" ]; then
       source_env
       source_vm_vars
+
       export PACKER_LOG_PATH="${BUILD}/gentoo-salt.log"
       packer build \
-             -var-file="$vm_vars" \
-             -var build="${BUILD}" \
+             -var cpus=${CPUS} \
+             -var memory=${MEMORY} \
+             -var iso_url="${BUILD}/gentoo-iso/gentoo-iso" \
+             -var output_directory="${BUILD}/gentoo-salt" \
              salt/salt.pkr.hcl
    else
       (>&2 echo 'Nothing to be done for gentoo-salt!')

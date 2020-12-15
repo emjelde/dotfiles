@@ -1,11 +1,11 @@
 # Gentoo Linux (salt)
 
-variable "build" {
-  type = string
-}
-
 variable "cpus" {
   type = number
+}
+
+variable "iso_url" {
+  type = string
 }
 
 variable "headless" {
@@ -15,6 +15,10 @@ variable "headless" {
 
 variable "memory" {
   type = number
+}
+
+variable "output_directory" {
+  type = string
 }
 
 variable "ssh_username" {
@@ -29,7 +33,7 @@ variable "ssh_password" {
 
 source "qemu" "gentoo-salt" {
   vm_name = "gentoo-salt"
-  output_directory = "${var.build}/gentoo-salt"
+  output_directory = var.output_directory
   disk_image = true
   cpus = var.cpus
   memory = var.memory
@@ -39,7 +43,7 @@ source "qemu" "gentoo-salt" {
      ["-bios", "/usr/share/edk2-ovmf/OVMF_CODE.fd"]
   ]
   headless = var.headless
-  iso_url = "${var.build}/gentoo-iso/gentoo-iso"
+  iso_url = var.iso_url
   iso_checksum = "none"
   ssh_username = var.ssh_username
   ssh_password = var.ssh_password
@@ -55,9 +59,9 @@ build {
 
   provisioner "shell-local" {
     environment_vars = [
-      "PILLAR_DIR=${var.build}/pillar",
-      "SALT_DIR=${var.build}/salt",
-      "SALT_KEYS=${var.build}/salt-keys"
+      "PILLAR_DIR=${var.output_directory}/pillar",
+      "SALT_DIR=${var.output_directory}/salt",
+      "SALT_KEYS=${var.output_directory}/salt-keys"
     ]
 
     inline = [
@@ -80,19 +84,19 @@ build {
 
   provisioner "file" {
     generated = true
-    source = "${var.build}/pillar"
+    source = "${var.output_directory}/pillar"
     destination = "/srv"
   }
 
   provisioner "file" {
     generated = true
-    source = "${var.build}/salt"
+    source = "${var.output_directory}/salt"
     destination = "/srv"
   }
 
   provisioner "file" {
     generated = true
-    source = "${var.build}/salt-keys"
+    source = "${var.output_directory}/salt-keys"
     destination = "/etc/salt/gpgkeys"
   }
 
