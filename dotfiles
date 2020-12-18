@@ -80,10 +80,10 @@ build_gentoo_iso() {
              -var gentoo_mirrors="${GENTOO_MIRRORS}" \
              -var gentoo_release_mirror="${RELEASE_MIRROR}" \
              -var gentoo_rsync_mirror="${RSYNC_MIRROR}" \
+             -var gentoo_stage="${GENTOO_STAGE}" \
              -var iso_checksum="${ISO_CHECKSUM}" \
              -var iso_url="${ISO_URL}" \
              -var output_directory="${BUILD}/gentoo-iso" \
-             -var stage3="${STAGE3}" \
              gentoo/gentoo.pkr.hcl
    elif $only; then
       (>&2 echo 'Nothing to be done for gentoo-iso!')

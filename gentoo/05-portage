@@ -11,25 +11,25 @@ mount --read-write --options defaults,noatime,subvol=repos "$ROOT_DEVICE" "${GEN
 mount --read-write --options defaults,noatime,subvol=distfiles "$ROOT_DEVICE" "${GENTOO_MOUNT_POINT}/var/cache/distfiles"
 
 # Use the latest daily snapshot
-tarball=portage-latest.tar.xz
-snapshots_url="${RELEASE_MIRROR}/snapshots/${tarball}"
+snapshot=portage-latest.tar.xz
+snapshot_url="${RELEASE_MIRROR}/snapshots/${snapshot}"
 
 # Download a snapshot of the main ebuild repository
-tarball_temp="$(mktemp -d)" && trap "rm -r \"$tarball_temp\"" EXIT
-wget --directory-prefix="$tarball_temp" --quiet "$snapshots_url"{.gpgsig,.md5sum,}
+snapshot_dir="$(mktemp -d)" && trap "rm -r \"$snapshot_dir\"" EXIT
+wget --directory-prefix="$snapshot_dir" --quiet "$snapshot_url"{.gpgsig,.md5sum,}
 
 # Verify and validate snapshot
-gpgv --quiet --keyring "$GENTOO_KEYRING" "${tarball_temp}/${tarball}"{.gpgsig,}
+gpgv --quiet --keyring "$GENTOO_KEYRING" "${snapshot_dir}/${snapshot}"{.gpgsig,}
 (
-cd "$tarball_temp"
-md5sum --check --status "${tarball}.md5sum"
+cd "$snapshot_dir"
+md5sum --check --status "${snapshot}.md5sum"
 )
 
 # Unpack the snapshot
 mkdir "${GENTOO_MOUNT_POINT}/var/db/repos/gentoo"
 tar --extract \
     --xz \
-    --file "${tarball_temp}/${tarball}" \
+    --file "${snapshot_dir}/${snapshot}" \
     --strip-components=1 \
     --directory "${GENTOO_MOUNT_POINT}/var/db/repos/gentoo"
 

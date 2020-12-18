@@ -13,19 +13,19 @@ ntpd --quit --panicgate
 
 # Choose multilib (32-bit and 64-bit) stage 3 for now because 32-bit is still
 # needed for some applications.
-tarball="stage3-amd64-${STAGE3}.tar.xz"
-stage3_url="${RELEASE_MIRROR}/releases/amd64/autobuilds/${STAGE3}/${tarball}"
+stage="stage3-amd64-${GENTOO_STAGE}.tar.xz"
+stage_url="${RELEASE_MIRROR}/releases/amd64/autobuilds/${GENTOO_STAGE}/${stage}"
 
 # Download stage file making sure to remove it later
-tarball_temp="$(mktemp -d)" && trap "rm -r \"$tarball_temp\"" EXIT
-wget --directory-prefix="$tarball_temp" --quiet "$stage3_url"{.DIGESTS.asc,}
+stage_dir="$(mktemp -d)" && trap "rm -r \"$stage_dir\"" EXIT
+wget --directory-prefix="$stage_dir" --quiet "$stage_url"{.DIGESTS.asc,}
 
 # Verify and validate stage file
-gpgv --quiet --keyring "$GENTOO_KEYRING" "${tarball_temp}/${tarball}.DIGESTS.asc"
+gpgv --quiet --keyring "$GENTOO_KEYRING" "${stage_dir}/${stage}.DIGESTS.asc"
 (
-cd "$tarball_temp"
-awk '/# SHA512 HASH/{getline; print}' "${tarball}.DIGESTS.asc" \
-   | grep "${tarball}$" \
+cd "$stage_dir"
+awk '/# SHA512 HASH/{getline; print}' "${stage}.DIGESTS.asc" \
+   | grep "${stage}$" \
    | sha512sum --check --status -
 )
 
@@ -43,5 +43,5 @@ tar --extract \
     --preserve-permissions \
     --xattrs-include='*.*' \
     --numeric-owner \
-    --file "${tarball_temp}/${tarball}" \
+    --file "${stage_dir}/${stage}" \
     --directory "$GENTOO_MOUNT_POINT"

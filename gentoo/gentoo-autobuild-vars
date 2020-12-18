@@ -72,8 +72,8 @@ echo "$ISO_CHECKSUM" | head -n 1 | cut -f 1 -d ' '
 # Export to be referenced later in the build
 export GENTOO_KEYRING
 export GENTOO_MIRRORS
+export GENTOO_STAGE=$AUTOBUILD
 export RELEASE_MIRROR
 export RSYNC_MIRROR
 export ISO_CHECKSUM
 export ISO_URL="./${AUTOBUILD_DIR}/${ISO}"
-export STAGE3=$AUTOBUILD

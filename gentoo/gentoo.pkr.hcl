@@ -24,6 +24,10 @@ variable "gentoo_rsync_mirror" {
   type = string
 }
 
+variable "gentoo_stage" {
+  type = string
+}
+
 variable "headless" {
   type = bool
   default = true
@@ -58,10 +62,6 @@ variable "ssh_username" {
 variable "ssh_password" {
   type = string
   default = "correcthorsebatterystaple"
-}
-
-variable "stage3" {
-  type = string
 }
 
 source "qemu" "gentoo-iso" {
@@ -113,13 +113,13 @@ build {
       "GENTOO_KEYRING=/tmp/gentoo-release.asc",
       "GENTOO_MIRRORS=${var.gentoo_mirrors}",
       "GENTOO_MOUNT_POINT=/mnt/gentoo",
+      "GENTOO_STAGE=${var.gentoo_stage}",
       "LUKS_DEVICE=/dev/sda2",
       "RELEASE_MIRROR=${var.gentoo_release_mirror}",
       "ROOT_DEVICE=/dev/${var.root_volume_group}/root",
       "ROOT_VOLUME_GROUP=${var.root_volume_group}",
       "RSYNC_MIRROR=${var.gentoo_rsync_mirror}",
       "SOURCE=/tmp",
-      "STAGE3=${var.stage3}",
       "SWAP_DEVICE=/dev/${var.root_volume_group}/swap"
     ]
 
