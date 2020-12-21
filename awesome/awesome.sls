@@ -61,7 +61,6 @@ awesome-themes-custom:
   file.patch:
     - name: {{ grains.xdg_config_home }}/awesome/themes/zenburn/theme.lua
     - source: salt://dotfiles/awesome/theme.patch
-    - hash: 25da5f8d57c7fe54d7269d75e67c1d22d0c08e75
     - onchanges:
       - file: awesome-themes-zenburn
 
