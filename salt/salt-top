@@ -51,11 +51,9 @@ statedir() {
    # Assume files named after the state directory are init files
    local init_sls="${DOTFILES}/${state}/init.sls"
    local statedir_sls="${DOTFILES}/${state}/${state}.sls"
-   if [ ! -f "$init_sls" ]; then
-      if ! mv "$statedir_sls" "$init_sls"; then
-         (>&2 echo 'Salt state directory needs an init.sls file')
-         exit 1
-      fi
+   if [ ! -f "$init_sls" ] && ! mv "$statedir_sls" "$init_sls"; then
+      (>&2 echo "The '${state}' directory needs an init.sls or ${state}.sls state file")
+      exit 1
    fi
 
    add_to_init "$state"
