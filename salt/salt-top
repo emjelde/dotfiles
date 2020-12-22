@@ -37,19 +37,20 @@ add_to_init() {
 
 # Copies the entire state directory ignoring files listed in .saltignore
 statedir() {
-   if [ -f "${1}/.saltignore" ]; then
-      GLOBIGNORE=$(tr '\n' ':' < <(sed "s/.*/${1}\/&/" < "${1}/.saltignore"))
+   local state=$1
+   if [ -f "${state}/.saltignore" ]; then
+      GLOBIGNORE=$(tr '\n' ':' < <(sed "s/.*/${state}\/&/" < "${state}/.saltignore"))
    else
       # Set a non-null value to implicitly enable dotglob to match all files,
       # including dot files.
       GLOBIGNORE=.
    fi
-   cp --parents --recursive "$1"/!([.]saltignore) "${DOTFILES}"
+   cp --parents --recursive "$state"/!([.]saltignore) "${DOTFILES}"
    unset GLOBIGNORE
 
    # Assume files named after the state directory are init files
-   local init_sls="${DOTFILES}/${1}/init.sls"
-   local statedir_sls="${DOTFILES}/${1}/${1}.sls"
+   local init_sls="${DOTFILES}/${state}/init.sls"
+   local statedir_sls="${DOTFILES}/${state}/${state}.sls"
    if [ ! -f "$init_sls" ]; then
       if ! mv "$statedir_sls" "$init_sls"; then
          (>&2 echo 'Salt state directory needs an init.sls file')
@@ -57,13 +58,14 @@ statedir() {
       fi
    fi
 
-   add_to_init "$1"
+   add_to_init "$state"
 }
 
 # Copies an individual salt state file
 statefile() {
-   cp --parents "${1/\./\/}.sls" "${DOTFILES}"
-   add_to_init "$1"
+   local state=$1
+   cp --parents "${state/\./\/}.sls" "${DOTFILES}"
+   add_to_init "$state"
 }
 
 statedir portage
