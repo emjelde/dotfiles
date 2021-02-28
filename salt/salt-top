@@ -75,6 +75,7 @@ statedir git
 statedir gpg
 statedir htop
 statedir java
+statedir minecraft
 statedir pass
 statedir salt
 statedir smartcard
