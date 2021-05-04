@@ -9,7 +9,7 @@ and build structures.
 To start the server:
 
 ```
-rc-service minecraft-service start
+rc-service minecraft-server start
 ```
 
 To interact with the console you can use the extra command attach:
