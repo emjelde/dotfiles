@@ -10,6 +10,7 @@ Usage: dotfiles command
 Available commands are:
   apply  Apply salt states
   build  Build a Gentoo VM image
+  run    Run the Gentoo VM image
   clean  Remove generated build files
   help   Display this help and exit
 USAGE
@@ -142,6 +143,50 @@ build() {
    esac
 }
 
+# Run the Gentoo VM after one or more build steps
+run() {
+   local help=$(cat <<-USAGE
+	Usage: dotfiles run [command]
+
+	Runs the Gentoo VM image using QEMU, defaults to any available VM if command not specified.
+
+	Available commands are:
+	  iso   Run base Gentoo VM
+	  salt  Run full Gentoo VM
+	  help  Display this help and exit
+	USAGE
+   )
+
+   local type=
+   if [ -z "${1:-}" ]; then
+      type=$([ -e "${BUILD}/gentoo-salt" ] && echo salt || echo iso)
+   else
+      case "$1" in
+         iso|salt) type="$1"; shift ;;
+         help) shift; echo "$help"; exit 0 ;;
+         *) shift; echo "$help"; exit 1 ;;
+      esac
+   fi
+   if [ -e "${BUILD}/gentoo-${type}/gentoo-${type}" ]; then
+      echo "Running gentoo-${type}..."
+
+      source_env
+      source_vm_vars
+
+      qemu-system-x86_64 \
+         -name "gentoo-${type}" \
+         -machine type=pc,accel=kvm \
+         -smp cpus="$CPUS",sockets="$CPUS" \
+         -m "${MEMORY}M" \
+         -boot c \
+         -drive if=pflash,format=raw,readonly,file=/usr/share/edk2-ovmf/OVMF_CODE.fd \
+         -drive file="${BUILD}/gentoo-${type}/gentoo-${type}",if=ide,cache=writeback,discard=ignore,format=qcow2
+   else
+      (>&2 echo "Must first build a Gentoo VM, try \`./dotfiles build\`")
+      exit 1
+   fi
+}
+
 # Remove all build output, including any downloaded Gentoo autobuilds,
 # verification keys, caches, and VMs.
 clean_all() {
@@ -194,8 +239,9 @@ cd "${BASH_SOURCE%/*}"
 
 case "$1" in
    apply) shift; apply "$@" ;;
-   clean) shift; clean "$@" ;;
    build) shift; build "$@" ;;
+     run) shift;   run "$@" ;;
+   clean) shift; clean "$@" ;;
    help) shift; echo "$help"; exit 0 ;;
    *) shift; echo "$help"; exit 1 ;;
 esac
