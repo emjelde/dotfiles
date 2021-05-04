@@ -23,7 +23,7 @@ can add these as shown below:
 ```sh
 # The HCL2 template files require a Packer version of at least 1.6.1.
 mkdir --parents /etc/portage/package.accept_keywords/dev-util
-echo ~dev-util/packer-1.6.1 > /etc/portage/package.accept_keywords/dev-util/packer
+echo ~dev-util/packer-1.7.2 > /etc/portage/package.accept_keywords/dev-util/packer
 
 # Install Packer
 emerge dev-util/packer
