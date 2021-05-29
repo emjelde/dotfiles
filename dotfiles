@@ -158,7 +158,7 @@ run() {
    )
 
    local type=
-   if [ -z "${1:-}" ]; then
+   if [ $# -eq 0 ]; then
       type=$([ -e "${BUILD}/gentoo-salt" ] && echo salt || echo iso)
    else
       case "$1" in
