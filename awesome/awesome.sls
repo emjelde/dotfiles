@@ -4,14 +4,14 @@ include:
 awesome:
   pkg.installed:
     - name: x11-wm/awesome
+    - require:
+      - portage_config: awesome
   portage_config.flags:
     # TODO update to the latest awesome
     - name: '>=x11-wm/awesome-4'
     - mask: true
     - require:
       - eselect: profile
-    - require_in:
-      - pkg: awesome
   file.managed:
     - name: /etc/env.d/90xsession
     - contents:

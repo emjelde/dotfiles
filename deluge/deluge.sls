@@ -1,6 +1,8 @@
 deluge:
   pkg.installed:
     - name: net-p2p/deluge
+    - require:
+      - portage_config: deluge
   portage_config.flags:
     - names:
       - dev-libs/boost:
@@ -14,5 +16,3 @@ deluge:
           - qtk
     - require:
       - eselect: profile
-    - require_in:
-      - pkg: deluge

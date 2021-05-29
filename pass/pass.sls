@@ -24,6 +24,7 @@ passff-host:
   pkg.installed:
     - name: www-plugins/passff-host
     - require:
+      - portage_config: passff-host
       - pkg: firefox
       - pkg: pass
   portage_config.flags:
@@ -36,8 +37,6 @@ passff-host:
           - firefox
     - require:
       - eselect: profile
-    - require_in:
-      - pkg: passff-host
   file.managed:
     - name: /etc/portage/patches/www-plugins/passff-host/passff-host-env.patch
     - source: salt://dotfiles/pass/passff-host-env.patch
