@@ -4,6 +4,7 @@ include:
 profile:
   eselect.set:
     - target: default/linux/amd64/17.1/desktop
+    - order: 1
 
 gentools:
   pkg.installed:

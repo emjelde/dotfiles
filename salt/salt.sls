@@ -8,3 +8,5 @@ salt:
           - gnupg
           - portage
           - vim-syntax
+    - require:
+      - eselect: profile

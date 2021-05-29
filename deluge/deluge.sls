@@ -12,5 +12,7 @@ deluge:
       - net-p2p/deluge:
         - use:
           - qtk
+    - require:
+      - eselect: profile
     - require_in:
       - pkg: deluge

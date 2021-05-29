@@ -34,6 +34,8 @@ passff-host:
       - www-plugins/passff-host:
         - use:
           - firefox
+    - require:
+      - eselect: profile
     - require_in:
       - pkg: passff-host
   file.managed:

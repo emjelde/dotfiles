@@ -7,3 +7,5 @@ jdk:
     - name: dev-java/openjdk-bin
     - use:
       - source
+    - require:
+      - eselect: profile

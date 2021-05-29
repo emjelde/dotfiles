@@ -7,6 +7,8 @@ minecraft-server:
     - name: games-server/minecraft-server
     - license:
       - Mojang
+    - require:
+      - eselect: profile
 
 minecraft-server-conf:
   file.managed:

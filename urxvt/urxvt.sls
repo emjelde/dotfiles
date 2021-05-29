@@ -17,6 +17,8 @@ urxvt:
       - pixbuf
       - unicode3
       - xft
+    - require:
+      - eselect: profile
   file.accumulated:
     - name: .Xdefaults
     - filename: {{ grains.user_home }}/.Xdefaults

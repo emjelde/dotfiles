@@ -3,3 +3,5 @@ python-useflags:
     - name: dev-lang/python
     - use:
       - sqlite
+    - require:
+      - eselect: profile

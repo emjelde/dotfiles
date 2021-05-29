@@ -10,6 +10,8 @@ git:
     - name: dev-vcs/git
     - use:
       - doc
+    - require:
+      - eselect: profile
 
 git-attributes:
   file.managed:

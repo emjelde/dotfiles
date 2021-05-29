@@ -8,6 +8,8 @@ awesome:
     # TODO update to the latest awesome
     - name: '>=x11-wm/awesome-4'
     - mask: true
+    - require:
+      - eselect: profile
     - require_in:
       - pkg: awesome
   file.managed:
