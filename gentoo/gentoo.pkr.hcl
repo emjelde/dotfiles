@@ -136,4 +136,10 @@ build {
       "gentoo/10-system"
     ]
   }
+
+  provisioner "file" {
+    source = "/dev/shm/initramfs.key"
+    destination = "${var.output_directory}/initramfs.key"
+    direction = "download"
+  }
 }
