@@ -7,7 +7,15 @@ set -o errexit -o nounset -o xtrace
 
 UID_GID=1337
 groupadd -g $UID_GID evan
-useradd --no-create-home --uid $UID_GID --gid $UID_GID --groups wheel --shell /bin/bash evan
+# Add user 'evan' without an initial home because one was added earlier.
+# Add to usb group for smartcard functions.
+# Add to wheel group to be able to use `su` for root.
+useradd --no-create-home \
+        --uid $UID_GID \
+        --gid $UID_GID \
+        --groups usb,wheel \
+        --shell /bin/bash \
+        evan
 chmod 750 /home/evan /snapshots/.evan
 chown evan: /home/evan /snapshots/.evan
 
