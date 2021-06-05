@@ -29,7 +29,8 @@ esac done
 if ! command -v salt-call > /dev/null 2>&1; then
    # Salt USE flags are managed here as well as in salt/salt.sls.
    # It is probably best to keep them in sync.
-   mkdir --parents /etc/portage/package.use/app-admin
+   mkdir --parents /etc/portage/package.{accept_keywords,use}/app-admin
+   echo '~app-admin/salt-3003' > /etc/portage/package.accept_keywords/app-admin/salt
    echo 'app-admin/salt gnupg portage vim-syntax' > /etc/portage/package.use/app-admin/salt
    # pyzmq seems to need zeromq drafts enabled?
    # https://bugs.gentoo.org/703252
