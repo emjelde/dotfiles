@@ -1,5 +1,6 @@
 include:
   - ..bash
+  - ..portage
 
 git:
   pkg.installed:

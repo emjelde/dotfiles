@@ -1,3 +1,6 @@
+include:
+  - ..portage
+
 salt:
   portage_config.flags:
     - names:

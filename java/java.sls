@@ -1,3 +1,6 @@
+include:
+  - ..portage
+
 jdk:
   pkg.installed:
     - name: dev-java/openjdk-bin

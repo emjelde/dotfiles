@@ -1,3 +1,6 @@
+include:
+  - ..portage
+
 deluge:
   pkg.installed:
     - name: net-p2p/deluge

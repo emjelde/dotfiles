@@ -1,4 +1,5 @@
 include:
+  - ..portage
   - ..x11
 
 urxvt:

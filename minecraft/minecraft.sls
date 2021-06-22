@@ -1,3 +1,6 @@
+include:
+  - ..portage
+
 minecraft-server:
   pkg.installed:
     - name: games-server/minecraft-server

@@ -1,6 +1,7 @@
 include:
   - ..bash
   - ..firefox
+  - ..portage
 
 # Install password manager
 
