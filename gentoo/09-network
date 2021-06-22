@@ -3,7 +3,10 @@
 chroot "$GENTOO_MOUNT_POINT" /bin/bash <<'EOF'
 set -o errexit -o xtrace
 
+# Activate network interface at boot
 ln -s /etc/init.d/net.lo /etc/init.d/net.enp0s3
 rc-update add net.enp0s3 default
+
+# Install a DHCP client used to automatically obtain an IP address
 emerge --quiet net-misc/dhcpcd
 EOF
