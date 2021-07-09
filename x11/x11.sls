@@ -18,14 +18,14 @@ x-dm:
     - require:
       - pkg: x11
   file.line:
-    - name: /etc/conf.d/xdm
+    - name: /etc/conf.d/display-manager
     - content: DISPLAYMANAGER="slim"
     - match: DISPLAYMANAGER="xdm"
     - mode: replace
     - require:
       - pkg: x-dm
   service.running:
-    - name: xdm
+    - name: display-manager
     - enable: true
     - require:
       - pkg: x-dm
