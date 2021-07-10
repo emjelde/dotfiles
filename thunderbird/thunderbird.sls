@@ -1,3 +1,3 @@
 thunderbird:
   pkg.installed:
-    - name: mail-client/thunderbird
+    - name: mail-client/thunderbird-bin
