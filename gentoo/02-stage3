@@ -13,7 +13,7 @@ ntpd --quit --panicgate
 
 # Choose multilib (32-bit and 64-bit) stage 3 for now because 32-bit is still
 # needed for some applications.
-stage="stage3-amd64-${GENTOO_STAGE}.tar.xz"
+stage="stage3-amd64-openrc-${GENTOO_STAGE}.tar.xz"
 stage_url="${RELEASE_MIRROR}/releases/amd64/autobuilds/${GENTOO_STAGE}/${stage}"
 
 # Download stage file making sure to remove it later
