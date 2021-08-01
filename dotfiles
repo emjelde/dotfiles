@@ -179,7 +179,7 @@ run() {
          -smp cpus="$CPUS",sockets="$CPUS" \
          -m "${MEMORY}M" \
          -boot c \
-         -drive if=pflash,format=raw,readonly,file=/usr/share/edk2-ovmf/OVMF_CODE.fd \
+         -drive if=pflash,format=raw,readonly=on,file=/usr/share/edk2-ovmf/OVMF_CODE.fd \
          -drive file="${BUILD}/gentoo-${type}/gentoo-${type}",if=ide,cache=writeback,discard=ignore,format=qcow2
    else
       (>&2 echo "Must first build a Gentoo VM, try \`./dotfiles build\`")
