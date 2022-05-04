@@ -16,14 +16,10 @@ snapshot_url="${RELEASE_MIRROR}/snapshots/${snapshot}"
 
 # Download a snapshot of the main ebuild repository
 snapshot_dir="$(mktemp -d)" && trap "rm -r \"$snapshot_dir\"" EXIT
-wget --directory-prefix="$snapshot_dir" --quiet "$snapshot_url"{.gpgsig,.md5sum,}
+wget --directory-prefix="$snapshot_dir" --quiet "$snapshot_url"{,.gpgsig}
 
 # Verify and validate snapshot
-gpgv --quiet --keyring "$GENTOO_KEYRING" "${snapshot_dir}/${snapshot}"{.gpgsig,}
-(
-cd "$snapshot_dir"
-md5sum --check --status "${snapshot}.md5sum"
-)
+gpgv --quiet --keyring "$GENTOO_KEYRING" "${snapshot_dir}/${snapshot}.gpgsig" "${snapshot_dir}/${snapshot}"
 
 # Unpack the snapshot
 mkdir "${GENTOO_MOUNT_POINT}/var/db/repos/gentoo"

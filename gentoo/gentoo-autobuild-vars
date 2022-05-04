@@ -26,7 +26,7 @@ AUTOBUILD_DIR="${BUILD}/autobuilds/${AUTOBUILD}"
 
 # Download the Gentoo Linux installation ISO
 mkdir --parents "$AUTOBUILD_DIR"
-wget --continue --directory-prefix "${AUTOBUILD_DIR}" "${DIST}/${ISO_PATH}"{,.CONTENTS.gz,.DIGESTS.asc}
+wget --continue --directory-prefix "${AUTOBUILD_DIR}" "${DIST}/${ISO_PATH}"{,.CONTENTS.gz,.asc}
 
 # Try to verify using Gentoo signing keys from
 # app-crypt/openpgp-keys-gentoo-release, otherwise fetch from Gentoo's
@@ -59,15 +59,7 @@ fi
 )
 
 # Verify ISO has been provided by the Gentoo Infrastructure team
-gpgv --quiet --keyring "$GENTOO_KEYRING" "${AUTOBUILD_DIR}/${ISO}.DIGESTS.asc"
-
-# Verify the checksum to make sure the downloaded ISO file is not corrupted
-ISO_CHECKSUM=$(
-cd "$AUTOBUILD_DIR"
-ISO_CHECKSUM="$(awk '/# SHA512 HASH/{getline; print}' "${ISO}.DIGESTS.asc")"
-echo "$ISO_CHECKSUM" | sha512sum --check --status -
-echo "$ISO_CHECKSUM" | head -n 1 | cut -f 1 -d ' '
-)
+gpgv --quiet --keyring "$GENTOO_KEYRING" "${AUTOBUILD_DIR}/${ISO}.asc" "${AUTOBUILD_DIR}/${ISO}"
 
 # Export to be referenced later in the build
 export GENTOO_KEYRING
@@ -75,5 +67,5 @@ export GENTOO_MIRRORS
 export GENTOO_STAGE=$AUTOBUILD
 export RELEASE_MIRROR
 export RSYNC_MIRROR
-export ISO_CHECKSUM
+export ISO_CHECKSUM=$(sha512sum "${AUTOBUILD_DIR}/${ISO}" | cut -f 1 -d ' ')
 export ISO_URL="./${AUTOBUILD_DIR}/${ISO}"
