@@ -49,7 +49,9 @@ if [ ! -d "$SALT_KEYS" ] && [ ! -d "$PILLAR_DIR" ]; then
    mkdir --parents "${PILLAR_DIR}/dotfiles/ssh"
    cat > "${PILLAR_DIR}/dotfiles/ssh/init.sls" <<-EOF
 	#!yaml|gpg
-
+	
+	# The salt/salt-pillar script generated the following using a mock gpg and ssh key
+	
 	$(print_identity bitbucket)
 	$(print_identity github)
 	$(print_identity visualstudio)
