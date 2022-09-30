@@ -6,6 +6,7 @@ cp --recursive "${SOURCE:-.}/kernel" "${GENTOO_MOUNT_POINT}/tmp/"
 cp /dev/shm/initramfs.key "${GENTOO_MOUNT_POINT}/tmp/kernel/"
 trap "rm --recursive \"${GENTOO_MOUNT_POINT}/tmp/kernel\"" EXIT
 
+export KEY_FILE=/tmp/kernel/initramfs.key
 export LUKS_UUID="$(blkid -s UUID -o value "$LUKS_DEVICE")"
 export ROOT_UUID="$(blkid -s UUID -o value "$ROOT_DEVICE")"
 
@@ -13,22 +14,8 @@ chroot "$GENTOO_MOUNT_POINT" /bin/bash <<'EOF'
 set -o errexit -o nounset -o xtrace
 
 # Prepare initramfs
-emerge --quiet \
-   sys-fs/btrfs-progs \
-   sys-fs/cryptsetup \
-   sys-fs/lvm2
-rc-update add lvm boot
-
-# Find GCC library path for extra libraries needed by cryptsetup
-export LIBGCCPATH="/usr/lib/gcc/$(s=$(gcc-config -c); echo ${s%-*}/${s##*-})"
-
-INITRAMFS_SOURCE=/usr/src/initramfs/initramfs.list
-export INITRAMFS_DIR=$(dirname "$INITRAMFS_SOURCE")
-mkdir --parents "$INITRAMFS_DIR"
-envsubst '$INITRAMFS_DIR $LIBGCCPATH' < <(/tmp/kernel/initramfs.list) > "$INITRAMFS_SOURCE"
-envsubst '$LUKS_UUID $ROOT_VOLUME_GROUP' < /tmp/kernel/initramfs.init > "${INITRAMFS_DIR}/init"
-envsubst '$ROOT_UUID' < /tmp/kernel/initramfs.fstab > "${INITRAMFS_DIR}/fstab"
-cp /tmp/kernel/initramfs.key "${INITRAMFS_DIR}/key"
+export INITRAMFS_SOURCE=/usr/src/initramfs/initramfs.list
+/tmp/kernel/gen-initramfs.sh --with-bdeps
 
 # Apply custom kernel patches
 mkdir --parents /etc/portage/patches/sys-kernel/gentoo-sources
