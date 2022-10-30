@@ -23,6 +23,7 @@ ISO_PATH=$(wget -q -O- "${DIST}/latest-install-amd64-minimal.txt" | tail -n 1 | 
 ISO="$(basename "$ISO_PATH")"
 AUTOBUILD="$(dirname "$ISO_PATH")"
 AUTOBUILD_DIR="${BUILD}/autobuilds/${AUTOBUILD}"
+ISO_URL="${AUTOBUILD_DIR}/${ISO}"
 
 # Download the Gentoo Linux installation ISO
 mkdir --parents "$AUTOBUILD_DIR"
@@ -59,7 +60,7 @@ fi
 )
 
 # Verify ISO has been provided by the Gentoo Infrastructure team
-gpgv --quiet --keyring "$GENTOO_KEYRING" "${AUTOBUILD_DIR}/${ISO}.asc" "${AUTOBUILD_DIR}/${ISO}"
+gpgv --quiet --keyring "$GENTOO_KEYRING" "${ISO_URL}.asc" "$ISO_URL"
 
 # Export to be referenced later in the build
 export GENTOO_KEYRING
@@ -67,5 +68,5 @@ export GENTOO_MIRRORS
 export GENTOO_STAGE=$AUTOBUILD
 export RELEASE_MIRROR
 export RSYNC_MIRROR
-export ISO_CHECKSUM=$(sha512sum "${AUTOBUILD_DIR}/${ISO}" | cut -f 1 -d ' ')
-export ISO_URL="./${AUTOBUILD_DIR}/${ISO}"
+export ISO_CHECKSUM=$(sha512sum "$ISO_URL" | cut -f 1 -d ' ')
+export ISO_URL
