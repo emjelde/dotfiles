@@ -15,7 +15,7 @@ set -o errexit -o nounset -o xtrace
 
 # Prepare initramfs
 export INITRAMFS_SOURCE=/usr/src/initramfs/initramfs.list
-/tmp/kernel/gen-initramfs.sh --with-bdeps
+/tmp/kernel/initramfs.sh --with-bdeps
 
 # Apply custom kernel patches
 mkdir --parents /etc/portage/patches/sys-kernel/gentoo-sources

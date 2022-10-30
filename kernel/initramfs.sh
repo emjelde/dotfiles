@@ -8,7 +8,7 @@ force=false
 bdeps=false
 
 help=$(cat <<'USAGE'
-Usage: kernel/gen-initramfs.sh [OPTION]
+Usage: kernel/initramfs.sh [OPTION]
 
   -f, --force       Replace /usr/src/initramfs/initramfs.list
   -d, --with-bdeps  Install initramfs dependencies
@@ -16,7 +16,7 @@ Usage: kernel/gen-initramfs.sh [OPTION]
 USAGE
 )
 
-opts="$(getopt -o fdh -l force,with-bdeps,help -n kernel/gen-initramfs.sh -- "$@")"
+opts="$(getopt -o fdh -l force,with-bdeps,help -n kernel/initramfs.sh -- "$@")"
 eval set -- "$opts"
 while true; do case "$1" in
    -f|--force) shift; force=true ;;
