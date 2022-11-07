@@ -31,6 +31,11 @@ variable "ssh_password" {
   default = "correcthorsebatterystaple"
 }
 
+variable "vm_source" {
+  type = string
+  default = "/tmp"
+}
+
 source "qemu" "gentoo-salt" {
   vm_name = "gentoo-salt"
   output_directory = var.output_directory
@@ -79,18 +84,15 @@ build {
 
   provisioner "file" {
     source = "salt"
-    destination = "/tmp"
+    destination = var.vm_source
   }
 
   provisioner "file" {
     generated = true
-    source = "${var.output_directory}/pillar"
-    destination = "/srv"
-  }
-
-  provisioner "file" {
-    generated = true
-    source = "${var.output_directory}/salt"
+    sources = [
+      "${var.output_directory}/pillar",
+      "${var.output_directory}/salt"
+    ]
     destination = "/srv"
   }
 
@@ -101,12 +103,8 @@ build {
   }
 
   provisioner "shell" {
-    environment_vars = [
-      "SOURCE=/tmp"
-    ]
-
     inline = [
-     "cd /tmp",
+     "cd ${var.vm_source}",
      "salt/salt-apply"
     ]
   }

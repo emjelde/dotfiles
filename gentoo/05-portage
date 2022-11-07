@@ -29,15 +29,15 @@ tar --extract \
     --strip-components=1 \
     --directory "${GENTOO_MOUNT_POINT}/var/db/repos/gentoo"
 
-cp --recursive "${SOURCE:-.}/portage" "${GENTOO_MOUNT_POINT}/tmp/"
+cp --recursive "${VM_SOURCE:-.}/portage" "${GENTOO_MOUNT_POINT}${CHROOT_SOURCE}/portage"
 
 chroot "$GENTOO_MOUNT_POINT" /bin/bash <<'EOF'
 set -o errexit -o nounset -o xtrace
 
 mkdir --parents /etc/portage/repos.conf
-envsubst '$CPUS $CPU_FLAGS_X86 $GENTOO_MIRRORS' < /tmp/portage/make.conf > /etc/portage/make.conf
-envsubst '$RSYNC_MIRROR' < /tmp/portage/gentoo.conf > /etc/portage/repos.conf/gentoo.conf
-rm --recursive /tmp/portage
+envsubst '$CPUS $CPU_FLAGS_X86 $GENTOO_MIRRORS' < "${CHROOT_SOURCE}/portage/make.conf" > /etc/portage/make.conf
+envsubst '$RSYNC_MIRROR' < "${CHROOT_SOURCE}/portage/gentoo.conf" > /etc/portage/repos.conf/gentoo.conf
+rm --recursive "${CHROOT_SOURCE}/portage"
 
 # Configure locales
 cat >> /etc/locale.gen <<'DATA'

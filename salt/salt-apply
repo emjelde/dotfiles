@@ -39,7 +39,7 @@ if ! command -v salt-call > /dev/null 2>&1; then
 
    emerge --quiet app-admin/salt
 
-   cp "${SOURCE:-.}/salt/salt.conf" /etc/salt/minion
+   cp salt/salt.conf /etc/salt/minion
 fi
 
 # Replace salt states

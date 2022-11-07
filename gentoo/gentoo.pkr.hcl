@@ -1,5 +1,10 @@
 # Gentoo Linux (iso)
 
+variable "chroot_source" {
+  type = string
+  default = "/tmp"
+}
+
 variable "cpuflags" {
   type = string
 }
@@ -64,6 +69,11 @@ variable "ssh_password" {
   default = "correcthorsebatterystaple"
 }
 
+variable "vm_source" {
+  type = string
+  default = "/tmp"
+}
+
 source "qemu" "gentoo-iso" {
   vm_name = "gentoo-iso"
   output_directory = var.output_directory
@@ -90,27 +100,26 @@ build {
   ]
 
   provisioner "file" {
-    source = "kernel"
-    destination = "/tmp"
+    sources = [
+      "kernel",
+      "portage"
+    ]
+    destination = var.vm_source
   }
 
   provisioner "file" {
     source = var.gentoo_keyring
-    destination = "/tmp/gentoo-release.asc"
-  }
-
-  provisioner "file" {
-    source = "portage"
-    destination = "/tmp"
+    destination = "${var.vm_source}/gentoo-release.asc"
   }
 
   provisioner "shell" {
     environment_vars = [
       "BOOT_DEVICE=/dev/sda1",
       "BTRFS_MOUNT_POINT=/mnt/btrfs",
+      "CHROOT_SOURCE=${var.chroot_source}",
       "CPUS=${var.cpus}",
       "CPU_FLAGS_X86=${var.cpuflags}",
-      "GENTOO_KEYRING=/tmp/gentoo-release.asc",
+      "GENTOO_KEYRING=${var.vm_source}/gentoo-release.asc",
       "GENTOO_MIRRORS=${var.gentoo_mirrors}",
       "GENTOO_MOUNT_POINT=/mnt/gentoo",
       "GENTOO_STAGE=${var.gentoo_stage}",
@@ -119,8 +128,8 @@ build {
       "ROOT_DEVICE=/dev/${var.root_volume_group}/root",
       "ROOT_VOLUME_GROUP=${var.root_volume_group}",
       "RSYNC_MIRROR=${var.gentoo_rsync_mirror}",
-      "SOURCE=/tmp",
-      "SWAP_DEVICE=/dev/${var.root_volume_group}/swap"
+      "SWAP_DEVICE=/dev/${var.root_volume_group}/swap",
+      "VM_SOURCE=${var.vm_source}"
     ]
 
     scripts = [

@@ -46,12 +46,12 @@ export LIBGCCPATH="/usr/lib/gcc/$(s=$(gcc-config -c); echo ${s%-*}/${s##*-})"
 export INITRAMFS_DIR=$(dirname "$initramfs_source")
 mkdir --parents "$INITRAMFS_DIR"
 
-envsubst '$INITRAMFS_DIR $LIBGCCPATH' < <(${SOURCE:-.}/kernel/initramfs.list) > "$initramfs_source"
+envsubst '$INITRAMFS_DIR $LIBGCCPATH' < <(kernel/initramfs.list) > "$initramfs_source"
 
 if [ -n "${KEY_FILE:-}" ] && [ -n "${LUKS_UUID:-}" ] && \
    [ -n "${ROOT_UUID:-}" ] && [ -n "${ROOT_VOLUME_GROUP:-}" ]
 then
-   envsubst '$LUKS_UUID $ROOT_VOLUME_GROUP' < ${SOURCE:-.}/kernel/initramfs.init > "${INITRAMFS_DIR}/init"
-   envsubst '$ROOT_UUID' < ${SOURCE:-.}/kernel/initramfs.fstab > "${INITRAMFS_DIR}/fstab"
+   envsubst '$LUKS_UUID $ROOT_VOLUME_GROUP' < kernel/initramfs.init > "${INITRAMFS_DIR}/init"
+   envsubst '$ROOT_UUID' < kernel/initramfs.fstab > "${INITRAMFS_DIR}/fstab"
    cp "$KEY_FILE" "${INITRAMFS_DIR}/key"
 fi

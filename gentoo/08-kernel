@@ -2,24 +2,26 @@
 
 set -o errexit -o nounset -o xtrace
 
-cp --recursive "${SOURCE:-.}/kernel" "${GENTOO_MOUNT_POINT}/tmp/"
-cp /dev/shm/initramfs.key "${GENTOO_MOUNT_POINT}/tmp/kernel/"
-trap "rm --recursive \"${GENTOO_MOUNT_POINT}/tmp/kernel\"" EXIT
-
-export KEY_FILE=/tmp/kernel/initramfs.key
+export KEY_FILE="${CHROOT_SOURCE}/kernel/initramfs.key"
 export LUKS_UUID="$(blkid -s UUID -o value "$LUKS_DEVICE")"
 export ROOT_UUID="$(blkid -s UUID -o value "$ROOT_DEVICE")"
+
+cp --recursive "${VM_SOURCE:-.}/kernel" "${GENTOO_MOUNT_POINT}${CHROOT_SOURCE}/kernel"
+cp /dev/shm/initramfs.key "${GENTOO_MOUNT_POINT}${KEY_FILE}"
+trap "rm --recursive \"${GENTOO_MOUNT_POINT}${CHROOT_SOURCE}/kernel\"" EXIT
 
 chroot "$GENTOO_MOUNT_POINT" /bin/bash <<'EOF'
 set -o errexit -o nounset -o xtrace
 
+cd $CHROOT_SOURCE
+
 # Prepare initramfs
 export INITRAMFS_SOURCE=/usr/src/initramfs/initramfs.list
-/tmp/kernel/initramfs.sh --with-bdeps
+kernel/initramfs.sh --with-bdeps
 
 # Apply custom kernel patches
 mkdir --parents /etc/portage/patches/sys-kernel/gentoo-sources
-cp /tmp/kernel/tuz.patch /etc/portage/patches/sys-kernel/gentoo-sources/
+cp kernel/tuz.patch /etc/portage/patches/sys-kernel/gentoo-sources/tuz.patch
 
 # Build kernel
 USE="symlink" emerge --quiet sys-kernel/gentoo-sources
